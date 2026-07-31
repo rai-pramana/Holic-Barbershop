@@ -1,0 +1,252 @@
+@extends('layouts.app')
+
+@section('title', 'Status Antrean #' . $queue->queue_number)
+
+@section('content')
+<div class="max-w-lg mx-auto">
+
+    {{-- Breadcrumb --}}
+    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-5">
+        <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-1 hover:text-pink-600 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Dashboard
+        </a>
+        <svg class="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-700 font-medium">Status Antrean</span>
+    </nav>
+
+    {{-- Main Status Card --}}
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden mb-5" id="status-card">
+
+        {{-- Colored Header --}}
+        <div class="relative overflow-hidden text-white text-center
+            @if($queue->status === 'called')    bg-gradient-to-br from-purple-500 to-indigo-600
+            @elseif($queue->status === 'active')  bg-gradient-to-br from-blue-500 to-cyan-600
+            @elseif($queue->status === 'pending') bg-gradient-to-br from-amber-400 to-orange-500
+            @elseif($queue->status === 'completed') bg-gradient-to-br from-green-500 to-emerald-600
+            @else bg-gradient-to-br from-gray-400 to-gray-600
+            @endif p-6 md:p-8">
+
+            {{-- Decoration --}}
+            <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-28 h-28 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <p class="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">{{ $queue->branch->name }}</p>
+
+                {{-- Queue Number --}}
+                <div class="text-6xl md:text-7xl font-black tracking-tight mb-3 font-mono" id="queue-number">
+                    {{ $queue->queue_number }}
+                </div>
+
+                {{-- Status Badge --}}
+                @php
+                    $statusConfig = [
+                        'called'    => ['icon' => 'M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z', 'label' => 'Anda Dipanggil!', 'animate' => true],
+                        'active'    => ['icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'Check-in Berhasil — Menunggu Panggilan', 'animate' => false],
+                        'pending'   => ['icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'Menunggu Check-in', 'animate' => false],
+                        'completed' => ['icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'Layanan Selesai', 'animate' => false],
+                        'skipped'   => ['icon' => 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', 'label' => 'Antrean Dilewati', 'animate' => false],
+                        'expired'   => ['icon' => 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'Antrean Kedaluwarsa', 'animate' => false],
+                    ];
+                    $cfg = $statusConfig[$queue->status] ?? ['icon' => '', 'label' => $queue->status_label, 'animate' => false];
+                @endphp
+                <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 text-sm font-semibold {{ $cfg['animate'] ? 'animate-pulse' : '' }}">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $cfg['icon'] }}"/></svg>
+                    {{ $cfg['label'] }}
+                </div>
+            </div>
+        </div>
+
+        <div class="p-5 md:p-6 space-y-5">
+
+            {{-- Stats Grid --}}
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-2xl p-4">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        Barber
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm leading-tight">{{ $queue->barber->name }}</p>
+                    @if($queue->barber->specialty)
+                        <p class="text-xs text-gray-400 mt-0.5">{{ $queue->barber->specialty }}</p>
+                    @endif
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-4">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                        Layanan
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm leading-tight">{{ $queue->service->name }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">{{ $queue->service->duration_minutes }} menit</p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-4">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Di Depan Anda
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm" id="queues-ahead">
+                        @if($queue->isActive_or_Pending())
+                            {{ $queuesAhead + $pendingAhead > 0 ? ($queuesAhead + $pendingAhead).' orang' : 'Hampir tiba!' }}
+                        @else —
+                        @endif
+                    </p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-4">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Est. Tunggu
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm" id="wait-time">
+                        @if($queue->isActive_or_Pending() && $waitMinutes > 0)
+                            ~{{ $waitMinutes }} menit
+                        @elseif($queue->isActive_or_Pending())
+                            Segera!
+                        @else —
+                        @endif
+                    </p>
+                </div>
+            </div>
+
+            {{-- QR Section (for pending) --}}
+            @if($queue->isPending())
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5">
+                <div class="text-center mb-4">
+                    <div class="inline-flex items-center gap-2 bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full mb-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        Tunjukkan QR ini ke petugas loket
+                    </div>
+                    <p class="text-xs text-amber-600">
+                        Atau customer bisa scan QR yang ada di loket
+                    </p>
+                    @if($queue->expired_at)
+                    <p class="text-xs text-amber-700 font-semibold mt-1">
+                        Berlaku s.d. {{ $queue->expired_at->format('H:i') }}
+                    </p>
+                    @endif
+                </div>
+
+                <div class="flex justify-center mb-3">
+                    <div class="bg-white p-3 rounded-2xl shadow-sm border-2 border-amber-100" id="qr-wrapper">
+                        <div id="qr-canvas"></div>
+                    </div>
+                </div>
+
+                <p class="text-center text-amber-800 font-mono font-black text-2xl tracking-widest">{{ $queue->queue_number }}</p>
+            </div>
+            @endif
+
+            {{-- Called alert --}}
+            @if($queue->isCalled())
+            <div class="bg-purple-50 border-2 border-purple-300 rounded-2xl p-4 animate-pulse">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-purple-900 font-bold text-sm">Nomor Anda Dipanggil!</p>
+                        <p class="text-purple-700 text-xs">Segera menuju kursi barber <strong>{{ $queue->barber->name }}</strong></p>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            {{-- Timeline --}}
+            <div class="border-t border-gray-100 pt-4">
+                <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-3">Riwayat Status</p>
+                <div class="space-y-2.5">
+                    @php
+                        $timelineItems = [
+                            ['dot' => 'bg-green-400', 'label' => 'Antrean dibuat', 'time' => $queue->created_at],
+                            $queue->checked_in_at ? ['dot' => 'bg-blue-400', 'label' => 'Check-in tervalidasi', 'time' => $queue->checked_in_at] : null,
+                            $queue->called_at ? ['dot' => 'bg-purple-400', 'label' => 'Dipanggil barber', 'time' => $queue->called_at] : null,
+                            $queue->completed_at ? ['dot' => 'bg-emerald-400', 'label' => 'Layanan selesai', 'time' => $queue->completed_at] : null,
+                        ];
+                    @endphp
+                    @foreach(array_filter($timelineItems) as $item)
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full {{ $item['dot'] }} flex-shrink-0"></div>
+                        <span class="text-sm text-gray-500 flex-1">{{ $item['label'] }}</span>
+                        <span class="text-sm font-semibold text-gray-800">{{ $item['time']->format('H:i') }}</span>
+                    </div>
+                    @endforeach
+                    @if($queue->isPending() && $queue->expired_at)
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-red-300 flex-shrink-0"></div>
+                        <span class="text-sm text-gray-400 flex-1">Kedaluwarsa pada</span>
+                        <span class="text-sm font-semibold text-red-500">{{ $queue->expired_at->format('H:i') }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Back button --}}
+            <a href="{{ route('customer.dashboard') }}"
+               class="w-full flex items-center justify-center gap-2 bg-gray-100 text-gray-700 font-semibold py-3 rounded-2xl hover:bg-gray-200 transition-colors text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Kembali ke Dashboard
+            </a>
+        </div>
+    </div>
+
+    {{-- Notes --}}
+    @if($queue->notes)
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+        <p class="text-xs text-gray-400 font-bold uppercase tracking-wide mb-1">Catatan</p>
+        <p class="text-sm text-gray-700">{{ $queue->notes }}</p>
+    </div>
+    @endif
+</div>
+
+@push('scripts')
+<script>
+@if($queue->isPending())
+// Generate QR Code
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    new QRCode(document.getElementById('qr-canvas'), {
+        text: "{{ $queue->qr_checkin_url }}",
+        width: 200,
+        height: 200,
+        colorDark: '#1a1a1a',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H,
+    });
+});
+@endif
+
+@if($queue->isActive_or_Pending())
+// Live polling every 10 seconds
+const pollUrl = "{{ route('customer.queue.poll', $queue) }}";
+let prevStatus = "{{ $queue->status }}";
+
+async function pollStatus() {
+    try {
+        const res = await fetch(pollUrl);
+        const data = await res.json();
+
+        if (data.status !== prevStatus) {
+            prevStatus = data.status;
+            if (data.status === 'called') {
+                // Show vibrate alert before reload
+                if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+            }
+            window.location.reload();
+        }
+
+        // Update "ahead" counter
+        const aheadEl = document.getElementById('queues-ahead');
+        if (aheadEl && data.queues_ahead !== undefined) {
+            aheadEl.textContent = data.queues_ahead > 0
+                ? data.queues_ahead + ' orang'
+                : 'Hampir tiba!';
+        }
+    } catch(e) { /* silent */ }
+}
+setInterval(pollStatus, 10000);
+@endif
+</script>
+@endpush
+@endsection

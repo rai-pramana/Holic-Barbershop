@@ -1,0 +1,243 @@
+<?php
+
+namespace App\Http\Controllers\Customer;
+
+use App\Http\Controllers\Controller;
+use App\Models\Barber;
+use App\Models\Branch;
+use App\Models\Queue;
+use App\Models\Service;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+
+class QueueController extends Controller
+{
+    /**
+     * Customer dashboard — show active queue or branch selection
+     */
+    public function dashboard(): View
+    {
+        Queue::expirePending();
+
+        $user = Auth::user();
+
+        // Get all active queues for this customer across all branches
+        $activeQueues = Queue::with(['branch', 'barber', 'service'])
+            ->where('customer_id', $user->id)
+            ->whereIn('status', ['pending', 'active', 'called'])
+            ->whereDate('created_at', today())
+            ->get();
+
+        $branches = Branch::where('is_active', true)->get();
+
+        return view('customer.dashboard', compact('activeQueues', 'branches'));
+    }
+
+    /**
+     * Show form to take a queue at a specific branch
+     */
+    public function take(Branch $branch): View
+    {
+        $user = Auth::user();
+
+        // Check for existing active queue at this branch
+        $existingQueue = $user->activeQueue($branch->id);
+        if ($existingQueue) {
+            return redirect()->route('customer.queue.status', $existingQueue)
+                ->with('info', 'Anda sudah memiliki antrean aktif di cabang ini.');
+        }
+
+        $services = Service::where('branch_id', $branch->id)
+            ->where('is_active', true)
+            ->get();
+
+        $barbers = Barber::query()
+            ->where('branch_id', $branch->id)
+            ->where('is_available', true)
+            ->get()
+            ->map(function ($barber) {
+                $barber->pending_count = $barber->getPendingQueueCount();
+                return $barber;
+            })
+            ->sortBy('pending_count');
+
+        return view('customer.queue.take', compact('branch', 'services', 'barbers'));
+    }
+
+    /**
+     * Store a new queue
+     */
+    public function store(Request $request, Branch $branch): RedirectResponse
+    {
+        $user = Auth::user();
+
+        // Prevent double queue
+        $existingQueue = $user->activeQueue($branch->id);
+        if ($existingQueue) {
+            return redirect()->route('customer.queue.status', $existingQueue)
+                ->with('info', 'Anda sudah memiliki antrean aktif di cabang ini.');
+        }
+
+        $request->validate([
+            'service_id' => 'required|exists:services,id',
+            'barber_id'  => 'nullable|exists:barbers,id',
+            'notes'      => 'nullable|string|max:500',
+        ]);
+
+        // Validate service belongs to this branch
+        $service = Service::where('id', $request->service_id)
+            ->where('branch_id', $branch->id)
+            ->firstOrFail();
+
+        // Select barber: manual or auto (fastest)
+        if ($request->filled('barber_id')) {
+            $barber = Barber::where('id', $request->barber_id)
+                ->where('branch_id', $branch->id)
+                ->where('is_available', true)
+                ->firstOrFail();
+        } else {
+            // Auto-assign: barber with fewest pending/active queues
+            $barber = Barber::query()
+                ->where('branch_id', $branch->id)
+                ->where('is_available', true)
+                ->get()
+                ->sortBy(fn($b) => $b->getPendingQueueCount())
+                ->first();
+
+            if (!$barber) {
+                return back()->with('error', 'Tidak ada barber yang tersedia saat ini.');
+            }
+        }
+
+        $queueNumber = null;
+        $queue = null;
+
+        \Illuminate\Support\Facades\DB::transaction(function () use (
+            $user, $branch, $barber, $service, $request, &$queueNumber, &$queue
+        ) {
+            $queueNumber = $branch->getNextQueueNumber();
+
+            $queue = Queue::create([
+                'queue_number' => $queueNumber,
+                'customer_id'  => $user->id,
+                'barber_id'    => $barber->id,
+                'service_id'   => $service->id,
+                'branch_id'    => $branch->id,
+                'status'       => Queue::STATUS_PENDING,
+                'notes'        => $request->notes,
+                'expired_at'   => now()->addMinutes(60),
+            ]);
+        });
+
+        return redirect()->route('customer.queue.status', $queue)
+            ->with('success', "Antrean berhasil dibuat! Nomor antrean Anda: {$queueNumber}");
+    }
+
+    /**
+     * Show queue status page (with auto-polling)
+     */
+    public function status(Queue $queue): View
+    {
+        // Ensure the queue belongs to the authenticated user
+        if ($queue->customer_id !== Auth::id()) {
+            abort(403);
+        }
+
+        Queue::expirePending();
+
+        $queue->load(['branch', 'barber', 'service']);
+
+        // Queues ahead in same barber queue
+        $queuesAhead = Queue::where('barber_id', $queue->barber_id)
+            ->whereIn('status', ['active', 'called'])
+            ->whereDate('created_at', today())
+            ->where('id', '<', $queue->id)
+            ->count();
+
+        $pendingAhead = Queue::where('barber_id', $queue->barber_id)
+            ->where('status', 'pending')
+            ->whereDate('created_at', today())
+            ->where('id', '<', $queue->id)
+            ->count();
+
+        $waitMinutes = ($queuesAhead + $pendingAhead) * ($queue->service->duration_minutes ?? 30);
+
+        return view('customer.queue.status', compact('queue', 'queuesAhead', 'pendingAhead', 'waitMinutes'));
+    }
+
+    /**
+     * AJAX: Poll queue status for real-time updates
+     */
+    public function poll(Queue $queue): JsonResponse
+    {
+        if ($queue->customer_id !== Auth::id()) {
+            abort(403);
+        }
+
+        Queue::expirePending();
+        $queue->refresh();
+        $queue->load(['barber', 'service']);
+
+        $queuesAhead = Queue::where('barber_id', $queue->barber_id)
+            ->whereIn('status', ['active', 'called'])
+            ->whereDate('created_at', today())
+            ->where('id', '<', $queue->id)
+            ->count();
+
+        return response()->json([
+            'status'       => $queue->status,
+            'status_label' => $queue->status_label,
+            'queues_ahead' => $queuesAhead,
+            'called_at'    => $queue->called_at?->toIso8601String(),
+            'completed_at' => $queue->completed_at?->toIso8601String(),
+        ]);
+    }
+
+    /**
+     * Customer scans the admin loket QR code → auto check-in.
+     * URL: /customer/checkin/{branch}
+     */
+    public function scanCheckin(Branch $branch): RedirectResponse
+    {
+        Queue::expirePending();
+
+        $user = Auth::user();
+
+        // Find today's pending queue at this branch
+        $queue = Queue::where('customer_id', $user->id)
+            ->where('branch_id', $branch->id)
+            ->where('status', Queue::STATUS_PENDING)
+            ->whereDate('created_at', today())
+            ->latest()
+            ->first();
+
+        if (! $queue) {
+            // Check if already validated today
+            $activeQueue = Queue::where('customer_id', $user->id)
+                ->where('branch_id', $branch->id)
+                ->whereIn('status', [Queue::STATUS_ACTIVE, Queue::STATUS_CALLED])
+                ->whereDate('created_at', today())
+                ->first();
+
+            if ($activeQueue) {
+                return redirect()->route('customer.queue.status', $activeQueue)
+                    ->with('info', '✅ Anda sudah tervalidasi. Silakan tunggu dipanggil.');
+            }
+
+            return redirect()->route('customer.dashboard')
+                ->with('error', "Tidak ada antrean aktif di cabang {$branch->name} hari ini. Silakan ambil antrean terlebih dahulu.");
+        }
+
+        // Auto validate
+        $queue->update([
+            'status'        => Queue::STATUS_ACTIVE,
+            'checked_in_at' => now(),
+        ]);
+
+        return redirect()->route('customer.queue.status', $queue)
+            ->with('success', "✅ Check-in berhasil di {$branch->name}! Nomor antrean Anda: {$queue->queue_number}. Silakan tunggu dipanggil.");
+    }
+}
