@@ -169,4 +169,40 @@ class QueueController extends Controller
 
         return response()->json($data);
     }
+
+    /**
+     * AJAX: Poll for new queues — used by admin notification system
+     */
+    public function notificationPoll(): JsonResponse
+    {
+        $today = today();
+
+        $pending   = Queue::whereDate('created_at', $today)->where('status', 'pending')->count();
+        $active    = Queue::whereDate('created_at', $today)->where('status', 'active')->count();
+        $called    = Queue::whereDate('created_at', $today)->where('status', 'called')->count();
+        $completed = Queue::whereDate('created_at', $today)->where('status', 'completed')->count();
+        $total     = Queue::whereDate('created_at', $today)->count();
+
+        // Latest queue for notification detail
+        $latest = Queue::with('customer', 'branch')
+            ->whereDate('created_at', $today)
+            ->latest()
+            ->first();
+
+        return response()->json([
+            'total'     => $total,
+            'pending'   => $pending,
+            'active'    => $active,
+            'called'    => $called,
+            'completed' => $completed,
+            'latest'    => $latest ? [
+                'id'           => $latest->id,
+                'queue_number' => $latest->queue_number,
+                'customer'     => $latest->customer->name ?? '-',
+                'branch'       => $latest->branch->name ?? '-',
+                'status'       => $latest->status,
+                'created_at'   => $latest->created_at->toISOString(),
+            ] : null,
+        ]);
+    }
 }

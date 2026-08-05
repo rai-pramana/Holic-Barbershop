@@ -51,6 +51,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('queues/{queue}/call', [Admin\QueueController::class, 'call'])->name('queues.call');
         Route::post('queues/{queue}/complete', [Admin\QueueController::class, 'complete'])->name('queues.complete');
         Route::post('queues/{queue}/skip', [Admin\QueueController::class, 'skip'])->name('queues.skip');
+        Route::get('notifications/poll', [Admin\QueueController::class, 'notificationPoll'])->name('notifications.poll');
 
         // ── Loket Check-in ────────────────────────────────────────────────
         Route::get('checkin', [Admin\CheckinController::class, 'index'])->name('checkin.index');

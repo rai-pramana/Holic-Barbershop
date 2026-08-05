@@ -63,10 +63,24 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+
+        /* Toast animations */
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .animate-slide-in { animation: slideIn 0.3s ease-out; transition: opacity 0.3s, transform 0.3s; }
     </style>
     @stack('styles')
 </head>
 <body class="h-full bg-slate-100 flex">
+
+{{-- Notification permission banner --}}
+<div id="notif-banner" class="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-3 text-sm font-medium items-center justify-center gap-3 shadow-lg" style="display:none">
+    <span>🔔 Aktifkan notifikasi untuk mendapat pemberitahuan antrean baru</span>
+    <button onclick="requestNotifPermission()" class="bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-1 rounded-lg transition-colors text-xs ml-3">Aktifkan</button>
+    <button onclick="this.parentElement.style.display='none'" class="ml-2 text-white/70 hover:text-white">✕</button>
+</div>
+
+{{-- Toast container --}}
+<div id="toast-container" class="fixed top-4 right-4 z-[60] flex flex-col gap-3 max-w-sm"></div>
 
 {{-- Mobile overlay --}}
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 lg:hidden" onclick="toggleSidebar()"></div>
@@ -331,6 +345,110 @@ document.addEventListener('keydown', e => {
     }
 
     setInterval(pollContent, POLL_INTERVAL);
+})();
+
+// ─── Admin Notification System ──────────────────────────────────────────────
+(function() {
+    const NOTIF_URL = '{{ route("admin.notifications.poll") }}';
+    const NOTIF_INTERVAL = 10000; // 10 seconds
+    let lastTotal = -1; // -1 = first load
+    let notifPermission = Notification.permission;
+
+    // Request notification permission
+    if (notifPermission === 'default') {
+        // Show permission banner
+        const banner = document.getElementById('notif-banner');
+        if (banner) banner.style.display = 'flex';
+    }
+
+    // Audio context for notification sound
+    function playNotifSound() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            // Notification chime: two short beeps
+            [0, 0.2].forEach(offset => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.value = 880;
+                gain.gain.value = 0.3;
+                osc.start(ctx.currentTime + offset);
+                osc.stop(ctx.currentTime + offset + 0.15);
+            });
+        } catch(e) { /* audio not supported */ }
+    }
+
+    // Show toast notification in-page
+    function showToast(message) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'flex items-center gap-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl px-4 py-3 shadow-2xl text-sm font-medium animate-slide-in';
+        toast.innerHTML = `
+            <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
+            <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    async function pollNotifications() {
+        try {
+            const res = await fetch(NOTIF_URL);
+            if (!res.ok) return;
+            const data = await res.json();
+
+            // First load — just store the count, don't notify
+            if (lastTotal === -1) {
+                lastTotal = data.total;
+                return;
+            }
+
+            // New queue detected
+            if (data.total > lastTotal && data.latest) {
+                const diff = data.total - lastTotal;
+                const msg = `🔔 ${diff} antrean baru! ${data.latest.customer} — ${data.latest.branch} (${data.latest.queue_number})`;
+
+                // In-page toast
+                showToast(msg);
+
+                // Audio
+                playNotifSound();
+
+                // Browser notification (if permitted)
+                if (Notification.permission === 'granted') {
+                    new Notification('HOLIC Barbershop — Antrean Baru', {
+                        body: `${data.latest.customer} mengambil antrean ${data.latest.queue_number} di ${data.latest.branch}`,
+                        icon: '/icons/icon-192.png',
+                        tag: 'new-queue-' + data.latest.id,
+                    });
+                }
+            }
+
+            lastTotal = data.total;
+        } catch(e) { /* silent */ }
+    }
+
+    setInterval(pollNotifications, NOTIF_INTERVAL);
+    // Initial poll after 2s
+    setTimeout(pollNotifications, 2000);
+
+    // Expose permission request
+    window.requestNotifPermission = function() {
+        Notification.requestPermission().then(p => {
+            notifPermission = p;
+            const banner = document.getElementById('notif-banner');
+            if (banner) banner.style.display = 'none';
+        });
+    };
 })();
 </script>
 @stack('scripts')

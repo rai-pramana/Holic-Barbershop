@@ -374,15 +374,63 @@ async function handleUnsubscribe(swReg, sub) {
 const pollUrl  = "{{ route('customer.queue.poll', $queue) }}";
 let prevStatus = "{{ $queue->status }}";
 
+// Request notification permission on first visit
+if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+}
+
+// Notification sound
+function playCustomerNotifSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const freqs = [523, 659, 784]; // C5, E5, G5 — pleasant chime
+        freqs.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.value = 0.25;
+            osc.start(ctx.currentTime + i * 0.15);
+            osc.stop(ctx.currentTime + i * 0.15 + 0.3);
+        });
+    } catch(e) {}
+}
+
+const statusMessages = {
+    'called':    { title: '📢 Giliran Anda!', body: 'Silakan menuju barber Anda sekarang.' },
+    'active':    { title: '✅ Check-in Berhasil', body: 'Antrean Anda sekarang aktif. Tunggu dipanggil.' },
+    'completed': { title: '🎉 Selesai!', body: 'Layanan selesai. Terima kasih telah berkunjung!' },
+    'skipped':   { title: '⚠️ Antrean Dilewati', body: 'Antrean Anda dilewati. Hubungi petugas jika ada kesalahan.' },
+};
+
 async function pollStatus() {
     try {
         const res  = await fetch(pollUrl);
         const data = await res.json();
 
         if (data.status !== prevStatus) {
-            prevStatus = data.status;
-            if (data.status === 'called' && navigator.vibrate) {
-                navigator.vibrate([300, 100, 300]);
+            const newStatus = data.status;
+
+            // Send browser notification
+            const msgData = statusMessages[newStatus];
+            if (msgData) {
+                playCustomerNotifSound();
+
+                if (Notification.permission === 'granted') {
+                    new Notification(msgData.title, {
+                        body: msgData.body,
+                        icon: '/icons/icon-192.png',
+                        tag: 'queue-status-{{ $queue->id }}',
+                        renotify: true,
+                    });
+                }
+            }
+
+            prevStatus = newStatus;
+            if (newStatus === 'called' && navigator.vibrate) {
+                navigator.vibrate([300, 100, 300, 100, 300]);
             }
             window.location.reload();
         }
