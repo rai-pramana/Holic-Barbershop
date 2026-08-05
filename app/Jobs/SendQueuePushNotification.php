@@ -34,6 +34,10 @@ class SendQueuePushNotification implements ShouldQueue
                 '🔔 Nomor Anda Dipanggil!',
                 "Antrean {$queue->queue_number} — Segera ke kursi barber {$queue->barber->name}.",
             ],
+            'active' => [
+                '✅ Check-in Berhasil!',
+                "Antrean {$queue->queue_number} di {$queue->branch->name} aktif. Silakan tunggu dipanggil.",
+            ],
             'completed' => [
                 '✅ Layanan Selesai',
                 "Terima kasih telah mengunjungi {$queue->branch->name}! Sampai jumpa lagi.",

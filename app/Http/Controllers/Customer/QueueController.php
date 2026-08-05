@@ -237,6 +237,13 @@ class QueueController extends Controller
             'checked_in_at' => now(),
         ]);
 
+        // Send push notification (confirmed check-in)
+        try {
+            dispatchSync(new \App\Jobs\SendQueuePushNotification($queue->id, 'active'));
+        } catch (\Throwable $e) {
+            // Silent — notification failure should not block check-in
+        }
+
         return redirect()->route('customer.queue.status', $queue)
             ->with('success', "✅ Check-in berhasil di {$branch->name}! Nomor antrean Anda: {$queue->queue_number}. Silakan tunggu dipanggil.");
     }

@@ -94,8 +94,8 @@ class QueueController extends Controller
             'called_at' => now(),
         ]);
 
-        // Send push notification to customer
-        dispatch(new SendQueuePushNotification($queue->id, 'called'));
+        // Send push notification to customer (sync — no queue worker needed)
+        dispatchSync(new SendQueuePushNotification($queue->id, 'called'));
 
         return back()->with('success', "🔔 Antrean #{$queue->queue_number} ({$queue->customer->name}) berhasil dipanggil.");
     }
@@ -114,8 +114,8 @@ class QueueController extends Controller
             'completed_at' => now(),
         ]);
 
-        // Send push notification to customer
-        dispatch(new SendQueuePushNotification($queue->id, 'completed'));
+        // Send push notification to customer (sync — no queue worker needed)
+        dispatchSync(new SendQueuePushNotification($queue->id, 'completed'));
 
         return back()->with('success', "✅ Antrean #{$queue->queue_number} telah selesai.");
     }
@@ -131,8 +131,8 @@ class QueueController extends Controller
 
         $queue->update(['status' => Queue::STATUS_SKIPPED]);
 
-        // Send push notification to customer
-        dispatch(new SendQueuePushNotification($queue->id, 'skipped'));
+        // Send push notification to customer (sync — no queue worker needed)
+        dispatchSync(new SendQueuePushNotification($queue->id, 'skipped'));
 
         return back()->with('success', "⚠️ Antrean #{$queue->queue_number} telah dilewati.");
     }
