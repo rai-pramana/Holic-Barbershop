@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#ec4899">
+    <link rel="manifest" href="/manifest.json">
     <title>@yield('title', 'HOLIC Barbershop') — HOLIC Barbershop</title>
     <meta name="description" content="@yield('description', 'Sistem Antrean Online HOLIC Barbershop — Potong rambut tanpa ribet, antri dari mana saja.')">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -208,6 +210,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// ─── Service Worker Registration (for PWA + Push Notifications) ────────────
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
 
 // ─── Live Content Polling ──────────────────────────────────────────────────
 (function() {
