@@ -29,6 +29,24 @@
         </div>
     </div>
 
+    {{-- Push Notification Banner --}}
+    <div id="push-banner" class="hidden bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-4 text-white shadow-md">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                </div>
+                <div>
+                    <p class="font-bold text-sm" id="push-title">Aktifkan Notifikasi HP</p>
+                    <p class="text-xs text-indigo-100" id="push-desc">Dapatkan notifikasi otomatis saat antrean Anda dipanggil meskipun HP dikunci/aplikasi ditutup.</p>
+                </div>
+            </div>
+            <button id="push-btn" class="w-full sm:w-auto px-4 py-2 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-xl shadow transition-colors flex-shrink-0">
+                Aktifkan Sekarang
+            </button>
+        </div>
+    </div>
+
     {{-- Active Queues --}}
     @if($activeQueues->isNotEmpty())
     <section>
@@ -191,46 +209,76 @@ const STATUS_MESSAGES = {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
     if (!VAPID_PUBLIC_KEY) return;
 
+    const banner = document.getElementById('push-banner');
+    const title  = document.getElementById('push-title');
+    const desc   = document.getElementById('push-desc');
+    const btn    = document.getElementById('push-btn');
+
     try {
         const swReg = await navigator.serviceWorker.register('/sw.js');
         await navigator.serviceWorker.ready;
 
         const permission = Notification.permission;
-        if (permission === 'denied') return;
+        if (permission === 'denied') {
+            if (banner) banner.classList.add('hidden');
+            return;
+        }
 
         let sub = await swReg.pushManager.getSubscription();
 
         if (sub) {
-            // Re-sync subscription to server (in case VAPID keys changed)
+            // Already subscribed
             await fetch(SUBSCRIBE_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
                 body: JSON.stringify(sub.toJSON()),
             }).catch(() => {});
-        } else if (permission === 'granted') {
-            // Already granted, subscribe now
-            sub = await swReg.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-            });
-            await fetch(SUBSCRIBE_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-                body: JSON.stringify(sub.toJSON()),
-            }).catch(() => {});
+
+            if (banner) {
+                banner.classList.remove('hidden');
+                if (title) title.textContent = 'Notifikasi HP Aktif ✓';
+                if (desc)  desc.textContent  = 'Anda akan menerima notifikasi di layar HP saat antrean dipanggil.';
+                if (btn) {
+                    btn.textContent = 'Notifikasi Aktif';
+                    btn.disabled = true;
+                    btn.classList.replace('bg-white', 'bg-white/20');
+                    btn.classList.replace('text-indigo-700', 'text-white');
+                }
+            }
         } else {
-            // Ask permission
-            const result = await Notification.requestPermission();
-            if (result === 'granted') {
-                sub = await swReg.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-                });
-                await fetch(SUBSCRIBE_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-                    body: JSON.stringify(sub.toJSON()),
-                }).catch(() => {});
+            // Not subscribed yet — show banner to prompt user
+            if (banner) banner.classList.remove('hidden');
+
+            if (btn) {
+                btn.onclick = async () => {
+                    btn.disabled = true;
+                    btn.textContent = 'Memproses...';
+                    const result = await Notification.requestPermission();
+                    if (result === 'granted') {
+                        try {
+                            const newSub = await swReg.pushManager.subscribe({
+                                userVisibleOnly: true,
+                                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+                            });
+                            await fetch(SUBSCRIBE_URL, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+                                body: JSON.stringify(newSub.toJSON()),
+                            });
+                            title.textContent = 'Notifikasi HP Aktif ✓';
+                            desc.textContent  = 'Anda akan menerima notifikasi di layar HP saat antrean dipanggil.';
+                            btn.textContent   = 'Notifikasi Aktif';
+                            btn.classList.replace('bg-white', 'bg-white/20');
+                            btn.classList.replace('text-indigo-700', 'text-white');
+                        } catch(err) {
+                            console.error('Subscription error:', err);
+                            btn.textContent = 'Coba Lagi';
+                            btn.disabled = false;
+                        }
+                    } else {
+                        btn.textContent = 'Izin Ditolak';
+                    }
+                };
             }
         }
     } catch(e) {
