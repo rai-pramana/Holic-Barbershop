@@ -180,6 +180,27 @@
                 </div>
             </div>
 
+            {{-- Push Notification Subscribe --}}
+            @if($queue->isActive_or_Pending())
+            <div id="push-banner" class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 hidden">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-bold text-indigo-900" id="push-title">Aktifkan Notifikasi</p>
+                        <p class="text-xs text-indigo-600" id="push-desc">Dapat notifikasi otomatis saat dipanggil</p>
+                    </div>
+                    <button id="push-btn" onclick="handlePushSubscription()"
+                            class="flex-shrink-0 bg-indigo-600 text-white text-xs font-bold px-3 py-2 rounded-xl hover:bg-indigo-700 active:scale-95 transition-all">
+                        Aktifkan
+                    </button>
+                </div>
+            </div>
+            @endif
+
             {{-- Back button --}}
             <a href="{{ route('customer.dashboard') }}"
                class="w-full flex items-center justify-center gap-2 bg-gray-100 text-gray-700 font-semibold py-3 rounded-2xl hover:bg-gray-200 transition-colors text-sm">
@@ -200,43 +221,153 @@
 
 @push('scripts')
 <script>
-@if($queue->isPending())
-// Generate QR Code
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    new QRCode(document.getElementById('qr-canvas'), {
-        text: "{{ $queue->qr_checkin_url }}",
-        width: 200,
-        height: 200,
-        colorDark: '#1a1a1a',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H,
-    });
-});
-@endif
+// ─── Config ──────────────────────────────────────────────────────────────────
+const VAPID_PUBLIC_KEY = "{{ config('webpush.vapid.public_key') }}";
+const SUBSCRIBE_URL    = "{{ route('customer.push.subscribe') }}";
+const UNSUBSCRIBE_URL  = "{{ route('customer.push.unsubscribe') }}";
+const CSRF_TOKEN       = document.querySelector('meta[name="csrf-token"]')?.content;
 
+// ─── Service Worker + Push Subscribe ─────────────────────────────────────────
 @if($queue->isActive_or_Pending())
-// Live polling every 10 seconds
-const pollUrl = "{{ route('customer.queue.poll', $queue) }}";
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        // Browser not supported — hide banner
+        return;
+    }
+
+    // Register service worker
+    let swReg;
+    try {
+        swReg = await navigator.serviceWorker.register('/sw.js');
+    } catch (e) {
+        console.warn('SW register failed:', e);
+        return;
+    }
+
+    const banner = document.getElementById('push-banner');
+    const btn    = document.getElementById('push-btn');
+    const title  = document.getElementById('push-title');
+    const desc   = document.getElementById('push-desc');
+
+    // Check current permission / subscription state
+    const permission = Notification.permission;
+    const sub = await swReg.pushManager.getSubscription();
+
+    if (permission === 'denied') {
+        // User explicitly blocked — don't show banner
+        return;
+    }
+
+    if (sub) {
+        // Already subscribed → show "on" state
+        banner.classList.remove('hidden');
+        title.textContent = 'Notifikasi Aktif ✓';
+        desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
+        btn.textContent   = 'Matikan';
+        btn.classList.replace('bg-indigo-600', 'bg-gray-400');
+        btn.onclick = () => handleUnsubscribe(swReg, sub);
+    } else {
+        // Not subscribed → show subscribe prompt
+        banner.classList.remove('hidden');
+    }
+});
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const raw     = window.atob(base64);
+    return new Uint8Array([...raw].map(c => c.charCodeAt(0)));
+}
+
+async function handlePushSubscription() {
+    const swReg = await navigator.serviceWorker.ready;
+    const btn   = document.getElementById('push-btn');
+
+    btn.disabled    = true;
+    btn.textContent = '...';
+
+    try {
+        const sub = await swReg.pushManager.subscribe({
+            userVisibleOnly:      true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        });
+
+        // Save to server
+        const res = await fetch(SUBSCRIBE_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+            body:    JSON.stringify(sub.toJSON()),
+        });
+
+        if (res.ok) {
+            const title = document.getElementById('push-title');
+            const desc  = document.getElementById('push-desc');
+            const banner = document.getElementById('push-banner');
+
+            title.textContent = 'Notifikasi Aktif ✓';
+            desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
+            btn.textContent   = 'Matikan';
+            btn.disabled      = false;
+            btn.classList.replace('bg-indigo-600', 'bg-gray-400');
+            btn.onclick = () => handleUnsubscribe(swReg, sub);
+
+            // Show brief success style
+            banner.classList.add('bg-green-50', 'border-green-200');
+            banner.classList.remove('bg-indigo-50', 'border-indigo-200');
+            setTimeout(() => {
+                banner.classList.remove('bg-green-50', 'border-green-200');
+                banner.classList.add('bg-indigo-50', 'border-indigo-200');
+            }, 2000);
+        } else {
+            throw new Error('Server rejected subscription');
+        }
+    } catch (e) {
+        console.error('Subscribe failed:', e);
+        btn.disabled    = false;
+        btn.textContent = 'Coba Lagi';
+        if (e.name === 'NotAllowedError') {
+            document.getElementById('push-desc').textContent = 'Izin notifikasi ditolak di browser.';
+        }
+    }
+}
+
+async function handleUnsubscribe(swReg, sub) {
+    const btn = document.getElementById('push-btn');
+    btn.disabled    = true;
+    btn.textContent = '...';
+
+    await sub.unsubscribe();
+    await fetch(UNSUBSCRIBE_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+        body:    JSON.stringify({ endpoint: sub.endpoint }),
+    });
+
+    document.getElementById('push-title').textContent = 'Aktifkan Notifikasi';
+    document.getElementById('push-desc').textContent  = 'Dapat notifikasi otomatis saat dipanggil';
+    btn.textContent = 'Aktifkan';
+    btn.disabled    = false;
+    btn.classList.replace('bg-gray-400', 'bg-indigo-600');
+    btn.onclick = handlePushSubscription;
+}
+
+// ─── Live Polling ──────────────────────────────────────────────────────────────
+const pollUrl  = "{{ route('customer.queue.poll', $queue) }}";
 let prevStatus = "{{ $queue->status }}";
 
 async function pollStatus() {
     try {
-        const res = await fetch(pollUrl);
+        const res  = await fetch(pollUrl);
         const data = await res.json();
 
         if (data.status !== prevStatus) {
             prevStatus = data.status;
-            if (data.status === 'called') {
-                // Show vibrate alert before reload
-                if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+            if (data.status === 'called' && navigator.vibrate) {
+                navigator.vibrate([300, 100, 300]);
             }
             window.location.reload();
         }
 
-        // Update "ahead" counter
         const aheadEl = document.getElementById('queues-ahead');
         if (aheadEl && data.queues_ahead !== undefined) {
             aheadEl.textContent = data.queues_ahead > 0
@@ -246,6 +377,21 @@ async function pollStatus() {
     } catch(e) { /* silent */ }
 }
 setInterval(pollStatus, 10000);
+@endif
+
+@if($queue->isPending())
+// ─── QR Code ──────────────────────────────────────────────────────────────────
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    new QRCode(document.getElementById('qr-canvas'), {
+        text: "{{ $queue->qr_checkin_url }}",
+        width: 200, height: 200,
+        colorDark: '#1a1a1a', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H,
+    });
+});
 @endif
 </script>
 @endpush
