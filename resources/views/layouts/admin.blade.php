@@ -237,9 +237,15 @@
     @endif
 
     {{-- Page Content --}}
-    <main class="flex-1 p-4 md:p-8">
+    <main class="flex-1 p-4 md:p-8" id="live-content">
         @yield('content')
     </main>
+</div>
+
+{{-- Live sync indicator --}}
+<div id="sync-dot" class="fixed bottom-4 right-4 z-50 flex items-center gap-2 bg-white/90 backdrop-blur border border-gray-200 rounded-full px-3 py-1.5 shadow-lg text-xs font-medium text-gray-500 opacity-0 transition-opacity duration-300 pointer-events-none">
+    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+    <span>Sinkronisasi...</span>
 </div>
 
 <script>
@@ -257,6 +263,75 @@ document.addEventListener('keydown', e => {
         if (sidebar.classList.contains('open')) toggleSidebar();
     }
 });
+
+// ─── Live Content Polling ──────────────────────────────────────────────────
+(function() {
+    const POLL_INTERVAL = 8000; // 8 seconds
+    let isPaused = false;
+
+    // Pause polling when user is interacting with forms/modals
+    document.addEventListener('focusin', e => {
+        if (e.target.matches('input, textarea, select, [contenteditable]')) isPaused = true;
+    });
+    document.addEventListener('focusout', e => {
+        if (e.target.matches('input, textarea, select, [contenteditable]')) isPaused = false;
+    });
+
+    // Also pause if any modal/dropdown is open
+    document.addEventListener('click', e => {
+        if (e.target.closest('[data-no-poll]')) isPaused = true;
+    });
+
+    async function pollContent() {
+        if (isPaused || document.hidden) return;
+
+        try {
+            const res = await fetch(window.location.href, {
+                headers: { 'X-Live-Poll': '1' }
+            });
+            if (!res.ok) return;
+
+            const html = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContent = doc.querySelector('#live-content');
+
+            if (!newContent) return;
+
+            const current = document.getElementById('live-content');
+
+            // Only update if content actually changed
+            if (current.innerHTML.trim() !== newContent.innerHTML.trim()) {
+                // Show sync indicator
+                const dot = document.getElementById('sync-dot');
+                dot.style.opacity = '1';
+
+                // Preserve scroll position
+                const scrollY = window.scrollY;
+                current.innerHTML = newContent.innerHTML;
+                window.scrollTo(0, scrollY);
+
+                // Re-run any inline scripts in new content
+                current.querySelectorAll('script').forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    oldScript.replaceWith(newScript);
+                });
+
+                // Hide indicator after 1.5s
+                setTimeout(() => { dot.style.opacity = '0'; }, 1500);
+            }
+        } catch (e) {
+            // Network error — silent retry next interval
+        }
+    }
+
+    setInterval(pollContent, POLL_INTERVAL);
+})();
 </script>
 @stack('scripts')
 </body>
