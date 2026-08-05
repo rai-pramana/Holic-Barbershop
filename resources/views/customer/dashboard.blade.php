@@ -247,7 +247,11 @@ function urlBase64ToUint8Array(base64String) {
 // ─── Active Queue Status Polling (for browser notification on dashboard) ──────
 @if($activeQueues->isNotEmpty())
 (function() {
-    const queues = @json($activeQueues->map(fn($q) => ['id' => $q->id, 'status' => $q->status, 'pollUrl' => route('customer.queue.poll', $q)]));
+    const queues = [
+        @foreach($activeQueues as $q)
+        { id: {{ $q->id }}, status: '{{ $q->status }}', pollUrl: '{{ route('customer.queue.poll', $q) }}' },
+        @endforeach
+    ];
     const prevStatuses = {};
     queues.forEach(q => prevStatuses[q.id] = q.status);
 
@@ -255,7 +259,6 @@ function urlBase64ToUint8Array(base64String) {
         if (Notification.permission === 'granted') {
             new Notification(title, { body, icon: '/icons/icon-192.png', tag: 'queue-dashboard' });
         }
-        // Also play sound
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             [523, 659, 784].forEach((f, i) => {
@@ -277,7 +280,6 @@ function urlBase64ToUint8Array(base64String) {
                     const msg = STATUS_MESSAGES[data.status];
                     if (msg) showBrowserNotif(msg.title, msg.body);
                     prevStatuses[q.id] = data.status;
-                    // Reload content after 1s to reflect new status
                     setTimeout(() => window.location.reload(), 1000);
                 }
             } catch(e) {}
