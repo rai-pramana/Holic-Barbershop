@@ -95,7 +95,11 @@ class QueueController extends Controller
         ]);
 
         // Send push notification to customer (sync — no queue worker needed)
-        dispatchSync(new SendQueuePushNotification($queue->id, 'called'));
+        try {
+            dispatchSync(new SendQueuePushNotification($queue->id, 'called'));
+        } catch (\Throwable $e) {
+            // Silent — push failure must not block queue management
+        }
 
         return back()->with('success', "🔔 Antrean #{$queue->queue_number} ({$queue->customer->name}) berhasil dipanggil.");
     }
@@ -115,7 +119,11 @@ class QueueController extends Controller
         ]);
 
         // Send push notification to customer (sync — no queue worker needed)
-        dispatchSync(new SendQueuePushNotification($queue->id, 'completed'));
+        try {
+            dispatchSync(new SendQueuePushNotification($queue->id, 'completed'));
+        } catch (\Throwable $e) {
+            // Silent — push failure must not block queue management
+        }
 
         return back()->with('success', "✅ Antrean #{$queue->queue_number} telah selesai.");
     }
@@ -132,7 +140,11 @@ class QueueController extends Controller
         $queue->update(['status' => Queue::STATUS_SKIPPED]);
 
         // Send push notification to customer (sync — no queue worker needed)
-        dispatchSync(new SendQueuePushNotification($queue->id, 'skipped'));
+        try {
+            dispatchSync(new SendQueuePushNotification($queue->id, 'skipped'));
+        } catch (\Throwable $e) {
+            // Silent — push failure must not block queue management
+        }
 
         return back()->with('success', "⚠️ Antrean #{$queue->queue_number} telah dilewati.");
     }
