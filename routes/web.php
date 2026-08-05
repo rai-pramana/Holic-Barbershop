@@ -11,6 +11,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// ─── Health Check (Railway) ─────────────────────────────────────────────────
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok', 'app' => config('app.name')]);
+});
+
 // ─── Auth Routes ───────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
