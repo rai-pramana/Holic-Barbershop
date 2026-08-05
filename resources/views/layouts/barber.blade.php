@@ -63,9 +63,49 @@
 </div>
 @endif
 
-<main class="max-w-5xl mx-auto px-6 py-8">
+<main class="max-w-5xl mx-auto px-6 py-8" id="live-content">
     @yield('content')
 </main>
+
+<script>
+// ─── Live Content Polling ──────────────────────────────────────────────────
+(function() {
+    const POLL_INTERVAL = 8000;
+    let isPaused = false;
+
+    document.addEventListener('focusin', e => {
+        if (e.target.matches('input, textarea, select')) isPaused = true;
+    });
+    document.addEventListener('focusout', e => {
+        if (e.target.matches('input, textarea, select')) isPaused = false;
+    });
+
+    async function pollContent() {
+        if (isPaused || document.hidden) return;
+        try {
+            const res = await fetch(window.location.href, { headers: { 'X-Live-Poll': '1' } });
+            if (!res.ok) return;
+            const html = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContent = doc.querySelector('#live-content');
+            if (!newContent) return;
+            const current = document.getElementById('live-content');
+            if (current.innerHTML.trim() !== newContent.innerHTML.trim()) {
+                const scrollY = window.scrollY;
+                current.innerHTML = newContent.innerHTML;
+                window.scrollTo(0, scrollY);
+                current.querySelectorAll('script').forEach(s => {
+                    const ns = document.createElement('script');
+                    if (s.src) ns.src = s.src; else ns.textContent = s.textContent;
+                    s.replaceWith(ns);
+                });
+            }
+        } catch (e) {}
+    }
+    setInterval(pollContent, POLL_INTERVAL);
+})();
+</script>
 
 @stack('scripts')
 </body>

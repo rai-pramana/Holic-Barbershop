@@ -171,7 +171,7 @@
 @endif
 
 {{-- Main Content --}}
-<main class="@yield('main-class', 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8') flex-1">
+<main class="@yield('main-class', 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8') flex-1" id="live-content">
     @yield('content')
 </main>
 
@@ -208,6 +208,53 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// ─── Live Content Polling ──────────────────────────────────────────────────
+(function() {
+    const POLL_INTERVAL = 8000;
+    let isPaused = false;
+
+    document.addEventListener('focusin', e => {
+        if (e.target.matches('input, textarea, select, [contenteditable]')) isPaused = true;
+    });
+    document.addEventListener('focusout', e => {
+        if (e.target.matches('input, textarea, select, [contenteditable]')) isPaused = false;
+    });
+
+    async function pollContent() {
+        if (isPaused || document.hidden) return;
+
+        try {
+            const res = await fetch(window.location.href, {
+                headers: { 'X-Live-Poll': '1' }
+            });
+            if (!res.ok) return;
+
+            const html = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContent = doc.querySelector('#live-content');
+            if (!newContent) return;
+
+            const current = document.getElementById('live-content');
+            if (current.innerHTML.trim() !== newContent.innerHTML.trim()) {
+                const scrollY = window.scrollY;
+                current.innerHTML = newContent.innerHTML;
+                window.scrollTo(0, scrollY);
+
+                // Re-run inline scripts
+                current.querySelectorAll('script').forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    if (oldScript.src) newScript.src = oldScript.src;
+                    else newScript.textContent = oldScript.textContent;
+                    oldScript.replaceWith(newScript);
+                });
+            }
+        } catch (e) { /* silent */ }
+    }
+
+    setInterval(pollContent, POLL_INTERVAL);
+})();
 </script>
 
 @stack('scripts')
