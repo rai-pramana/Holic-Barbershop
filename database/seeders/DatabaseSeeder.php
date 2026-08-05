@@ -13,6 +13,11 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Skip if already seeded (idempotent — safe for Railway restarts)
+        if (User::where('email', 'admin@holic.com')->exists()) {
+            return;
+        }
+
         // ── Admin ───────────────────────────────────────────────────────────
         User::create([
             'name'     => 'Admin HOLIC',
