@@ -83,7 +83,9 @@
     async function pollContent() {
         if (isPaused || document.hidden) return;
         try {
-            const res = await fetch(window.location.href, { headers: { 'X-Live-Poll': '1' } });
+            const url = new URL(window.location.href);
+            url.searchParams.set('_poll', Date.now());
+            const res = await fetch(url.toString(), { headers: { 'X-Live-Poll': '1' }, cache: 'no-store' });
             if (!res.ok) return;
             const html = await res.text();
             const parser = new DOMParser();
