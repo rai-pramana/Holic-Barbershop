@@ -250,7 +250,6 @@ const CSRF_TOKEN       = document.querySelector('meta[name="csrf-token"]')?.cont
 @if($queue->isActive_or_Pending())
 document.addEventListener('DOMContentLoaded', async () => {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        // Browser not supported — hide banner
         return;
     }
 
@@ -258,6 +257,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let swReg;
     try {
         swReg = await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.ready;
     } catch (e) {
         console.warn('SW register failed:', e);
         return;
@@ -268,26 +268,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     const title  = document.getElementById('push-title');
     const desc   = document.getElementById('push-desc');
 
-    // Check current permission / subscription state
     const permission = Notification.permission;
-    const sub = await swReg.pushManager.getSubscription();
 
     if (permission === 'denied') {
-        // User explicitly blocked — don't show banner
+        // Blocked — hide banner
+        if (banner) banner.classList.add('hidden');
         return;
     }
 
+    // Check existing subscription
+    const sub = await swReg.pushManager.getSubscription();
+
     if (sub) {
-        // Already subscribed → show "on" state
-        banner.classList.remove('hidden');
-        title.textContent = 'Notifikasi Aktif ✓';
-        desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
-        btn.textContent   = 'Matikan';
-        btn.classList.replace('bg-indigo-600', 'bg-gray-400');
-        btn.onclick = () => handleUnsubscribe(swReg, sub);
+        // Already subscribed — sync to server silently & show active state
+        await syncSubscription(sub);
+        if (banner) {
+            banner.classList.remove('hidden');
+            if (title) title.textContent = 'Notifikasi Aktif ✓';
+            if (desc)  desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
+            if (btn) {
+                btn.textContent = 'Matikan';
+                btn.classList.replace('bg-indigo-600', 'bg-gray-400');
+                btn.onclick = () => handleUnsubscribe(swReg, sub);
+            }
+        }
+    } else if (permission === 'granted') {
+        // Permission already granted — subscribe automatically
+        await doSubscribe(swReg);
     } else {
-        // Not subscribed → show subscribe prompt
-        banner.classList.remove('hidden');
+        // Not yet asked — show banner with subscribe button
+        if (banner) banner.classList.remove('hidden');
     }
 });
 
@@ -296,6 +306,47 @@ function urlBase64ToUint8Array(base64String) {
     const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const raw     = window.atob(base64);
     return new Uint8Array([...raw].map(c => c.charCodeAt(0)));
+}
+
+// Sync existing subscription to server (re-save in case keys changed)
+async function syncSubscription(sub) {
+    try {
+        await fetch(SUBSCRIBE_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+            body:    JSON.stringify(sub.toJSON()),
+        });
+    } catch(e) { /* silent */ }
+}
+
+// Subscribe and save to server
+async function doSubscribe(swReg) {
+    try {
+        const sub = await swReg.pushManager.subscribe({
+            userVisibleOnly:      true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        });
+        await syncSubscription(sub);
+
+        // Update UI
+        const banner = document.getElementById('push-banner');
+        const title  = document.getElementById('push-title');
+        const desc   = document.getElementById('push-desc');
+        const btn    = document.getElementById('push-btn');
+        if (title)  title.textContent = 'Notifikasi Aktif ✓';
+        if (desc)   desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
+        if (btn) {
+            btn.textContent = 'Matikan';
+            btn.disabled    = false;
+            btn.classList.replace('bg-indigo-600', 'bg-gray-400');
+            btn.onclick = () => handleUnsubscribe(swReg, sub);
+        }
+        if (banner) banner.classList.remove('hidden');
+        return sub;
+    } catch(e) {
+        console.warn('Auto-subscribe failed:', e.message);
+        return null;
+    }
 }
 
 async function handlePushSubscription() {
