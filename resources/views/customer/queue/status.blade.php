@@ -108,33 +108,52 @@
                 </div>
             </div>
 
-            {{-- QR Section (for pending) --}}
+            {{-- Check-in Instructions (for pending) --}}
             @if($queue->isPending())
-            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5">
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5">
                 <div class="text-center mb-4">
-                    <div class="inline-flex items-center gap-2 bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full mb-2">
+                    <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-full mb-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-                        Tunjukkan QR ini ke petugas loket
-                    </div>
-                    <p class="text-xs text-amber-600">
-                        Atau customer bisa scan QR yang ada di loket
-                    </p>
-                    @if($queue->expired_at)
-                    <p class="text-xs text-amber-700 font-semibold mt-1">
-                        Berlaku s.d. {{ $queue->expired_at->format('H:i') }}
-                    </p>
-                    @endif
-                </div>
-
-                <div class="flex justify-center mb-3">
-                    <div class="bg-white p-3 rounded-2xl shadow-sm border-2 border-amber-100" id="qr-wrapper">
-                        <div id="qr-canvas"></div>
+                        Langkah Check-in
                     </div>
                 </div>
 
-                <p class="text-center text-amber-800 font-mono font-black text-2xl tracking-widest">{{ $queue->queue_number }}</p>
+                <div class="space-y-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">1</div>
+                        <div>
+                            <p class="text-sm font-semibold text-blue-900">Datang ke barbershop</p>
+                            <p class="text-xs text-blue-600">{{ $queue->branch->name }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">2</div>
+                        <div>
+                            <p class="text-sm font-semibold text-blue-900">Scan QR Code di loket</p>
+                            <p class="text-xs text-blue-600">Gunakan kamera HP untuk scan QR yang ditampilkan di meja loket</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">✓</div>
+                        <div>
+                            <p class="text-sm font-semibold text-blue-900">Selesai! Status berubah otomatis</p>
+                            <p class="text-xs text-blue-600">Antrean Anda langsung aktif setelah scan</p>
+                        </div>
+                    </div>
+                </div>
+
+                @if($queue->expired_at)
+                <div class="mt-4 text-center">
+                    <p class="text-xs text-blue-700 font-semibold">
+                        ⏰ Berlaku s.d. <span class="local-time" data-utc="{{ $queue->expired_at->toISOString() }}">{{ $queue->expired_at->format('H:i') }}</span> WITA
+                    </p>
+                </div>
+                @endif
+
+                <p class="text-center text-blue-800 font-mono font-black text-2xl tracking-widest mt-4">{{ $queue->queue_number }}</p>
             </div>
             @endif
+
 
             {{-- Called alert --}}
             @if($queue->isCalled())
@@ -379,20 +398,14 @@ async function pollStatus() {
 setInterval(pollStatus, 10000);
 @endif
 
-@if($queue->isPending())
-// ─── QR Code ──────────────────────────────────────────────────────────────────
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    new QRCode(document.getElementById('qr-canvas'), {
-        text: "{{ $queue->qr_checkin_url }}",
-        width: 200, height: 200,
-        colorDark: '#1a1a1a', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H,
-    });
+// ─── Local Time Display ───────────────────────────────────────────────────────
+document.querySelectorAll('.local-time').forEach(el => {
+    const utc = el.dataset.utc;
+    if (utc) {
+        const d = new Date(utc);
+        el.textContent = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
 });
-@endif
 </script>
 @endpush
 @endsection

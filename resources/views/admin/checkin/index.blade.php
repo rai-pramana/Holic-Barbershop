@@ -86,10 +86,10 @@
             <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
                 <p class="text-xs font-bold text-blue-800 mb-2">📋 Cara Penggunaan</p>
                 <ol class="text-xs text-blue-700 space-y-1 list-decimal list-inside">
-                    <li>Customer ambil nomor antrean via aplikasi</li>
-                    <li>Saat tiba di barbershop, minta customer buka antrean di HP</li>
-                    <li>Customer scan QR ini atau gunakan QR yang ada di tiket mereka</li>
-                    <li>Status otomatis berubah menjadi <strong>Hadir ✅</strong></li>
+                    <li>Tampilkan QR ini di layar meja loket/kasir</li>
+                    <li>Customer yang sudah ambil antrean online datang ke barbershop</li>
+                    <li>Customer scan QR ini menggunakan kamera HP mereka</li>
+                    <li>Status antrean otomatis berubah menjadi <strong>Hadir ✅</strong></li>
                 </ol>
             </div>
         </div>
