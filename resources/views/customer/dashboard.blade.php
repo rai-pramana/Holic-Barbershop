@@ -170,4 +170,123 @@
         </div>
     </section>
 </div>
+
+@push('scripts')
+<script>
+// ─── Dashboard Notification System ────────────────────────────────────────────
+const CSRF_TOKEN       = document.querySelector('meta[name="csrf-token"]')?.content;
+const VAPID_PUBLIC_KEY = "{{ config('webpush.vapid.public_key') }}";
+const SUBSCRIBE_URL    = "{{ route('customer.push.subscribe') }}";
+
+// Queue status messages
+const STATUS_MESSAGES = {
+    called:    { title: '📢 Dipanggil!',         body: 'Giliran Anda telah tiba! Segera ke barber Anda.' },
+    completed: { title: '✅ Selesai!',            body: 'Layanan selesai. Terima kasih!' },
+    skipped:   { title: '⚠️ Antrean Dilewati',   body: 'Antrean Anda dilewati. Hubungi petugas.' },
+    active:    { title: '✅ Check-in Berhasil',   body: 'Antrean Anda aktif. Tunggu dipanggil.' },
+};
+
+// ─── Service Worker + Push Subscription ──────────────────────────────────────
+(async function initPush() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    if (!VAPID_PUBLIC_KEY) return;
+
+    try {
+        const swReg = await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.ready;
+
+        const permission = Notification.permission;
+        if (permission === 'denied') return;
+
+        let sub = await swReg.pushManager.getSubscription();
+
+        if (sub) {
+            // Re-sync subscription to server (in case VAPID keys changed)
+            await fetch(SUBSCRIBE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+                body: JSON.stringify(sub.toJSON()),
+            }).catch(() => {});
+        } else if (permission === 'granted') {
+            // Already granted, subscribe now
+            sub = await swReg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+            });
+            await fetch(SUBSCRIBE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+                body: JSON.stringify(sub.toJSON()),
+            }).catch(() => {});
+        } else {
+            // Ask permission
+            const result = await Notification.requestPermission();
+            if (result === 'granted') {
+                sub = await swReg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+                });
+                await fetch(SUBSCRIBE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+                    body: JSON.stringify(sub.toJSON()),
+                }).catch(() => {});
+            }
+        }
+    } catch(e) {
+        console.warn('Push init failed:', e.message);
+    }
+})();
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    return new Uint8Array([...window.atob(base64)].map(c => c.charCodeAt(0)));
+}
+
+// ─── Active Queue Status Polling (for browser notification on dashboard) ──────
+@if($activeQueues->isNotEmpty())
+(function() {
+    const queues = @json($activeQueues->map(fn($q) => ['id' => $q->id, 'status' => $q->status, 'pollUrl' => route('customer.queue.poll', $q)]));
+    const prevStatuses = {};
+    queues.forEach(q => prevStatuses[q.id] = q.status);
+
+    function showBrowserNotif(title, body) {
+        if (Notification.permission === 'granted') {
+            new Notification(title, { body, icon: '/icons/icon-192.png', tag: 'queue-dashboard' });
+        }
+        // Also play sound
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            [523, 659, 784].forEach((f, i) => {
+                const o = ctx.createOscillator(), g = ctx.createGain();
+                o.connect(g); g.connect(ctx.destination);
+                o.frequency.value = f; g.gain.value = 0.2;
+                o.start(ctx.currentTime + i * 0.15);
+                o.stop(ctx.currentTime + i * 0.15 + 0.25);
+            });
+        } catch(e) {}
+    }
+
+    async function pollQueues() {
+        for (const q of queues) {
+            try {
+                const res  = await fetch(q.pollUrl);
+                const data = await res.json();
+                if (data.status !== prevStatuses[q.id]) {
+                    const msg = STATUS_MESSAGES[data.status];
+                    if (msg) showBrowserNotif(msg.title, msg.body);
+                    prevStatuses[q.id] = data.status;
+                    // Reload content after 1s to reflect new status
+                    setTimeout(() => window.location.reload(), 1000);
+                }
+            } catch(e) {}
+        }
+    }
+
+    setInterval(pollQueues, 10000);
+})();
+@endif
+</script>
+@endpush
 @endsection
