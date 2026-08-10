@@ -29,7 +29,8 @@
         </div>
     </div>
 
-    {{-- Push Notification Banner --}}
+    {{-- Push Notification Banner (hidden) --}}
+    @if(false){{-- hidden: push notification feature disabled --}}
     <div id="push-banner" class="hidden bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-4 text-white shadow-md">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3">
@@ -46,6 +47,7 @@
             </button>
         </div>
     </div>
+    @endif
 
     {{-- Active Queues --}}
     @if($activeQueues->isNotEmpty())

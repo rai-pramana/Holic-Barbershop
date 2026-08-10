@@ -199,7 +199,8 @@
                 </div>
             </div>
 
-            {{-- Push Notification Subscribe --}}
+            {{-- Push Notification Subscribe (hidden) --}}
+            @if(false){{-- hidden: push notification feature disabled --}}
             @if($queue->isActive_or_Pending())
             <div id="push-banner" class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 hidden">
                 <div class="flex items-center gap-3">
@@ -218,6 +219,7 @@
                     </button>
                 </div>
             </div>
+            @endif
             @endif
 
             {{-- Back button --}}
