@@ -83,16 +83,26 @@ class WalkinQueueController extends Controller
             }
         }
 
+        // Use or create a system "walk-in" user as placeholder for customer_id
+        $guestUser = \App\Models\User::firstOrCreate(
+            ['email' => 'walkin@holic.system'],
+            [
+                'name'     => 'Walk-in Guest',
+                'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(32)),
+                'role'     => 'customer',
+            ]
+        );
+
         $queue = null;
         \Illuminate\Support\Facades\DB::transaction(function () use (
-            $branch, $barber, $service, $request, &$queue
+            $branch, $barber, $service, $request, $guestUser, &$queue
         ) {
             $queueNumber = $branch->getNextQueueNumber();
 
-            // Walk-in queue: auto-active (no check-in needed, admin already validated)
+            // Walk-in queue: auto-active (admin already validated at counter)
             $queue = Queue::create([
                 'queue_number' => $queueNumber,
-                'customer_id'  => null,           // No account
+                'customer_id'  => $guestUser->id,
                 'guest_name'   => trim($request->guest_name),
                 'guest_phone'  => $request->guest_phone ? trim($request->guest_phone) : null,
                 'barber_id'    => $barber->id,

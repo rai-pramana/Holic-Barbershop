@@ -89,10 +89,10 @@ class Queue extends Model
         return in_array($this->status, [self::STATUS_PENDING, self::STATUS_ACTIVE, self::STATUS_CALLED]);
     }
 
-    /** True if this is a walk-in queue (no customer account) */
+    /** True if this is a walk-in queue (uses system guest user + has guest_name) */
     public function isGuest(): bool
     {
-        return is_null($this->customer_id) && !is_null($this->guest_name);
+        return !is_null($this->guest_name);
     }
 
     /** Display name for any queue type (account or walk-in) */
