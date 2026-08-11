@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
 .flatpickr-calendar { font-family: 'Plus Jakarta Sans', sans-serif !important; border-radius: 16px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.18) !important; border: 1px solid #f1f5f9 !important; overflow: hidden; }
-.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: linear-gradient(135deg,#f59e0b,#d97706) !important; border-color: transparent !important; color:#fff !important; }
-.flatpickr-day.inRange { background: #fef3c7 !important; border-color: transparent !important; color: #92400e !important; }
-.flatpickr-day:hover { background: #fffbeb !important; border-color: #fcd34d !important; }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: #0f172a !important; border-color: transparent !important; color:#fff !important; }
+.flatpickr-day.inRange { background: #e2e8f0 !important; border-color: transparent !important; color: #1e293b !important; }
+.flatpickr-day:hover { background: #f1f5f9 !important; border-color: #94a3b8 !important; }
 .flatpickr-months { background: linear-gradient(135deg,#1e293b,#334155) !important; padding: 8px 0; }
 .flatpickr-month { color:#fff !important; fill:#fff !important; }
 .flatpickr-current-month { color:#fff !important; font-size: 14px !important; font-weight: 700 !important; }
@@ -20,9 +20,9 @@
 .numInputWrapper span { border-color: rgba(255,255,255,0.3) !important; }
 .numInputWrapper span svg { fill: rgba(255,255,255,0.8) !important; }
 .flatpickr-prev-month, .flatpickr-next-month { fill: #fff !important; color: #fff !important; }
-.flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: #fcd34d !important; }
+.flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: #ffffff !important; }
 .flatpickr-weekday { color: #94a3b8 !important; font-weight: 700; font-size: 10px; }
-.flatpickr-day.today { border-color: #f59e0b !important; }
+.flatpickr-day.today { border-color: #334155 !important; }
 .flatpickr-day.flatpickr-disabled { color: #cbd5e1 !important; }
 </style>
 @endpush
@@ -40,7 +40,7 @@
         {{-- Branch filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Cabang</label>
-            <select name="branch_id" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-amber-300 cursor-pointer">
+            <select name="branch_id" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 cursor-pointer">
                 <option value="">Semua Cabang</option>
                 @foreach($branches as $branch)
                     <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
@@ -51,7 +51,7 @@
         {{-- Status filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
-            <select name="status" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-amber-300 cursor-pointer">
+            <select name="status" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 cursor-pointer">
                 <option value="">Semua Status</option>
                 @foreach(['pending'=>'Menunggu','active'=>'Check-in','called'=>'Dipanggil','completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'] as $val => $lbl)
                     <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
@@ -65,7 +65,7 @@
                 <label class="block text-xs font-medium text-gray-500 mb-1">Periode</label>
                 <div class="relative">
                     <button type="button" id="h-date-btn"
-                            class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:border-amber-300 hover:bg-amber-50 transition-all cursor-pointer min-w-[200px]">
+                            class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all cursor-pointer min-w-[200px]">
                         <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         <span id="h-date-label">{{ $dateLabel }}</span>
                         <svg class="w-3 h-3 text-gray-400 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
@@ -76,7 +76,7 @@
 
             <div class="flex items-end gap-2">
                 <button type="submit"
-                        class="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
+                        class="bg-gradient-to-r from-gray-900 to-slate-800 text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
                     Filter
                 </button>
                 <a href="{{ route('admin.queues.index') }}"

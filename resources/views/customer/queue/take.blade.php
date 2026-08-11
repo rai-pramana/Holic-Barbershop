@@ -7,7 +7,7 @@
 
     {{-- Breadcrumb --}}
     <nav class="flex items-center gap-2 text-sm text-gray-500 mb-5">
-        <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-1 hover:text-amber-700 transition-colors">
+        <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-1 hover:text-gray-900 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
             Dashboard
         </a>
@@ -37,7 +37,7 @@
     <div class="flex items-center gap-2 mb-6">
         @foreach(['Pilih Layanan', 'Pilih Barber', 'Catatan'] as $i => $step)
         <div class="flex items-center gap-2 {{ $loop->last ? '' : 'flex-1' }}">
-            <div class="w-6 h-6 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">{{ $i+1 }}</div>
+            <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-900 to-slate-800 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">{{ $i+1 }}</div>
             <span class="text-xs font-medium text-gray-600 whitespace-nowrap hidden sm:inline">{{ $step }}</span>
             @if(!$loop->last)
             <div class="flex-1 h-px bg-gray-200 hidden sm:block"></div>
@@ -52,7 +52,7 @@
         {{-- Step 1: Service --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="px-5 py-4 border-b border-gray-50 flex items-center gap-3">
-                <div class="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 text-xs font-bold">1</div>
+                <div class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-900 text-xs font-bold">1</div>
                 <h2 class="font-bold text-gray-900">Pilih Layanan</h2>
                 @error('service_id')
                     <span class="text-red-500 text-xs ml-auto">{{ $message }}</span>
@@ -63,10 +63,10 @@
                 <label for="service_{{ $service->id }}" class="cursor-pointer">
                     <input type="radio" id="service_{{ $service->id }}" name="service_id" value="{{ $service->id }}"
                            class="peer sr-only" {{ old('service_id') == $service->id ? 'checked' : '' }}>
-                    <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-amber-400 peer-checked:bg-amber-50/60 hover:border-gray-200 transition-all h-full">
+                    <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-gray-400 peer-checked:bg-gray-50/60 hover:border-gray-200 transition-all h-full">
                         <div class="flex justify-between items-start gap-2 mb-1.5">
                             <p class="font-semibold text-gray-900 text-sm leading-tight">{{ $service->name }}</p>
-                            <span class="text-amber-700 font-bold text-sm whitespace-nowrap flex-shrink-0">{{ $service->formatted_price }}</span>
+                            <span class="text-gray-900 font-bold text-sm whitespace-nowrap flex-shrink-0">{{ $service->formatted_price }}</span>
                         </div>
                         @if($service->description)
                             <p class="text-xs text-gray-500 mb-2 leading-relaxed">{{ $service->description }}</p>
@@ -84,7 +84,7 @@
         {{-- Step 2: Barber --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="px-5 py-4 border-b border-gray-50 flex items-center gap-3">
-                <div class="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 text-xs font-bold">2</div>
+                <div class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-900 text-xs font-bold">2</div>
                 <div>
                     <h2 class="font-bold text-gray-900">Pilih Barber</h2>
                     <p class="text-xs text-gray-400">Kosongkan untuk barber tercepat otomatis</p>
@@ -94,9 +94,9 @@
                 {{-- Auto option --}}
                 <label for="barber_auto" class="cursor-pointer">
                     <input type="radio" id="barber_auto" name="barber_id" value="" class="peer sr-only" checked>
-                    <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-amber-400 peer-checked:bg-amber-50/60 hover:border-gray-200 transition-all">
+                    <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-gray-400 peer-checked:bg-gray-50/60 hover:border-gray-200 transition-all">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center flex-shrink-0 shadow-sm shadow-amber-500/25">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-900 to-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm shadow-gray-900/20">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                             </div>
                             <div>
@@ -110,7 +110,7 @@
                 @foreach($barbers as $barber)
                 <label for="barber_{{ $barber->id }}" class="cursor-pointer">
                     <input type="radio" id="barber_{{ $barber->id }}" name="barber_id" value="{{ $barber->id }}" class="peer sr-only">
-                    <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-amber-400 peer-checked:bg-amber-50/60 hover:border-gray-200 transition-all">
+                    <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-gray-400 peer-checked:bg-gray-50/60 hover:border-gray-200 transition-all">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                                 {{ strtoupper(substr($barber->name, 0, 1)) }}
@@ -121,7 +121,7 @@
                                     <p class="text-xs text-gray-400 truncate">{{ $barber->specialty }}</p>
                                 @endif
                                 <span class="inline-flex items-center gap-1 text-xs font-medium mt-0.5
-                                    {{ $barber->pending_count === 0 ? 'text-green-600' : 'text-amber-600' }}">
+                                    {{ $barber->pending_count === 0 ? 'text-green-600' : 'text-gray-900' }}">
                                     <span class="w-1.5 h-1.5 rounded-full {{ $barber->pending_count === 0 ? 'bg-green-400' : 'bg-amber-400' }}"></span>
                                     {{ $barber->pending_count === 0 ? 'Kosong' : $barber->pending_count.' antrean' }}
                                 </span>
@@ -136,14 +136,14 @@
         {{-- Step 3: Notes --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="px-5 py-4 border-b border-gray-50 flex items-center gap-3">
-                <div class="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 text-xs font-bold">3</div>
+                <div class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-900 text-xs font-bold">3</div>
                 <div>
                     <h2 class="font-bold text-gray-900">Catatan <span class="text-xs text-gray-400 font-normal">(opsional)</span></h2>
                 </div>
             </div>
             <div class="p-4">
                 <textarea name="notes" id="notes" rows="3"
-                          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all resize-none placeholder:text-gray-400"
+                          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-amber-400/20 transition-all resize-none placeholder:text-gray-400"
                           placeholder="Contoh: minta fade tipis, jangan terlalu pendek...">{{ old('notes') }}</textarea>
             </div>
         </div>
@@ -156,7 +156,7 @@
                 Batal
             </a>
             <button type="submit" id="submit-btn"
-                    class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold py-3.5 rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-amber-500/25 text-sm">
+                    class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold py-3.5 rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/20 text-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
                 Ambil Nomor Antrean
             </button>

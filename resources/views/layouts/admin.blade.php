@@ -33,7 +33,9 @@
             flex-shrink: 0;
         }
         .sidebar-link.active .icon-wrap {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            color: #0f172a; /* dark icon on white bg */
         }
 
         /* Badges */
@@ -73,7 +75,7 @@
 <body class="h-full bg-slate-100 flex">
 
 {{-- Notification permission banner --}}
-<div id="notif-banner" class="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-3 text-sm font-medium items-center justify-center gap-3 shadow-lg" style="display:none">
+<div id="notif-banner" class="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-gray-900 to-slate-800 text-white px-4 py-3 text-sm font-medium items-center justify-center gap-3 shadow-lg" style="display:none">
     <span>🔔 Aktifkan notifikasi untuk mendapat pemberitahuan antrean baru</span>
     <button onclick="requestNotifPermission()" class="bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-1 rounded-lg transition-colors text-xs ml-3">Aktifkan</button>
     <button onclick="this.parentElement.style.display='none'" class="ml-2 text-white/70 hover:text-white">✕</button>
@@ -91,12 +93,12 @@
     {{-- Logo --}}
     <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg ring-2 ring-amber-500/40 flex-shrink-0 overflow-hidden">
+            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg ring-1 ring-white/20 flex-shrink-0 overflow-hidden">
                 <img src="/images/holic-logo.png" alt="HOLIC" class="w-10 h-10 object-cover">
             </div>
             <div>
                 <p class="text-white font-black text-base tracking-tight">HOLIC</p>
-                <p class="text-amber-400 text-xs font-semibold">Barbershop</p>
+                <p class="text-slate-300 text-xs font-medium">Barbershop</p>
             </div>
         </a>
         {{-- Close btn (mobile) --}}
@@ -192,7 +194,7 @@
     {{-- User info --}}
     <div class="px-3 py-4 border-t border-white/10">
         <div class="flex items-center gap-3 px-2 mb-2">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-gray-900 to-slate-800 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
             <div class="min-w-0 flex-1">
@@ -403,7 +405,7 @@ document.addEventListener('keydown', e => {
         if (!container) return;
 
         const toast = document.createElement('div');
-        toast.className = 'flex items-center gap-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl px-4 py-3 shadow-2xl text-sm font-medium animate-slide-in';
+        toast.className = 'flex items-center gap-3 bg-gradient-to-r from-gray-900 to-slate-800 text-white rounded-xl px-4 py-3 shadow-2xl text-sm font-medium animate-slide-in';
         toast.innerHTML = `
             <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
             <span>${message}</span>

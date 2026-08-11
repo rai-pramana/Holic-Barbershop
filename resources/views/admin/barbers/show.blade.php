@@ -6,7 +6,7 @@
 
 @section('page-actions')
 <a href="{{ route('admin.barbers.edit', $barber) }}"
-   class="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
+   class="bg-gradient-to-r from-gray-900 to-slate-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
     Edit
 </a>
 @endsection
@@ -22,7 +22,7 @@
         <div class="flex-1">
             <h2 class="text-xl font-bold text-gray-900">{{ $barber->name }}</h2>
             @if($barber->specialty)
-                <p class="text-amber-700 font-medium text-sm">{{ $barber->specialty }}</p>
+                <p class="text-gray-900 font-medium text-sm">{{ $barber->specialty }}</p>
             @endif
             @if($barber->phone)
                 <p class="text-gray-500 text-sm mt-1">📞 {{ $barber->phone }}</p>
@@ -68,7 +68,7 @@
                     {{ $queue->status_label }}
                 </span>
                 <a href="{{ route('admin.queues.show', $queue) }}"
-                   class="text-xs text-amber-600 hover:underline">Detail</a>
+                   class="text-xs text-gray-900 hover:underline">Detail</a>
             </div>
             @endforeach
         </div>

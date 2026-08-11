@@ -6,7 +6,7 @@
 
 @section('page-actions')
 <a href="{{ route('admin.services.create') }}"
-   class="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2">
+   class="bg-gradient-to-r from-gray-900 to-slate-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
     Tambah Layanan
 </a>
@@ -54,7 +54,7 @@
                         <div class="flex items-center gap-1.5">
                             <a href="{{ route('admin.services.edit', $service) }}"
                                title="Edit"
-                               class="inline-flex items-center gap-1 text-xs font-semibold bg-amber-50 text-amber-600 px-2.5 py-1.5 rounded-lg hover:bg-amber-100 active:scale-95 transition-all">
+                               class="inline-flex items-center gap-1 text-xs font-semibold bg-gray-50 text-gray-900 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 active:scale-95 transition-all">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 Edit
                             </a>
@@ -73,7 +73,7 @@
                 @empty
                 <tr>
                     <td colspan="6" class="px-6 py-12 text-center text-gray-400">
-                        Belum ada layanan. <a href="{{ route('admin.services.create') }}" class="text-amber-700 font-medium">Tambah sekarang</a>.
+                        Belum ada layanan. <a href="{{ route('admin.services.create') }}" class="text-gray-900 font-medium">Tambah sekarang</a>.
                     </td>
                 </tr>
                 @endforelse

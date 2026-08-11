@@ -61,7 +61,7 @@
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
         <div class="p-6 border-b border-gray-100 flex justify-between items-center">
             <h3 class="font-bold text-gray-900">Antrean Terbaru Hari Ini</h3>
-            <a href="{{ route('admin.queues.index') }}" class="text-sm text-amber-700 hover:text-pink-700 font-medium">
+            <a href="{{ route('admin.queues.index') }}" class="text-sm text-gray-900 hover:text-pink-700 font-medium">
                 Lihat Semua →
             </a>
         </div>
@@ -118,9 +118,9 @@
         @endphp
         @foreach($links as $link)
         <a href="{{ $link['href'] }}"
-           class="bg-white border border-gray-200 rounded-2xl p-4 flex items-center gap-3 hover:border-amber-200 hover:shadow-md transition-all group">
+           class="bg-white border border-gray-200 rounded-2xl p-4 flex items-center gap-3 hover:border-gray-200 hover:shadow-md transition-all group">
             <span class="text-2xl">{{ $link['icon'] }}</span>
-            <span class="text-sm font-semibold text-gray-700 group-hover:text-amber-700 transition-colors">{{ $link['label'] }}</span>
+            <span class="text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">{{ $link['label'] }}</span>
         </a>
         @endforeach
     </div>

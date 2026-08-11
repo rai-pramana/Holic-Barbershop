@@ -13,7 +13,7 @@
         .badge { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold; }
         .badge-pending   { @apply bg-yellow-100 text-yellow-800; }
         .badge-active    { @apply bg-blue-100 text-blue-800; }
-        .badge-called    { @apply bg-amber-100 text-amber-800; }
+        .badge-called    { @apply bg-gray-100 text-amber-800; }
         .badge-completed { @apply bg-green-100 text-green-800; }
         .badge-skipped   { @apply bg-red-100 text-red-800; }
         .badge-expired   { @apply bg-gray-100 text-gray-600; }
@@ -25,12 +25,12 @@
 {{-- Barber top nav --}}
 <nav class="bg-gray-900 border-b border-gray-800 px-6 py-3 flex justify-between items-center">
     <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-md ring-2 ring-amber-500/40 flex-shrink-0 overflow-hidden">
+        <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-md ring-2 ring-white/40 flex-shrink-0 overflow-hidden">
             <img src="/images/holic-logo.png" alt="HOLIC" class="w-9 h-9 object-cover">
         </div>
         <div>
             <p class="font-bold text-white text-sm">HOLIC Barbershop</p>
-            <p class="text-amber-400 text-xs">Barber Panel — {{ auth()->user()->name }}</p>
+            <p class="text-slate-300 text-xs">Barber Panel — {{ auth()->user()->name }}</p>
         </div>
     </div>
 

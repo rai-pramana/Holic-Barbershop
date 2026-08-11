@@ -12,7 +12,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Cabang *</label>
                     <select name="branch_id" required
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400">
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400">
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}" {{ old('branch_id', $service->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                         @endforeach
@@ -22,32 +22,32 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Layanan *</label>
                     <input type="text" name="name" value="{{ old('name', $service->name) }}" required
-                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Deskripsi</label>
                     <textarea name="description" rows="2"
-                              class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 resize-none">{{ old('description', $service->description) }}</textarea>
+                              class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 resize-none">{{ old('description', $service->description) }}</textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Durasi (menit) *</label>
                         <input type="number" name="duration_minutes" value="{{ old('duration_minutes', $service->duration_minutes) }}" min="5" max="480" required
-                               class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400">
+                               class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Harga (Rp) *</label>
                         <input type="number" name="price" value="{{ old('price', $service->price) }}" min="0" required
-                               class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400">
+                               class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400">
                     </div>
                 </div>
 
                 <div>
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" name="is_active" value="1" {{ old('is_active', $service->is_active) ? 'checked' : '' }}
-                               class="w-5 h-5 rounded border-gray-300 text-amber-600 focus:ring-amber-400">
+                               class="w-5 h-5 rounded border-gray-300 text-gray-900 focus:ring-amber-400">
                         <span class="text-sm font-medium text-gray-700">Layanan Aktif</span>
                     </label>
                 </div>
@@ -59,7 +59,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                        class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity text-sm">
+                        class="flex-1 bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity text-sm">
                     Simpan Perubahan
                 </button>
             </div>
