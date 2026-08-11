@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Kelola Antrean')
-@section('page-title', 'Antrean')
-@section('page-subtitle', 'Monitor semua antrean')
+@section('title', 'Riwayat Antrean')
+@section('page-title', '📋 Riwayat Antrean')
+@section('page-subtitle', 'Periode: ' . $dateLabel)
 
 @section('content')
 {{-- Filters --}}
@@ -21,14 +21,21 @@
             <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
             <select name="status" class="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-400">
                 <option value="">Semua Status</option>
-                @foreach(['pending'=>'Menunggu','active'=>'Check-in','called'=>'Dipanggil','completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'] as $val => $label)
-                    <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                @foreach(['pending'=>'Menunggu','active'=>'Check-in','called'=>'Dipanggil','completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'] as $val => $lbl)
+                    <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
                 @endforeach
             </select>
         </div>
         <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">Tanggal</label>
-            <input type="date" name="date" value="{{ request('date', today()->toDateString()) }}"
+            <label class="block text-xs font-medium text-gray-500 mb-1">Dari Tanggal</label>
+            <input type="date" name="date_from"
+                   value="{{ request('date_from', request('date', today()->toDateString())) }}"
+                   class="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-400">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Sampai Tanggal</label>
+            <input type="date" name="date_to"
+                   value="{{ request('date_to', '') }}"
                    class="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-400">
         </div>
         <button type="submit"

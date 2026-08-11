@@ -70,7 +70,8 @@
 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
     @php
     $kpis = [
-        ['label'=>'Total Antrean',    'value'=>$total,         'sub'=>'terdaftar',          'color'=>'from-slate-600 to-slate-500',   'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
+        ['label'=>'Total Antrean',    'value'=>$total,         'sub'=>'terdaftar',          'color'=>'from-slate-600 to-slate-500',   'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+            'link' => route('admin.queues.index', array_filter(['date_from'=>$from->toDateString(), 'date_to'=>$to->toDateString(), 'branch_id'=>$branchId]))],
         ['label'=>'Selesai',          'value'=>$completed,     'sub'=>'dilayani',           'color'=>'from-emerald-500 to-green-500', 'icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
         ['label'=>'Dilewati',         'value'=>$skipped,       'sub'=>'tidak hadir',        'color'=>'from-rose-500 to-red-500',      'icon'=>'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'],
         ['label'=>'Kedaluwarsa',      'value'=>$expired,       'sub'=>'tidak check-in',     'color'=>'from-gray-500 to-slate-400',    'icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
@@ -79,6 +80,24 @@
     ];
     @endphp
     @foreach($kpis as $kpi)
+    @if(!empty($kpi['link']))
+    <a href="{{ $kpi['link'] }}"
+       class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-2 hover:border-pink-200 hover:shadow-md transition-all group cursor-pointer">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br {{ $kpi['color'] }} flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $kpi['icon'] }}"/>
+            </svg>
+        </div>
+        <div>
+            <p class="text-2xl font-black text-gray-900 group-hover:text-pink-600 transition-colors">{{ $kpi['value'] }}</p>
+            <p class="text-xs font-semibold text-gray-700 leading-tight flex items-center gap-1">
+                {{ $kpi['label'] }}
+                <svg class="w-3 h-3 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </p>
+            <p class="text-[10px] text-gray-400">{{ $kpi['sub'] }}</p>
+        </div>
+    </a>
+    @else
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-2">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-br {{ $kpi['color'] }} flex items-center justify-center flex-shrink-0">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,6 +110,7 @@
             <p class="text-[10px] text-gray-400">{{ $kpi['sub'] }}</p>
         </div>
     </div>
+    @endif
     @endforeach
 </div>
 

@@ -29,16 +29,31 @@ class QueueController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        if ($request->filled('date')) {
+
+        // Support both single date and date range
+        if ($request->filled('date_from') && $request->filled('date_to')) {
+            $query->whereBetween('created_at', [
+                \Carbon\Carbon::parse($request->date_from)->startOfDay(),
+                \Carbon\Carbon::parse($request->date_to)->endOfDay(),
+            ]);
+            $dateLabel = \Carbon\Carbon::parse($request->date_from)->isoFormat('D MMM YYYY')
+                . ' — '
+                . \Carbon\Carbon::parse($request->date_to)->isoFormat('D MMM YYYY');
+        } elseif ($request->filled('date_from')) {
+            $query->whereDate('created_at', $request->date_from);
+            $dateLabel = \Carbon\Carbon::parse($request->date_from)->isoFormat('dddd, D MMMM YYYY');
+        } elseif ($request->filled('date')) {
             $query->whereDate('created_at', $request->date);
+            $dateLabel = \Carbon\Carbon::parse($request->date)->isoFormat('dddd, D MMMM YYYY');
         } else {
             $query->whereDate('created_at', today());
+            $dateLabel = now()->isoFormat('dddd, D MMMM YYYY');
         }
 
-        $queues   = $query->paginate(20)->withQueryString();
+        $queues   = $query->paginate(25)->withQueryString();
         $branches = Branch::where('is_active', true)->get();
 
-        return view('admin.queues.index', compact('queues', 'branches'));
+        return view('admin.queues.index', compact('queues', 'branches', 'dateLabel'));
     }
 
     /**

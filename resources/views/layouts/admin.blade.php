@@ -154,6 +154,14 @@
             Rekap
         </a>
 
+        <a href="{{ route('admin.queues.index') }}"
+           class="sidebar-link {{ request()->routeIs('admin.queues.index') || request()->routeIs('admin.queues.show') ? 'active' : '' }}">
+            <span class="icon-wrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            </span>
+            Riwayat Antrean
+        </a>
+
         <div class="pt-4 pb-1.5 px-3">
             <p class="text-white/30 text-[10px] font-bold uppercase tracking-[0.15em]">Master Data</p>
         </div>
