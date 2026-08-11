@@ -7,13 +7,23 @@
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
-.flatpickr-calendar { font-family: 'Plus Jakarta Sans', sans-serif !important; border-radius: 16px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important; border: 1px solid #f1f5f9 !important; overflow: hidden; }
-.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: linear-gradient(135deg,#ec4899,#a855f7) !important; border-color: transparent !important; }
+.flatpickr-calendar { font-family: 'Plus Jakarta Sans', sans-serif !important; border-radius: 16px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.18) !important; border: 1px solid #f1f5f9 !important; overflow: hidden; }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: linear-gradient(135deg,#ec4899,#a855f7) !important; border-color: transparent !important; color:#fff !important; }
 .flatpickr-day.inRange { background: #fce7f3 !important; border-color: transparent !important; color: #9d174d !important; }
 .flatpickr-day:hover { background: #fdf2f8 !important; border-color: #f9a8d4 !important; }
-.flatpickr-months { background: linear-gradient(135deg,#1e293b,#334155); padding: 8px 0; }
-.flatpickr-month, .flatpickr-current-month, .flatpickr-monthDropdown-months, .numInputWrapper input, .flatpickr-prev-month, .flatpickr-next-month { color: #fff !important; fill: #fff !important; }
+.flatpickr-months { background: linear-gradient(135deg,#1e293b,#334155) !important; padding: 8px 0; }
+.flatpickr-month { color:#fff !important; fill:#fff !important; }
+.flatpickr-current-month { color:#fff !important; font-size: 14px !important; font-weight: 700 !important; }
+.flatpickr-monthDropdown-months { background: #1e293b !important; color: #fff !important; border: none !important; font-weight: 600 !important; font-size: 14px !important; appearance: none; -webkit-appearance: none; cursor: pointer; }
+.flatpickr-monthDropdown-months option { background: #1e293b; color: #fff; }
+.numInputWrapper input { color: #fff !important; background: transparent !important; font-weight: 700 !important; font-size: 14px !important; border: none !important; }
+.numInputWrapper span { border-color: rgba(255,255,255,0.3) !important; }
+.numInputWrapper span svg { fill: rgba(255,255,255,0.8) !important; }
+.flatpickr-prev-month, .flatpickr-next-month { fill: #fff !important; color: #fff !important; }
+.flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: #f9a8d4 !important; }
 .flatpickr-weekday { color: #94a3b8 !important; font-weight: 700; font-size: 10px; }
+.flatpickr-day.today { border-color: #ec4899 !important; }
+.flatpickr-day.flatpickr-disabled { color: #cbd5e1 !important; }
 </style>
 @endpush
 
@@ -148,8 +158,10 @@ const hFp = flatpickr('#h-flatpickr', {
     ],
     onChange(selectedDates) {
         if (selectedDates.length === 0) return;
-        const from = selectedDates[0].toISOString().slice(0,10);
-        const to   = selectedDates.length === 2 ? selectedDates[1].toISOString().slice(0,10) : from;
+        // Use local date getters to avoid UTC timezone shift
+        const toISO = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+        const from = toISO(selectedDates[0]);
+        const to   = selectedDates.length === 2 ? toISO(selectedDates[1]) : from;
 
         document.getElementById('h_date_from').value = from;
         document.getElementById('h_date_to').value   = to;
