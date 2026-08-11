@@ -43,6 +43,11 @@ Route::middleware(['auth', 'role:admin'])
 
         // ── Antrean: list & detail ─────────────────────────────────────────
         Route::get('queues', [Admin\QueueController::class, 'index'])->name('queues.index');
+
+        // ── Walk-in Queue (tanpa akun customer) — harus sebelum queues/{queue} ──
+        Route::get('queues/walkin', [Admin\WalkinQueueController::class, 'create'])->name('queues.walkin');
+        Route::post('queues/walkin', [Admin\WalkinQueueController::class, 'store'])->name('queues.walkin.store');
+
         Route::get('queues/{queue}', [Admin\QueueController::class, 'show'])->name('queues.show');
 
         // ── Kelola Antrean (board per barber) ─────────────────────────────
@@ -58,10 +63,6 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('checkin/search', [Admin\CheckinController::class, 'search'])->name('checkin.search');
         Route::get('checkin/{token}', [Admin\CheckinController::class, 'confirm'])->name('checkin.confirm');
         Route::post('checkin/{queue}/validate', [Admin\CheckinController::class, 'validate_checkin'])->name('checkin.validate');
-
-        // ── Walk-in Queue (tanpa akun customer) ───────────────────────────
-        Route::get('queues/walkin', [Admin\WalkinQueueController::class, 'create'])->name('queues.walkin');
-        Route::post('queues/walkin', [Admin\WalkinQueueController::class, 'store'])->name('queues.walkin.store');
     });
 
 // ─── QR Scan Check-in (Customer scans admin's QR) ─────────────────────────
@@ -81,9 +82,12 @@ Route::middleware(['auth', 'role:customer'])
 
         Route::get('branches/{branch}/queue/take', [Customer\QueueController::class, 'take'])->name('queue.take');
         Route::post('branches/{branch}/queue', [Customer\QueueController::class, 'store'])->name('queue.store');
+
+        // Static routes MUST be before {queue} wildcard routes
+        Route::get('queue/history', [Customer\QueueController::class, 'history'])->name('queue.history');
+
         Route::get('queue/{queue}/status', [Customer\QueueController::class, 'status'])->name('queue.status');
         Route::get('queue/{queue}/poll', [Customer\QueueController::class, 'poll'])->name('queue.poll');
-        Route::get('queue/history', [Customer\QueueController::class, 'history'])->name('queue.history');
 
         // Push notification subscription
         Route::post('push/subscribe',   [Customer\PushSubscriptionController::class, 'store'])->name('push.subscribe');
