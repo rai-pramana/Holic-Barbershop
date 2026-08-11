@@ -19,7 +19,7 @@
         /* Status badges — monochrome with readable contrast */
         .badge-pending   { background: #fef9c3; color: #713f12; border: 1px solid #fde68a; }
         .badge-active    { background: #e0f2fe; color: #0c4a6e; border: 1px solid #bae6fd; }
-        .badge-called    { background: #0f172a; color: #f8fafc; border: 1px solid #334155; }
+        .badge-called    { background: #e2e8f0; color: #1e293b; border: 1px solid #94a3b8; }
         .badge-completed { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; }
         .badge-skipped   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
         .badge-expired   { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }

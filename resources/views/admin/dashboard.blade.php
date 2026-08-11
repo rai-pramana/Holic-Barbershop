@@ -42,7 +42,7 @@
             $statusCards = [
                 ['key' => 'pending',   'label' => 'Menunggu',    'cls' => 'bg-yellow-50  border-yellow-200 text-yellow-800'],
                 ['key' => 'active',    'label' => 'Check-in',    'cls' => 'bg-sky-50     border-sky-200    text-sky-800'],
-                ['key' => 'called',    'label' => 'Dipanggil',   'cls' => 'bg-gray-900   border-gray-700   text-white'],
+                ['key' => 'called',    'label' => 'Dipanggil',   'cls' => 'bg-slate-100  border-slate-300  text-slate-800'],
                 ['key' => 'completed', 'label' => 'Selesai',     'cls' => 'bg-green-50   border-green-200  text-green-800'],
                 ['key' => 'skipped',   'label' => 'Dilewati',    'cls' => 'bg-red-50     border-red-200    text-red-700'],
                 ['key' => 'expired',   'label' => 'Kedaluwarsa', 'cls' => 'bg-gray-50    border-gray-200   text-gray-600'],

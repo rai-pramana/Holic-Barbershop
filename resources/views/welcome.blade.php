@@ -10,9 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .gradient-hero { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #3b0764 100%); }
-        .gradient-card { background: linear-gradient(135deg, rgba(236,72,153,0.1), rgba(139,92,246,0.1)); }
-        .glow { box-shadow: 0 0 60px rgba(236,72,153,0.3), 0 0 120px rgba(139,92,246,0.2); }
+        .gradient-hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); }
+        .gradient-card { background: rgba(255,255,255,0.03); }
+        .glow { box-shadow: 0 0 40px rgba(255,255,255,0.08), 0 0 80px rgba(255,255,255,0.04); }
         .float-anim { animation: float 6s ease-in-out infinite; }
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
@@ -20,9 +20,9 @@
         }
         .pulse-ring { animation: pulseRing 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite; }
         @keyframes pulseRing {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(236,72,153,0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(236,72,153,0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(236,72,153,0); }
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+            70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(255,255,255,0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255,255,255,0); }
         }
     </style>
 </head>
@@ -81,9 +81,9 @@
                     <span class="w-2 h-2 bg-white rounded-full pulse-ring inline-block"></span>
                     Sistem Antrean Online Tersedia
                 </div>
-                <h1 class="text-5xl lg:text-6xl font-black leading-tight mb-6">
+                <h1 class="text-5xl lg:text-6xl font-black leading-tight mb-6 text-white">
                     Antri Cerdas,
-                    <span class="block" style="background: linear-gradient(135deg, #0f172a, #334155); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    <span class="block" style="background: linear-gradient(135deg, #ffffff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                         Tampil Keren
                     </span>
                 </h1>
@@ -119,7 +119,7 @@
                         <div class="flex justify-between items-start mb-6">
                             <div>
                                 <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Nomor Antrean</p>
-                                <p class="text-5xl font-black text-white mt-1" style="background: linear-gradient(135deg, #0f172a, #334155); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                <p class="text-5xl font-black text-white mt-1 font-mono">
                                     Q0731<br>042
                                 </p>
                             </div>
@@ -141,8 +141,8 @@
                                 <span class="text-green-400 font-medium">Segera!</span>
                             </div>
                         </div>
-                        <div class="bg-gray-100/10 border border-gray-300/30 rounded-xl p-3 text-center">
-                            <p class="text-gray-700 text-sm font-medium">🎉 Anda dipanggil! Segera ke kursi.</p>
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3 text-center">
+                            <p class="text-gray-300 text-sm font-medium">🎉 Anda dipanggil! Segera ke kursi.</p>
                         </div>
                     </div>
 

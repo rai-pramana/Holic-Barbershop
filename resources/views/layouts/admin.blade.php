@@ -42,7 +42,7 @@
         .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
         .badge-pending   { background: #fef9c3; color: #713f12; border: 1px solid #fde68a; }  /* keep yellow — universal 'waiting' signal */
         .badge-active    { background: #e0f2fe; color: #0c4a6e; border: 1px solid #bae6fd; }  /* keep blue — universal 'active' signal */
-        .badge-called    { background: #0f172a; color: #f8fafc; border: 1px solid #334155; }  /* black pill — stands out, urgent */
+        .badge-called    { background: #e2e8f0; color: #1e293b; border: 1px solid #94a3b8; }  /* slate gray — distinct but not stark */
         .badge-completed { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; }  /* keep green — universal 'success' */
         .badge-skipped   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }  /* keep red — universal 'warning' */
         .badge-expired   { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }  /* gray — neutral/inactive */
