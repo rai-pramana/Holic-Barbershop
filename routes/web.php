@@ -58,6 +58,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('checkin/search', [Admin\CheckinController::class, 'search'])->name('checkin.search');
         Route::get('checkin/{token}', [Admin\CheckinController::class, 'confirm'])->name('checkin.confirm');
         Route::post('checkin/{queue}/validate', [Admin\CheckinController::class, 'validate_checkin'])->name('checkin.validate');
+
+        // ── Walk-in Queue (tanpa akun customer) ───────────────────────────
+        Route::get('queues/walkin', [Admin\WalkinQueueController::class, 'create'])->name('queues.walkin');
+        Route::post('queues/walkin', [Admin\WalkinQueueController::class, 'store'])->name('queues.walkin.store');
     });
 
 // ─── QR Scan Check-in (Customer scans admin's QR) ─────────────────────────
@@ -79,6 +83,7 @@ Route::middleware(['auth', 'role:customer'])
         Route::post('branches/{branch}/queue', [Customer\QueueController::class, 'store'])->name('queue.store');
         Route::get('queue/{queue}/status', [Customer\QueueController::class, 'status'])->name('queue.status');
         Route::get('queue/{queue}/poll', [Customer\QueueController::class, 'poll'])->name('queue.poll');
+        Route::get('queue/history', [Customer\QueueController::class, 'history'])->name('queue.history');
 
         // Push notification subscription
         Route::post('push/subscribe',   [Customer\PushSubscriptionController::class, 'store'])->name('push.subscribe');

@@ -25,6 +25,8 @@ class Queue extends Model
         'branch_id',
         'status',
         'notes',
+        'guest_name',
+        'guest_phone',
         'validation_token',
         'estimated_start',
         'checked_in_at',
@@ -85,6 +87,21 @@ class Queue extends Model
     public function isActive_or_Pending(): bool
     {
         return in_array($this->status, [self::STATUS_PENDING, self::STATUS_ACTIVE, self::STATUS_CALLED]);
+    }
+
+    /** True if this is a walk-in queue (no customer account) */
+    public function isGuest(): bool
+    {
+        return is_null($this->customer_id) && !is_null($this->guest_name);
+    }
+
+    /** Display name for any queue type (account or walk-in) */
+    public function getCustomerNameAttribute(): string
+    {
+        if ($this->isGuest()) {
+            return $this->guest_name . ' (Walk-in)';
+        }
+        return $this->customer?->name ?? '—';
     }
 
     public function getStatusLabelAttribute(): string

@@ -187,19 +187,53 @@ class QueueController extends Controller
             ->where('id', '<', $queue->id)
             ->count();
 
+        $pendingAhead = Queue::where('barber_id', $queue->barber_id)
+            ->where('status', 'pending')
+            ->whereDate('created_at', today())
+            ->where('id', '<', $queue->id)
+            ->count();
+
+        $waitMinutes = ($queuesAhead + $pendingAhead) * ($queue->service->duration_minutes ?? 30);
+
+        $position = Queue::where('barber_id', $queue->barber_id)
+            ->whereIn('status', ['active', 'called', 'pending'])
+            ->whereDate('created_at', today())
+            ->where('id', '<=', $queue->id)
+            ->count();
+
         return response()->json([
-            'status'       => $queue->status,
-            'status_label' => $queue->status_label,
-            'queues_ahead' => $queuesAhead,
-            'called_at'    => $queue->called_at?->toIso8601String(),
-            'completed_at' => $queue->completed_at?->toIso8601String(),
+            'status'        => $queue->status,
+            'status_label'  => $queue->status_label,
+            'queues_ahead'  => $queuesAhead,
+            'pending_ahead' => $pendingAhead,
+            'wait_minutes'  => $waitMinutes,
+            'position'      => $position,
+            'called_at'     => $queue->called_at?->toIso8601String(),
+            'completed_at'  => $queue->completed_at?->toIso8601String(),
         ]);
     }
 
     /**
-     * Customer scans the admin loket QR code → auto check-in.
-     * URL: /customer/checkin/{branch}
+     * Show queue history for the authenticated customer
      */
+    public function history(Request $request): View
+    {
+        $user = Auth::user();
+
+        $query = Queue::with(['branch', 'barber', 'service'])
+            ->where('customer_id', $user->id)
+            ->whereIn('status', ['completed', 'skipped', 'expired'])
+            ->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $histories = $query->paginate(10)->withQueryString();
+
+        return view('customer.queue.history', compact('histories'));
+    }
+
     public function scanCheckin(Branch $branch): RedirectResponse
     {
         Queue::expirePending();

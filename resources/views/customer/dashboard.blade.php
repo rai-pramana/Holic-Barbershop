@@ -21,8 +21,15 @@
                     {{ now()->isoFormat('dddd, D MMMM YYYY') }}
                 </p>
             </div>
-            <div class="flex-shrink-0">
-                <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white text-2xl font-black">
+            <div class="flex items-center gap-2 flex-shrink-0">
+                {{-- Scan QR Button --}}
+                <button onclick="openQrScanner()"
+                        class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-sm font-semibold backdrop-blur-sm border border-white/30 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                    Scan QR
+                </button>
+                {{-- Avatar --}}
+                <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white text-xl font-black">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </div>
             </div>
@@ -189,7 +196,107 @@
             @endforelse
         </div>
     </section>
+
+    {{-- Riwayat Antrean Link --}}
+    <a href="{{ route('customer.queue.history') }}"
+       class="flex items-center justify-between gap-3 bg-white border border-gray-100 rounded-2xl shadow-sm p-4 hover:border-pink-200 transition-colors group">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-pink-50 flex items-center justify-center transition-colors">
+                <svg class="w-5 h-5 text-gray-500 group-hover:text-pink-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+            </div>
+            <div>
+                <p class="font-semibold text-gray-800 text-sm">Riwayat Antrean</p>
+                <p class="text-xs text-gray-400">Lihat semua antrean Anda sebelumnya</p>
+            </div>
+        </div>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-pink-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </a>
+
 </div>
+
+{{-- QR Scanner Modal --}}
+<div id="qr-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+        <div class="flex items-center justify-between p-4 border-b border-gray-100">
+            <div>
+                <h3 class="font-bold text-gray-900">Scan QR Check-in</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Arahkan kamera ke QR di loket barbershop</p>
+            </div>
+            <button onclick="closeQrScanner()" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="p-4">
+            <div id="qr-reader" class="rounded-xl overflow-hidden"></div>
+            <p id="qr-status" class="text-center text-sm text-gray-500 mt-3">Menginisialisasi kamera...</p>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+let html5QrCode = null;
+
+function openQrScanner() {
+    const modal = document.getElementById('qr-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.getElementById('qr-status').textContent = 'Menginisialisasi kamera...';
+
+    html5QrCode = new Html5Qrcode('qr-reader');
+
+    const config = { fps: 10, qrbox: { width: 240, height: 240 } };
+
+    html5QrCode.start(
+        { facingMode: 'environment' },
+        config,
+        (decodedText) => {
+            document.getElementById('qr-status').textContent = '✅ QR berhasil dibaca, mengalihkan...';
+            // Stop scanner then redirect
+            html5QrCode.stop().then(() => {
+                // Only follow URLs from our domain
+                try {
+                    const url = new URL(decodedText);
+                    const appHost = window.location.host;
+                    if (url.host === appHost) {
+                        window.location.href = decodedText;
+                    } else {
+                        document.getElementById('qr-status').textContent = '⚠️ QR tidak valid untuk aplikasi ini.';
+                    }
+                } catch(e) {
+                    document.getElementById('qr-status').textContent = '⚠️ Format QR tidak dikenali.';
+                }
+            }).catch(() => {
+                window.location.href = decodedText;
+            });
+        },
+        (errorMessage) => {
+            // Ignore scan errors — normal during scanning
+        }
+    ).then(() => {
+        document.getElementById('qr-status').textContent = 'Scan QR yang ada di loket barbershop';
+    }).catch((err) => {
+        document.getElementById('qr-status').textContent = '❌ Tidak dapat mengakses kamera: ' + err;
+    });
+}
+
+function closeQrScanner() {
+    const modal = document.getElementById('qr-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    if (html5QrCode) {
+        html5QrCode.stop().catch(() => {});
+        html5QrCode = null;
+    }
+}
+
+// Close modal if clicking backdrop
+document.getElementById('qr-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeQrScanner();
+});
+</script>
+@endpush
 
 @push('scripts')
 <script>

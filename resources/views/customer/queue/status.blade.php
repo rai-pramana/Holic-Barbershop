@@ -61,50 +61,58 @@
         <div class="p-5 md:p-6 space-y-5">
 
             {{-- Stats Grid --}}
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 rounded-2xl p-4">
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
                     <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        Barber
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+                        Posisi
                     </p>
-                    <p class="font-bold text-gray-900 text-sm leading-tight">{{ $queue->barber->name }}</p>
-                    @if($queue->barber->specialty)
-                        <p class="text-xs text-gray-400 mt-0.5">{{ $queue->barber->specialty }}</p>
-                    @endif
-                </div>
-                <div class="bg-gray-50 rounded-2xl p-4">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                        Layanan
-                    </p>
-                    <p class="font-bold text-gray-900 text-sm leading-tight">{{ $queue->service->name }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">{{ $queue->service->duration_minutes }} menit</p>
-                </div>
-                <div class="bg-gray-50 rounded-2xl p-4">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        Di Depan Anda
-                    </p>
-                    <p class="font-bold text-gray-900 text-sm" id="queues-ahead">
+                    <p class="font-bold text-gray-900 text-sm" id="queue-position">
                         @if($queue->isActive_or_Pending())
-                            {{ $queuesAhead + $pendingAhead > 0 ? ($queuesAhead + $pendingAhead).' orang' : 'Hampir tiba!' }}
+                            ke-{{ $queue->position_in_queue }}
                         @else —
                         @endif
                     </p>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4">
+                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Di Depan
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm" id="queues-ahead">
+                        @if($queue->isActive_or_Pending())
+                            {{ $queuesAhead + $pendingAhead > 0 ? ($queuesAhead + $pendingAhead).' org' : 'Hampir!' }}
+                        @else —
+                        @endif
+                    </p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
                     <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Est. Tunggu
                     </p>
                     <p class="font-bold text-gray-900 text-sm" id="wait-time">
                         @if($queue->isActive_or_Pending() && $waitMinutes > 0)
-                            ~{{ $waitMinutes }} menit
+                            ~{{ $waitMinutes }}m
                         @elseif($queue->isActive_or_Pending())
                             Segera!
                         @else —
                         @endif
                     </p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        Barber
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm">{{ $queue->barber?->name ?? '—' }}</p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-4 col-span-2">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                        Layanan
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm leading-tight">{{ $queue->service->name }} <span class="text-xs font-normal text-gray-400">({{ $queue->service->duration_minutes }}m)</span></p>
                 </div>
             </div>
 
@@ -488,11 +496,20 @@ async function pollStatus() {
             window.location.reload();
         }
 
-        const aheadEl = document.getElementById('queues-ahead');
+        // Live-update position, queues ahead, and estimated wait time
+        const aheadEl    = document.getElementById('queues-ahead');
+        const waitEl     = document.getElementById('wait-time');
+        const positionEl = document.getElementById('queue-position');
+
+        if (positionEl && data.position !== undefined) {
+            positionEl.textContent = data.position > 0 ? 'ke-' + data.position : '—';
+        }
         if (aheadEl && data.queues_ahead !== undefined) {
-            aheadEl.textContent = data.queues_ahead > 0
-                ? data.queues_ahead + ' orang'
-                : 'Hampir tiba!';
+            const total = (data.queues_ahead ?? 0) + (data.pending_ahead ?? 0);
+            aheadEl.textContent = total > 0 ? total + ' org' : 'Hampir!';
+        }
+        if (waitEl && data.wait_minutes !== undefined) {
+            waitEl.textContent = data.wait_minutes > 0 ? '~' + data.wait_minutes + 'm' : 'Segera!';
         }
     } catch(e) { /* silent */ }
 }
