@@ -149,18 +149,36 @@
         </div>
 
         {{-- Submit --}}
-        <div class="flex gap-3 sticky bottom-4 md:static bg-gray-50/80 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none p-4 md:p-0 -mx-4 md:mx-0 rounded-t-2xl md:rounded-none shadow-t-lg md:shadow-none">
-            <a href="{{ route('customer.dashboard') }}"
-               class="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 font-semibold py-3.5 rounded-2xl hover:bg-gray-50 transition-colors text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Batal
-            </a>
+        <div class="sticky bottom-0 md:static z-10
+                    bg-white/95 md:bg-transparent
+                    backdrop-blur-md md:backdrop-blur-none
+                    border-t border-gray-100 md:border-0
+                    px-4 pt-3 pb-5 md:p-0
+                    -mx-4 md:mx-0 mt-4">
+
             <button type="submit" id="submit-btn"
-                    class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold py-3.5 rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/20 text-sm">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
-                Ambil Nomor Antrean
+                    class="w-full flex items-center justify-center gap-2.5
+                           bg-gradient-to-r from-gray-900 to-slate-800
+                           text-white font-bold py-4 rounded-2xl
+                           hover:opacity-90 active:scale-[0.98] transition-all
+                           shadow-lg shadow-gray-900/20 text-base">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
+                </svg>
+                <span>Ambil Nomor Antrean</span>
             </button>
+
+            <a href="{{ route('customer.dashboard') }}"
+               class="flex items-center justify-center gap-1.5 mt-3
+                      text-gray-500 hover:text-gray-800 text-sm font-medium transition-colors">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Kembali ke Dashboard
+            </a>
         </div>
+
     </form>
 </div>
 
