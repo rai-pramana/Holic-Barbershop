@@ -1,0 +1,131 @@
+<?php $__env->startSection('title', 'Tambah Layanan'); ?>
+<?php $__env->startSection('page-title', 'Tambah Layanan Baru'); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="max-w-xl">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <form method="POST" action="<?php echo e(route('admin.services.store')); ?>">
+            <?php echo csrf_field(); ?>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Cabang *</label>
+                    <select name="branch_id" required
+                            class="w-full border <?php $__errorArgs = ['branch_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-400 <?php else: ?> border-gray-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400">
+                        <option value="">Pilih Cabang</option>
+                        <?php $__currentLoopData = $branches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $branch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($branch->id); ?>" <?php echo e(old('branch_id') == $branch->id ? 'selected' : ''); ?>><?php echo e($branch->name); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+                    <?php $__errorArgs = ['branch_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Layanan *</label>
+                    <input type="text" name="name" value="<?php echo e(old('name')); ?>" required
+                           class="w-full border <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-400 <?php else: ?> border-gray-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400">
+                    <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Deskripsi</label>
+                    <textarea name="description" rows="2"
+                              class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 resize-none"><?php echo e(old('description')); ?></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Durasi (menit) *</label>
+                        <input type="number" name="duration_minutes" value="<?php echo e(old('duration_minutes', 30)); ?>" min="5" max="480" required
+                               class="w-full border <?php $__errorArgs = ['duration_minutes'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-400 <?php else: ?> border-gray-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400">
+                        <?php $__errorArgs = ['duration_minutes'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Harga (Rp) *</label>
+                        <input type="number" name="price" value="<?php echo e(old('price', 0)); ?>" min="0" required
+                               class="w-full border <?php $__errorArgs = ['price'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-400 <?php else: ?> border-gray-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400">
+                        <?php $__errorArgs = ['price'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" name="is_active" value="1" checked
+                               class="w-5 h-5 rounded border-gray-300 text-pink-500 focus:ring-pink-400">
+                        <span class="text-sm font-medium text-gray-700">Layanan Aktif</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-6 pt-4 border-t border-gray-100">
+                <a href="<?php echo e(route('admin.services.index')); ?>"
+                   class="flex-1 text-center bg-gray-100 text-gray-700 font-semibold py-2.5 rounded-xl hover:bg-gray-200 transition-colors text-sm">
+                    Batal
+                </a>
+                <button type="submit"
+                        class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity text-sm">
+                    Simpan Layanan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\raipr\Documents\Code\holic-barbershop\resources\views\admin\services\create.blade.php ENDPATH**/ ?>

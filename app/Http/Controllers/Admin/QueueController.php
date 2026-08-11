@@ -101,7 +101,7 @@ class QueueController extends Controller
             // Silent — push failure must not block queue management
         }
 
-        return back()->with('success', "🔔 Antrean #{$queue->queue_number} ({$queue->customer->name}) berhasil dipanggil.");
+        return back()->with('success', "🔔 Antrean #{$queue->queue_number} ({$queue->customer_name}) berhasil dipanggil.");
     }
 
     /**
@@ -174,7 +174,7 @@ class QueueController extends Controller
                     'queue_number' => $q->queue_number,
                     'status'       => $q->status,
                     'status_label' => $q->status_label,
-                    'customer'     => $q->customer->name,
+                    'customer'     => $q->customer_name,
                     'service'      => $q->service->name,
                 ]),
             ]);
@@ -210,7 +210,7 @@ class QueueController extends Controller
             'latest'    => $latest ? [
                 'id'           => $latest->id,
                 'queue_number' => $latest->queue_number,
-                'customer'     => $latest->customer->name ?? '-',
+                'customer'     => $latest->customer_name,
                 'branch'       => $latest->branch->name ?? '-',
                 'status'       => $latest->status,
                 'created_at'   => $latest->created_at->toISOString(),

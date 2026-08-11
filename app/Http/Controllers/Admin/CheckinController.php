@@ -82,6 +82,6 @@ class CheckinController extends Controller
         ]);
 
         return redirect()->route('admin.checkin.index')
-            ->with('success', "✅ Antrean #{$queue->queue_number} ({$queue->customer->name}) berhasil divalidasi!");
+            ->with('success', "✅ Antrean #{$queue->queue_number} ({$queue->customer_name}) berhasil divalidasi!");
     }
 }

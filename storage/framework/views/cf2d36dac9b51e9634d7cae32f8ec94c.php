@@ -1,0 +1,70 @@
+<?php $__env->startSection('title', $branch->name); ?>
+<?php $__env->startSection('page-title', $branch->name); ?>
+<?php $__env->startSection('page-subtitle', 'Detail cabang dan antrean hari ini'); ?>
+
+<?php $__env->startSection('page-actions'); ?>
+<a href="<?php echo e(route('admin.branches.edit', $branch)); ?>"
+   class="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-200 transition-colors">
+    Edit Cabang
+</a>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white rounded-2xl border border-gray-100 p-5">
+        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Barber</p>
+        <p class="text-3xl font-black text-gray-900"><?php echo e($branch->barbers_count); ?></p>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-100 p-5">
+        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Layanan</p>
+        <p class="text-3xl font-black text-gray-900"><?php echo e($branch->services_count); ?></p>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-100 p-5">
+        <p class="text-xs text-gray-500 uppercase font-medium mb-1">Total Antrean</p>
+        <p class="text-3xl font-black text-gray-900"><?php echo e($branch->queues_count); ?></p>
+    </div>
+</div>
+
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+    <div class="p-5 border-b border-gray-100">
+        <h3 class="font-bold text-gray-900">Antrean Hari Ini</h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-gray-100 bg-gray-50">
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase px-5 py-3">No.</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase px-5 py-3">Customer</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase px-5 py-3">Barber</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase px-5 py-3">Layanan</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase px-5 py-3">Status</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase px-5 py-3">Waktu</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                <?php $__empty_1 = true; $__currentLoopData = $todayQueues; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $queue): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <tr class="hover:bg-gray-50/50">
+                    <td class="px-5 py-3 font-bold text-gray-900 text-sm"><?php echo e($queue->queue_number); ?></td>
+                    <td class="px-5 py-3 text-sm text-gray-700"><?php echo e($queue->customer->name); ?></td>
+                    <td class="px-5 py-3 text-sm text-gray-700"><?php echo e($queue->barber?->user?->name ?? '—'); ?></td>
+                    <td class="px-5 py-3 text-sm text-gray-700"><?php echo e($queue->service->name); ?></td>
+                    <td class="px-5 py-3">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-<?php echo e($queue->status); ?>">
+                            <?php echo e($queue->status_label); ?>
+
+                        </span>
+                    </td>
+                    <td class="px-5 py-3 text-xs text-gray-500"><?php echo e($queue->created_at->format('H:i')); ?></td>
+                </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                <tr>
+                    <td colspan="6" class="px-5 py-10 text-center text-gray-400 text-sm">Belum ada antrean hari ini.</td>
+                </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\raipr\Documents\Code\holic-barbershop\resources\views\admin\branches\show.blade.php ENDPATH**/ ?>
