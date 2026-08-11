@@ -111,9 +111,9 @@
         @php
         $links = [
             ['href' => route('admin.branches.create'), 'icon' => '🏪', 'label' => 'Tambah Cabang'],
-            ['href' => route('admin.barbers.create'), 'icon' => '💈', 'label' => 'Tambah Barber'],
+            ['href' => route('admin.barbers.create'),  'icon' => '💈', 'label' => 'Tambah Barber'],
             ['href' => route('admin.services.create'), 'icon' => '✂️', 'label' => 'Tambah Layanan'],
-            ['href' => route('admin.queues.index'), 'icon' => '📋', 'label' => 'Kelola Antrean'],
+            ['href' => route('admin.rekap.index'),     'icon' => '📊', 'label' => 'Rekap Kinerja'],
         ];
         @endphp
         @foreach($links as $link)

@@ -44,6 +44,9 @@ Route::middleware(['auth', 'role:admin'])
         // ── Antrean: list & detail ─────────────────────────────────────────
         Route::get('queues', [Admin\QueueController::class, 'index'])->name('queues.index');
 
+        // ── Rekap Kinerja ─────────────────────────────────────────────
+        Route::get('rekap', [Admin\RekapController::class, 'index'])->name('rekap.index');
+
         // ── Walk-in Queue (tanpa akun customer) — harus sebelum queues/{queue} ──
         Route::get('queues/walkin', [Admin\WalkinQueueController::class, 'create'])->name('queues.walkin');
         Route::post('queues/walkin', [Admin\WalkinQueueController::class, 'store'])->name('queues.walkin.store');
