@@ -36,7 +36,7 @@
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Nama Lengkap</label>
                     <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus
-                           class="w-full bg-gray-800/60 border @error('name') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                           class="w-full bg-gray-800/60 border @error('name') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="Nama Anda">
                     @error('name')
                         <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
@@ -47,7 +47,7 @@
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                           class="w-full bg-gray-800/60 border @error('email') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                           class="w-full bg-gray-800/60 border @error('email') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="email@contoh.com">
                     @error('email')
                         <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
@@ -58,7 +58,7 @@
                 <div class="mb-4">
                     <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Nomor HP <span class="text-gray-600 font-normal">(opsional)</span></label>
                     <input type="text" id="phone" name="phone" value="{{ old('phone') }}"
-                           class="w-full bg-gray-800/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                           class="w-full bg-gray-800/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="08xxxxxxxxxx">
                 </div>
 
@@ -66,7 +66,7 @@
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
                     <input type="password" id="password" name="password" required
-                           class="w-full bg-gray-800/60 border @error('password') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                           class="w-full bg-gray-800/60 border @error('password') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="Minimal 8 karakter">
                     @error('password')
                         <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
@@ -77,7 +77,7 @@
                 <div class="mb-6">
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-300 mb-2">Konfirmasi Password</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" required
-                           class="w-full bg-gray-800/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                           class="w-full bg-gray-800/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="Ulangi password Anda">
                 </div>
 

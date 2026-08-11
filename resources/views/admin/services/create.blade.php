@@ -53,7 +53,7 @@
                 <div>
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" name="is_active" value="1" checked
-                               class="w-5 h-5 rounded border-gray-300 text-gray-900 focus:ring-amber-400">
+                               class="w-5 h-5 rounded border-gray-300 text-gray-900 focus:ring-gray-400">
                         <span class="text-sm font-medium text-gray-700">Layanan Aktif</span>
                     </label>
                 </div>

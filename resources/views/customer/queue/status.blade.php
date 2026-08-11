@@ -22,7 +22,7 @@
         <div class="relative overflow-hidden text-white text-center
             @if($queue->status === 'called')    bg-gradient-to-br from-purple-500 to-indigo-600
             @elseif($queue->status === 'active')  bg-gradient-to-br from-blue-500 to-cyan-600
-            @elseif($queue->status === 'pending') bg-gradient-to-br from-amber-400 to-orange-500
+            @elseif($queue->status === 'pending') bg-gradient-to-br from-gray-800 to-slate-900
             @elseif($queue->status === 'completed') bg-gradient-to-br from-green-500 to-emerald-600
             @else bg-gradient-to-br from-gray-400 to-gray-600
             @endif p-6 md:p-8">

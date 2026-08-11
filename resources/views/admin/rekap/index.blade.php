@@ -100,7 +100,7 @@
         ['label'=>'Dilewati',         'value'=>$skipped,       'sub'=>'tidak hadir',        'color'=>'from-rose-500 to-red-500',      'icon'=>'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'],
         ['label'=>'Kedaluwarsa',      'value'=>$expired,       'sub'=>'tidak check-in',     'color'=>'from-gray-500 to-slate-400',    'icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
         ['label'=>'Tk. Kehadiran',    'value'=>$attendRate.'%','sub'=>'check-in / daftar',  'color'=>'from-blue-500 to-cyan-500',     'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m-6 9l2 2 4-4'],
-        ['label'=>'Tk. Selesai',      'value'=>$completeRate.'%','sub'=>'selesai / hadir',  'color'=>'from-violet-500 to-purple-500', 'icon'=>'M13 10V3L4 14h7v7l9-11h-7z'],
+        ['label'=>'Tk. Selesai',      'value'=>$completeRate.'%','sub'=>'selesai / hadir',  'color'=>'from-slate-700 to-gray-800', 'icon'=>'M13 10V3L4 14h7v7l9-11h-7z'],
     ];
     @endphp
     @foreach($kpis as $kpi)
@@ -141,7 +141,7 @@
 {{-- ── Row: Avg Duration + Revenue ────────────────────────────────────────── --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-gray-800 to-slate-900 flex items-center justify-center flex-shrink-0">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <div>
@@ -181,7 +181,7 @@
             <div class="relative w-full">
                 @if($count > 0)
                 <div class="absolute bottom-0 w-full rounded-t-md transition-all
-                    {{ $hour === $peakHour ? 'bg-gradient-to-t from-gray-900 to-gray-900' : 'bg-gradient-to-t from-slate-300 to-slate-200 group-hover:from-pink-300 group-hover:to-purple-300' }}"
+                    {{ $hour === $peakHour ? 'bg-gradient-to-t from-gray-900 to-gray-900' : 'bg-gradient-to-t from-slate-300 to-slate-200 group-hover:from-slate-500 group-hover:to-slate-400' }}"
                      style="height: {{ max(4, $pct) }}px; max-height: 96px;">
                 </div>
                 @endif
@@ -340,7 +340,7 @@ const fp = flatpickr('#flatpickr-range', {
 
         // Deactivate preset chips
         document.querySelectorAll('.preset-btn').forEach(b => {
-            b.classList.remove('bg-gradient-to-r','from-pink-500','to-purple-600','text-white','border-transparent','shadow-sm');
+            b.classList.remove('bg-gradient-to-r','from-gray-900','to-slate-800','text-white','border-transparent','shadow-sm');
             b.classList.add('border-gray-200','text-gray-600');
         });
 
@@ -366,12 +366,12 @@ function setPreset(key) {
 
     // Highlight active chip
     document.querySelectorAll('.preset-btn').forEach(b => {
-        b.classList.remove('bg-gradient-to-r','from-pink-500','to-purple-600','text-white','border-transparent','shadow-sm');
+        b.classList.remove('bg-gradient-to-r','from-gray-900','to-slate-800','text-white','border-transparent','shadow-sm');
         b.classList.add('border-gray-200','text-gray-600');
     });
     const chip = document.getElementById('preset-' + key);
     if (chip) {
-        chip.classList.add('bg-gradient-to-r','from-pink-500','to-purple-600','text-white','border-transparent','shadow-sm');
+        chip.classList.add('bg-gradient-to-r','from-gray-900','to-slate-800','text-white','border-transparent','shadow-sm');
         chip.classList.remove('border-gray-200','text-gray-600');
     }
 

@@ -122,7 +122,7 @@
                                 @endif
                                 <span class="inline-flex items-center gap-1 text-xs font-medium mt-0.5
                                     {{ $barber->pending_count === 0 ? 'text-green-600' : 'text-gray-900' }}">
-                                    <span class="w-1.5 h-1.5 rounded-full {{ $barber->pending_count === 0 ? 'bg-green-400' : 'bg-amber-400' }}"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $barber->pending_count === 0 ? 'bg-green-400' : 'bg-gray-400' }}"></span>
                                     {{ $barber->pending_count === 0 ? 'Kosong' : $barber->pending_count.' antrean' }}
                                 </span>
                             </div>
@@ -143,7 +143,7 @@
             </div>
             <div class="p-4">
                 <textarea name="notes" id="notes" rows="3"
-                          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-amber-400/20 transition-all resize-none placeholder:text-gray-400"
+                          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-400/20 transition-all resize-none placeholder:text-gray-400"
                           placeholder="Contoh: minta fade tipis, jangan terlalu pendek...">{{ old('notes') }}</textarea>
             </div>
         </div>

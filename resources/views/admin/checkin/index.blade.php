@@ -117,14 +117,14 @@
                            value="{{ old('queue_number') }}"
                            placeholder="cth: Q0005"
                            autofocus
-                           class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-mono font-bold uppercase text-gray-800 tracking-widest focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-amber-400 @error('queue_number') border-red-400 @enderror">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-mono font-bold uppercase text-gray-800 tracking-widest focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 @error('queue_number') border-red-400 @enderror">
                     @error('queue_number')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cabang (opsional)</label>
                     <select name="branch_id"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-amber-400">
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400">
                         <option value="">— Semua Cabang —</option>
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -213,7 +213,7 @@ function switchBranch(branchId, branchName, url) {
     });
     const activeTab = document.getElementById('tab-' + branchId);
     activeTab.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
-    activeTab.classList.add('bg-gradient-to-r', 'from-pink-500', 'to-purple-600', 'text-white');
+    activeTab.classList.add('bg-gradient-to-r', 'from-gray-900', 'to-slate-800', 'text-white');
 
     // Regenerate QR
     generateQR(url);

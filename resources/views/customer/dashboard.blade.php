@@ -6,7 +6,7 @@
 <div class="space-y-6 md:space-y-8">
 
     {{-- Welcome hero --}}
-    <div class="bg-gradient-to-br from-pink-500 via-pink-600 to-purple-700 rounded-2xl md:rounded-3xl p-6 md:p-8 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-gray-800 rounded-2xl md:rounded-3xl p-6 md:p-8 text-white relative overflow-hidden">
         {{-- Decorative circles --}}
         <div class="absolute top-0 right-0 w-48 h-48 md:w-72 md:h-72 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 w-32 h-32 md:w-48 md:h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
@@ -14,9 +14,9 @@
 
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <p class="text-pink-100 text-sm font-medium mb-1">Selamat datang kembali,</p>
+                <p class="text-gray-300 text-sm font-medium mb-1">Selamat datang kembali,</p>
                 <h1 class="text-2xl md:text-3xl font-black tracking-tight">{{ auth()->user()->name }}</h1>
-                <p class="text-pink-100 text-sm mt-1">
+                <p class="text-gray-300 text-sm mt-1">
                     <svg class="w-4 h-4 inline-block mr-1 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     {{ now()->isoFormat('dddd, D MMMM YYYY') }}
                 </p>
@@ -38,7 +38,7 @@
 
     {{-- Push Notification Banner (hidden) --}}
     @if(false){{-- hidden: push notification feature disabled --}}
-    <div id="push-banner" class="hidden bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-4 text-white shadow-md">
+    <div id="push-banner" class="hidden bg-gradient-to-r from-gray-800 to-slate-700 rounded-2xl p-4 text-white shadow-md">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
@@ -143,7 +143,7 @@
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 card-hover group">
                 {{-- Header --}}
                 <div class="flex items-start justify-between mb-4">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-50 to-purple-50 border border-pink-100 flex items-center justify-center group-hover:from-pink-100 group-hover:to-purple-100 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-100 flex items-center justify-center group-hover:from-gray-100 group-hover:to-slate-100 transition-colors">
                         <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     </div>
                     <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-50 border border-green-100 px-2.5 py-1 rounded-full">

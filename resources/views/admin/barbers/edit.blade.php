@@ -15,20 +15,20 @@
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Barber *</label>
                     <input type="text" name="name" value="{{ old('name', $barber->name) }}" required
-                           class="w-full border @error('name') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-amber-400">
+                           class="w-full border @error('name') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400">
                     @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">No. HP</label>
                     <input type="text" name="phone" value="{{ old('phone', $barber->phone) }}"
-                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-amber-400">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Cabang *</label>
                     <select name="branch_id" required
-                            class="w-full border @error('branch_id') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-amber-400">
+                            class="w-full border @error('branch_id') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400">
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}" {{ old('branch_id', $barber->branch_id) == $branch->id ? 'selected' : '' }}>
                                 {{ $branch->name }}
@@ -41,19 +41,19 @@
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Keahlian / Spesialisasi</label>
                     <input type="text" name="specialty" value="{{ old('specialty', $barber->specialty) }}"
-                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-amber-400">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400">
                 </div>
 
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Bio / Deskripsi</label>
                     <textarea name="bio" rows="3"
-                              class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-amber-400 resize-none">{{ old('bio', $barber->bio) }}</textarea>
+                              class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 resize-none">{{ old('bio', $barber->bio) }}</textarea>
                 </div>
 
                 <div class="sm:col-span-2">
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" name="is_available" value="1" {{ old('is_available', $barber->is_available) ? 'checked' : '' }}
-                               class="w-5 h-5 rounded border-gray-300 text-gray-900 focus:ring-amber-400">
+                               class="w-5 h-5 rounded border-gray-300 text-gray-900 focus:ring-gray-400">
                         <span class="text-sm font-medium text-gray-700">Barber Tersedia (menerima antrean)</span>
                     </label>
                 </div>

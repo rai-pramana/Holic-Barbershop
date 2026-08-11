@@ -24,7 +24,7 @@
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
         {{-- Header --}}
-        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-5">
+        <div class="bg-gradient-to-r from-gray-800 to-slate-700 px-6 py-5">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -129,7 +129,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                        class="flex-1 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-bold hover:opacity-90 transition-opacity shadow-sm">
+                        class="flex-1 py-3 rounded-xl bg-gradient-to-r from-gray-800 to-slate-700 text-white text-sm font-bold hover:opacity-90 transition-opacity shadow-sm">
                     ✅ Daftarkan Antrean
                 </button>
             </div>

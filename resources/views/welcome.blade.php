@@ -68,7 +68,7 @@
 <section class="gradient-hero min-h-screen flex items-center relative overflow-hidden pt-20">
     {{-- Background decorations --}}
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl float-anim"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-slate-500/20 rounded-full blur-3xl float-anim"></div>
         <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl float-anim" style="animation-delay: 3s"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-900/30 rounded-full blur-3xl"></div>
     </div>
@@ -77,8 +77,8 @@
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             {{-- Left: Text --}}
             <div>
-                <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-pink-500/30 rounded-full px-4 py-2 text-sm text-gray-400 font-medium mb-6">
-                    <span class="w-2 h-2 bg-pink-400 rounded-full pulse-ring inline-block"></span>
+                <div class="inline-flex items-center gap-2 bg-slate-200/10 border border-white/20 rounded-full px-4 py-2 text-sm text-gray-400 font-medium mb-6">
+                    <span class="w-2 h-2 bg-white rounded-full pulse-ring inline-block"></span>
                     Sistem Antrean Online Tersedia
                 </div>
                 <h1 class="text-5xl lg:text-6xl font-black leading-tight mb-6">
@@ -180,7 +180,7 @@
             @php
             $features = [
                 ['icon' => '⚡', 'title' => 'Antrean Real-time', 'desc' => 'Pantau posisi antrean Anda secara langsung. Status selalu diperbarui otomatis.', 'color' => 'from-yellow-400 to-orange-500'],
-                ['icon' => '✂️', 'title' => 'Pilih Barber Favorit', 'desc' => 'Pilih barber spesifik atau biarkan sistem memilih barber tercepat untuk Anda.', 'color' => 'from-pink-400 to-rose-500'],
+                ['icon' => '✂️', 'title' => 'Pilih Barber Favorit', 'desc' => 'Pilih barber spesifik atau biarkan sistem memilih barber tercepat untuk Anda.', 'color' => 'from-gray-800 to-slate-700'],
                 ['icon' => '📱', 'title' => 'Check-in Digital', 'desc' => 'Cukup klik tombol Check-in saat tiba. Tidak perlu scan QR code fisik.', 'color' => 'from-blue-400 to-cyan-500'],
                 ['icon' => '🔔', 'title' => 'Notifikasi Panggilan', 'desc' => 'Halaman status otomatis memberi tahu saat nomor Anda dipanggil barber.', 'color' => 'from-purple-400 to-violet-500'],
                 ['icon' => '⏰', 'title' => 'Estimasi Waktu', 'desc' => 'Ketahui perkiraan waktu tunggu berdasarkan antrian dan durasi layanan.', 'color' => 'from-green-400 to-emerald-500'],
@@ -189,7 +189,7 @@
             @endphp
 
             @foreach($features as $f)
-            <div class="group relative bg-gray-900/50 border border-white/5 rounded-2xl p-6 hover:border-pink-500/30 transition-all hover:bg-gray-900/80">
+            <div class="group relative bg-gray-900/50 border border-white/5 rounded-2xl p-6 hover:border-gray-500/30 transition-all hover:bg-gray-900/80">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-br {{ $f['color'] }} flex items-center justify-center text-xl mb-5 shadow-lg">
                     {{ $f['icon'] }}
                 </div>
@@ -223,7 +223,7 @@
                     <span class="text-white font-black text-lg">{{ $step['num'] }}</span>
                 </div>
                 @if(!$loop->last)
-                <div class="hidden md:block absolute top-8 left-3/4 w-1/2 h-0.5 bg-gradient-to-r from-pink-500/50 to-transparent"></div>
+                <div class="hidden md:block absolute top-8 left-3/4 w-1/2 h-0.5 bg-gradient-to-r from-white/20 to-transparent"></div>
                 @endif
                 <h3 class="text-white font-semibold mb-2">{{ $step['title'] }}</h3>
                 <p class="text-gray-400 text-sm">{{ $step['desc'] }}</p>
@@ -236,7 +236,7 @@
 {{-- CTA Section --}}
 <section class="py-24 bg-gray-950">
     <div class="max-w-3xl mx-auto px-6 text-center">
-        <div class="bg-gradient-to-br from-pink-500/10 to-purple-600/10 border border-pink-500/20 rounded-3xl p-12">
+        <div class="bg-gradient-to-br from-gray-700/20 to-slate-600/10 border border-gray-500/20 rounded-3xl p-12">
             <h2 class="text-4xl font-black text-white mb-4">
                 Siap tampil <span style="background: linear-gradient(135deg, #0f172a, #334155); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">keren</span>?
             </h2>

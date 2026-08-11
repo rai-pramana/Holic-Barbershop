@@ -36,7 +36,7 @@
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
-                           class="w-full bg-gray-800/60 border @error('email') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                           class="w-full bg-gray-800/60 border @error('email') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="email@contoh.com">
                     @error('email')
                         <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
@@ -47,7 +47,7 @@
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
                     <input type="password" id="password" name="password" required
-                           class="w-full bg-gray-800/60 border @error('password') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                           class="w-full bg-gray-800/60 border @error('password') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="••••••••">
                     @error('password')
                         <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
@@ -57,7 +57,7 @@
                 {{-- Remember --}}
                 <div class="flex items-center justify-between mb-6">
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="remember" class="rounded border-white/10 bg-gray-800 text-gray-900 focus:ring-amber-500">
+                        <input type="checkbox" name="remember" class="rounded border-white/10 bg-gray-800 text-gray-900 focus:ring-gray-500">
                         <span class="text-sm text-gray-400">Ingat saya</span>
                     </label>
                 </div>
