@@ -34,7 +34,7 @@
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-gray-50 rounded-xl p-4">
                     <p class="text-xs text-gray-500 font-medium mb-1">👤 Customer</p>
-                    <p class="font-bold text-gray-900">{{ $queue->customer->name }}</p>
+                    <p class="font-bold text-gray-900">{{ $queue->customer_name }}</p>
                     @if($queue->customer->phone)
                         <p class="text-xs text-gray-500">{{ $queue->customer->phone }}</p>
                     @endif

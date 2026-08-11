@@ -89,7 +89,7 @@
             <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 flex items-center justify-between">
                 <div>
                     <p class="font-black text-purple-900 text-xl font-mono">{{ $activeQ->queue_number }}</p>
-                    <p class="text-purple-700 text-sm font-medium">{{ $activeQ->customer->name }}</p>
+                    <p class="text-purple-700 text-sm font-medium">{{ $activeQ->customer_name }}</p>
                     <p class="text-purple-500 text-xs">{{ $activeQ->service->name }}</p>
                 </div>
                 <div class="flex flex-col gap-2">
@@ -131,7 +131,7 @@
                     @endif
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-800 truncate">{{ $q->customer->name }}</p>
+                    <p class="text-sm font-medium text-gray-800 truncate">{{ $q->customer_name }}</p>
                     <p class="text-xs text-gray-400 truncate">{{ $q->service->name }}</p>
                 </div>
                 <div class="flex-shrink-0">

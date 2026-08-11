@@ -161,7 +161,7 @@
             <div class="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
                 <span class="font-mono font-bold text-xs text-gray-700 w-14">{{ $q->queue_number }}</span>
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-800 truncate">{{ $q->customer->name }}</p>
+                    <p class="text-sm font-medium text-gray-800 truncate">{{ $q->customer_name }}</p>
                     <p class="text-xs text-gray-400">{{ $q->checked_in_at->format('H:i') }} · {{ $q->branch->name }}</p>
                 </div>
                 <span class="text-xs font-semibold px-2 py-0.5 rounded-full

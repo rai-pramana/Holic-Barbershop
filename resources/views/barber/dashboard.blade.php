@@ -41,7 +41,7 @@
         <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
             <div>
                 <p class="text-gray-500 mb-1">Customer</p>
-                <p class="text-white font-semibold">{{ $activeQueue->customer->name }}</p>
+                <p class="text-white font-semibold">{{ $activeQueue->customer_name }}</p>
                 @if($activeQueue->customer->phone)
                     <p class="text-gray-400 text-xs">{{ $activeQueue->customer->phone }}</p>
                 @endif
@@ -137,7 +137,7 @@
                     {{ $queue->queue_number }}
                 </div>
                 <div>
-                    <p class="text-white font-semibold text-sm">{{ $queue->customer->name }}</p>
+                    <p class="text-white font-semibold text-sm">{{ $queue->customer_name }}</p>
                     <p class="text-gray-400 text-xs">{{ $queue->service->name }} — {{ $queue->service->duration_minutes }} menit</p>
                 </div>
             </div>
@@ -163,7 +163,7 @@
                     <div class="w-10 h-10 rounded-lg bg-gray-800 text-gray-500 flex items-center justify-center font-bold text-xs">
                         {{ $queue->queue_number }}
                     </div>
-                    <p class="text-gray-400 text-sm">{{ $queue->customer->name }}</p>
+                    <p class="text-gray-400 text-sm">{{ $queue->customer_name }}</p>
                 </div>
                 <span class="text-xs font-medium text-gray-500">{{ $queue->status_label }}</span>
             </div>

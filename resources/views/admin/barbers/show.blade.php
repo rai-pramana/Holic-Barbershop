@@ -55,7 +55,7 @@
             <div class="px-6 py-3 flex items-center gap-4">
                 <span class="font-mono font-bold text-gray-800 w-16">{{ $queue->queue_number }}</span>
                 <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-800">{{ $queue->customer->name }}</p>
+                    <p class="text-sm font-medium text-gray-800">{{ $queue->customer_name }}</p>
                     <p class="text-xs text-gray-400">{{ $queue->service->name }}</p>
                 </div>
                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold

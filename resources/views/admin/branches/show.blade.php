@@ -47,7 +47,7 @@
                 @forelse($todayQueues as $queue)
                 <tr class="hover:bg-gray-50/50">
                     <td class="px-5 py-3 font-bold text-gray-900 text-sm">{{ $queue->queue_number }}</td>
-                    <td class="px-5 py-3 text-sm text-gray-700">{{ $queue->customer->name }}</td>
+                    <td class="px-5 py-3 text-sm text-gray-700">{{ $queue->customer_name }}</td>
                     <td class="px-5 py-3 text-sm text-gray-700">{{ $queue->barber?->user?->name ?? '—' }}</td>
                     <td class="px-5 py-3 text-sm text-gray-700">{{ $queue->service->name }}</td>
                     <td class="px-5 py-3">

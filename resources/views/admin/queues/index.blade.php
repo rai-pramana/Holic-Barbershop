@@ -58,7 +58,7 @@
                 <tr class="hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3 font-bold text-gray-900 text-sm">{{ $queue->queue_number }}</td>
                     <td class="px-5 py-3 text-sm">
-                        <p class="font-medium text-gray-900">{{ $queue->customer->name }}</p>
+                        <p class="font-medium text-gray-900">{{ $queue->customer_name }}</p>
                         <p class="text-xs text-gray-500">{{ $queue->customer->phone }}</p>
                     </td>
                     <td class="px-5 py-3 text-sm text-gray-700">{{ $queue->barber?->user?->name ?? '—' }}</td>
