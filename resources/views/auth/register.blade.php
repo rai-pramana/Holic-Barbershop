@@ -80,7 +80,7 @@
                 </div>
 
                 <button type="submit"
-                        class="w-full bg-white text-gray-900 font-bold py-3.5 rounded-xl hover:bg-gray-100 active:scale-[0.98] transition-all shadow-lg">
+                        class="w-full bg-slate-600 hover:bg-slate-500 text-white font-bold py-3.5 rounded-xl active:scale-[0.98] transition-all shadow-lg">
                     Buat Akun
                 </button>
             </form>

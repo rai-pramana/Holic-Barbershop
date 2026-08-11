@@ -113,17 +113,15 @@
 
             {{-- Right: Queue Card Preview --}}
             <div class="lg:flex justify-center hidden">
-                <div class="relative">
+                <div class="relative pb-12">
                     {{-- Main card --}}
                     <div class="bg-gray-900/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 w-80 shadow-2xl">
                         <div class="flex justify-between items-start mb-6">
                             <div>
                                 <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Nomor Antrean</p>
-                                <p class="text-5xl font-black text-white mt-1 font-mono">
-                                    Q0731<br>042
-                                </p>
+                                <p class="text-5xl font-black text-white mt-1 font-mono tracking-widest">Q0008</p>
                             </div>
-                            <span class="bg-gray-100/20 text-gray-700 border border-gray-300/30 text-xs font-semibold px-3 py-1.5 rounded-full">
+                            <span class="bg-white text-gray-900 border border-white/20 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
                                 Dipanggil
                             </span>
                         </div>
@@ -138,24 +136,24 @@
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Estimasi</span>
-                                <span class="text-green-400 font-medium">Segera!</span>
+                                <span class="text-white font-medium">Segera!</span>
                             </div>
                         </div>
-                        <div class="bg-white/5 border border-white/10 rounded-xl p-3 text-center">
-                            <p class="text-gray-300 text-sm font-medium">🎉 Anda dipanggil! Segera ke kursi.</p>
+                        <div class="bg-white/10 border border-white/15 rounded-xl p-3 text-center">
+                            <p class="text-white text-sm font-semibold">🎉 Anda dipanggil! Segera ke kursi.</p>
                         </div>
                     </div>
 
                     {{-- Floating badge --}}
-                    <div class="absolute -top-4 -right-4 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg shadow-green-500/30">
+                    <div class="absolute -top-4 -right-4 bg-white text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg ring-1 ring-black/10">
                         Live ✓
                     </div>
 
                     {{-- Second card (behind) --}}
-                    <div class="absolute -bottom-4 -left-8 bg-gray-800/60 backdrop-blur border border-white/5 rounded-2xl p-4 w-56 shadow-xl">
+                    <div class="absolute -bottom-2 -left-8 bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-4 w-56 shadow-xl">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-yellow-500/20 rounded-xl flex items-center justify-center">
-                                <span class="text-yellow-400 text-sm font-bold">Q043</span>
+                            <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center border border-white/15">
+                                <span class="text-white text-sm font-bold font-mono">Q0009</span>
                             </div>
                             <div>
                                 <p class="text-white text-xs font-semibold">Antrean berikutnya</p>
