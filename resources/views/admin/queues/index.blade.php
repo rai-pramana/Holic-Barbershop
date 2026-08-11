@@ -4,46 +4,79 @@
 @section('page-title', '📋 Riwayat Antrean')
 @section('page-subtitle', 'Periode: ' . $dateLabel)
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+.flatpickr-calendar { font-family: 'Plus Jakarta Sans', sans-serif !important; border-radius: 16px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important; border: 1px solid #f1f5f9 !important; overflow: hidden; }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: linear-gradient(135deg,#ec4899,#a855f7) !important; border-color: transparent !important; }
+.flatpickr-day.inRange { background: #fce7f3 !important; border-color: transparent !important; color: #9d174d !important; }
+.flatpickr-day:hover { background: #fdf2f8 !important; border-color: #f9a8d4 !important; }
+.flatpickr-months { background: linear-gradient(135deg,#1e293b,#334155); padding: 8px 0; }
+.flatpickr-month, .flatpickr-current-month, .flatpickr-monthDropdown-months, .numInputWrapper input, .flatpickr-prev-month, .flatpickr-next-month { color: #fff !important; fill: #fff !important; }
+.flatpickr-weekday { color: #94a3b8 !important; font-weight: 700; font-size: 10px; }
+</style>
+@endpush
+
 @section('content')
-{{-- Filters --}}
-<form method="GET" action="{{ route('admin.queues.index') }}" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6">
-    <div class="flex flex-wrap gap-3 items-end">
+
+{{-- Hidden inputs for date range --}}
+<form method="GET" action="{{ route('admin.queues.index') }}" id="history-form">
+<input type="hidden" name="date_from" id="h_date_from" value="{{ request('date_from', today()->toDateString()) }}">
+<input type="hidden" name="date_to"   id="h_date_to"   value="{{ request('date_to', today()->toDateString()) }}">
+
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6">
+    <div class="flex flex-wrap gap-3 items-center">
+
+        {{-- Branch filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Cabang</label>
-            <select name="branch_id" class="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-400">
+            <select name="branch_id" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-pink-300 cursor-pointer">
                 <option value="">Semua Cabang</option>
                 @foreach($branches as $branch)
                     <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                 @endforeach
             </select>
         </div>
+
+        {{-- Status filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
-            <select name="status" class="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-400">
+            <select name="status" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-pink-300 cursor-pointer">
                 <option value="">Semua Status</option>
                 @foreach(['pending'=>'Menunggu','active'=>'Check-in','called'=>'Dipanggil','completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'] as $val => $lbl)
                     <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
                 @endforeach
             </select>
         </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">Dari Tanggal</label>
-            <input type="date" name="date_from"
-                   value="{{ request('date_from', request('date', today()->toDateString())) }}"
-                   class="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-400">
+
+        {{-- Flatpickr range button --}}
+        <div class="ml-auto flex items-center gap-3">
+            <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">Periode</label>
+                <div class="relative">
+                    <button type="button" id="h-date-btn"
+                            class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:border-pink-300 hover:bg-pink-50 transition-all cursor-pointer min-w-[200px]">
+                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span id="h-date-label">{{ $dateLabel }}</span>
+                        <svg class="w-3 h-3 text-gray-400 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <input type="text" id="h-flatpickr" class="absolute opacity-0 pointer-events-none w-0 h-0">
+                </div>
+            </div>
+
+            <div class="flex items-end gap-2">
+                <button type="submit"
+                        class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
+                    Filter
+                </button>
+                <a href="{{ route('admin.queues.index') }}"
+                   class="text-sm text-gray-400 hover:text-gray-600 py-2 transition-colors">
+                    Reset
+                </a>
+            </div>
         </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">Sampai Tanggal</label>
-            <input type="date" name="date_to"
-                   value="{{ request('date_to', '') }}"
-                   class="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-400">
-        </div>
-        <button type="submit"
-                class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition-opacity">
-            Filter
-        </button>
-        <a href="{{ route('admin.queues.index') }}" class="text-sm text-gray-500 hover:text-gray-700 py-2">Reset</a>
     </div>
+</div>
 </form>
 
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -94,3 +127,45 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+function fmtDisplay(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+}
+
+const hFp = flatpickr('#h-flatpickr', {
+    mode: 'range',
+    maxDate: 'today',
+    dateFormat: 'Y-m-d',
+    locale: { firstDayOfWeek: 1 },
+    defaultDate: [
+        document.getElementById('h_date_from').value,
+        document.getElementById('h_date_to').value
+    ],
+    onChange(selectedDates) {
+        if (selectedDates.length === 0) return;
+        const from = selectedDates[0].toISOString().slice(0,10);
+        const to   = selectedDates.length === 2 ? selectedDates[1].toISOString().slice(0,10) : from;
+
+        document.getElementById('h_date_from').value = from;
+        document.getElementById('h_date_to').value   = to;
+
+        const label = from === to
+            ? fmtDisplay(from)
+            : fmtDisplay(from) + ' – ' + fmtDisplay(to);
+        document.getElementById('h-date-label').textContent = label;
+
+        // Auto-submit when range is complete
+        if (selectedDates.length === 2) {
+            document.getElementById('history-form').submit();
+        }
+    },
+});
+
+document.getElementById('h-date-btn').addEventListener('click', () => hFp.open());
+</script>
+@endpush

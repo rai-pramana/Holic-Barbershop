@@ -4,12 +4,29 @@
 @section('page-title', '📊 Rekap Kinerja')
 @section('page-subtitle', 'Rangkuman performa barbershop berdasarkan periode')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+.flatpickr-calendar { font-family: 'Plus Jakarta Sans', sans-serif !important; border-radius: 16px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important; border: 1px solid #f1f5f9 !important; overflow: hidden; }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: linear-gradient(135deg,#ec4899,#a855f7) !important; border-color: transparent !important; }
+.flatpickr-day.inRange { background: #fce7f3 !important; border-color: transparent !important; color: #9d174d !important; }
+.flatpickr-day:hover { background: #fdf2f8 !important; border-color: #f9a8d4 !important; }
+.flatpickr-months { background: linear-gradient(135deg,#1e293b,#334155); padding: 8px 0; }
+.flatpickr-month, .flatpickr-current-month, .flatpickr-monthDropdown-months, .numInputWrapper input, .flatpickr-prev-month, .flatpickr-next-month { color: #fff !important; fill: #fff !important; }
+.flatpickr-weekday { color: #94a3b8 !important; font-weight: 700; font-size: 10px; }
+</style>
+@endpush
+
 @section('content')
 
 {{-- ── Filter Bar ─────────────────────────────────────────────────────────── --}}
 <form method="GET" action="{{ route('admin.rekap.index') }}" id="rekap-form">
+<input type="hidden" name="date_from" id="date_from_hidden" value="{{ $from->toDateString() }}">
+<input type="hidden" name="date_to"   id="date_to_hidden" value="{{ $to->toDateString() }}">
+<input type="hidden" name="preset"    id="preset-input" value="{{ $preset }}">
+
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6">
-    <div class="flex flex-wrap gap-3 items-end">
+    <div class="flex flex-wrap gap-3 items-center">
 
         {{-- Preset chips --}}
         <div class="flex gap-2 flex-wrap">
@@ -23,19 +40,18 @@
             @endforeach
         </div>
 
-        {{-- Custom range --}}
+        {{-- Flatpickr range picker --}}
         <div class="flex items-center gap-2 ml-auto">
-            <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                <input type="date" name="date_from" id="date_from"
-                       value="{{ $preset === 'custom' ? $from->toDateString() : '' }}"
-                       class="bg-transparent text-sm text-gray-700 outline-none w-34"
-                       onchange="clearPreset()">
-                <span class="text-gray-400 text-xs">s/d</span>
-                <input type="date" name="date_to" id="date_to"
-                       value="{{ $preset === 'custom' && $from->toDateString() !== $to->toDateString() ? $to->toDateString() : '' }}"
-                       class="bg-transparent text-sm text-gray-700 outline-none w-34"
-                       onchange="clearPreset()">
+            <div class="relative">
+                <button type="button" id="date-picker-btn"
+                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:border-pink-300 hover:bg-pink-50 transition-all cursor-pointer min-w-[200px]">
+                    <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span id="date-picker-label">
+                        {{ $from->isoFormat('D MMM YY') . ' – ' . $to->isoFormat('D MMM YY') }}
+                    </span>
+                    <svg class="w-3 h-3 text-gray-400 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <input type="text" id="flatpickr-range" class="absolute opacity-0 pointer-events-none w-0 h-0">
             </div>
 
             {{-- Branch filter --}}
@@ -46,8 +62,6 @@
                 <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                 @endforeach
             </select>
-
-            <input type="hidden" name="preset" id="preset-input" value="{{ $preset }}">
 
             <button type="submit"
                     class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
@@ -265,49 +279,93 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+// ── Helpers ────────────────────────────────────────────────────────────────
+function getDayOfWeek() { const d = new Date().getDay(); return d === 0 ? 6 : d - 1; }
+function daysInMonth()  { const d = new Date(); return new Date(d.getFullYear(), d.getMonth()+1, 0).getDate(); }
+function fmtISO(d)      { return d.toISOString().slice(0, 10); }
+function offsetDate(n)  { const d = new Date(); d.setDate(d.getDate() + n); return d; }
+function fmtDisplay(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'2-digit' });
+}
+
 const presets = {
-    today:     [formatDate(0),  formatDate(0)],
-    yesterday: [formatDate(-1), formatDate(-1)],
-    week:      [formatDate(-getDayOfWeek()), formatDate(6-getDayOfWeek())],
-    month:     [formatDate(-(new Date().getDate()-1)), formatDate(daysInMonth()-(new Date().getDate()))],
+    today:     [fmtISO(new Date()), fmtISO(new Date())],
+    yesterday: [fmtISO(offsetDate(-1)), fmtISO(offsetDate(-1))],
+    week:      [fmtISO(offsetDate(-getDayOfWeek())), fmtISO(offsetDate(6-getDayOfWeek()))],
+    month:     [fmtISO(offsetDate(-(new Date().getDate()-1))), fmtISO(offsetDate(daysInMonth()-new Date().getDate()))],
 };
 
-function getDayOfWeek() {
-    const d = new Date().getDay();
-    return d === 0 ? 6 : d - 1; // Mon=0
-}
-function daysInMonth() {
-    const d = new Date();
-    return new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
-}
-function formatDate(offsetDays) {
-    const d = new Date();
-    d.setDate(d.getDate() + offsetDays);
-    return d.toISOString().slice(0, 10);
-}
+// ── Flatpickr init ─────────────────────────────────────────────────────────
+const fp = flatpickr('#flatpickr-range', {
+    mode: 'range',
+    maxDate: 'today',
+    dateFormat: 'Y-m-d',
+    locale: { firstDayOfWeek: 1 },
+    defaultDate: [
+        document.getElementById('date_from_hidden').value,
+        document.getElementById('date_to_hidden').value
+    ],
+    onReady(_, __, fp) {
+        // Position calendar under button
+        fp.calendarContainer.style.marginTop = '4px';
+    },
+    onChange(selectedDates) {
+        if (selectedDates.length === 0) return;
+        const from = fmtISO(selectedDates[0]);
+        const to   = selectedDates.length === 2 ? fmtISO(selectedDates[1]) : from;
 
+        document.getElementById('date_from_hidden').value = from;
+        document.getElementById('date_to_hidden').value   = to;
+        document.getElementById('preset-input').value     = 'custom';
+
+        // Update label
+        const label = from === to
+            ? fmtDisplay(from)
+            : fmtDisplay(from) + ' – ' + fmtDisplay(to);
+        document.getElementById('date-picker-label').textContent = label;
+
+        // Deactivate preset chips
+        document.querySelectorAll('.preset-btn').forEach(b => {
+            b.classList.remove('bg-gradient-to-r','from-pink-500','to-purple-600','text-white','border-transparent','shadow-sm');
+            b.classList.add('border-gray-200','text-gray-600');
+        });
+
+        // Auto-submit when range complete (2 dates selected)
+        if (selectedDates.length === 2) {
+            document.getElementById('rekap-form').submit();
+        }
+    },
+});
+
+// Open picker on button click
+document.getElementById('date-picker-btn').addEventListener('click', () => fp.open());
+
+// ── Preset chips ───────────────────────────────────────────────────────────
 function setPreset(key) {
-    document.getElementById('preset-input').value = key;
     const [from, to] = presets[key];
-    document.getElementById('date_from').value = from;
-    document.getElementById('date_to').value = from === to ? '' : to;
-    // Update button styles
-    document.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.className = btn.className.replace('bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-sm', 'border-gray-200 text-gray-600 hover:border-pink-300 hover:text-pink-600');
-    });
-    const active = document.getElementById('preset-' + key);
-    if (active) active.className = active.className.replace('border-gray-200 text-gray-600 hover:border-pink-300 hover:text-pink-600', 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-sm');
-    document.getElementById('rekap-form').submit();
-}
+    document.getElementById('date_from_hidden').value = from;
+    document.getElementById('date_to_hidden').value   = to;
+    document.getElementById('preset-input').value     = key;
 
-function clearPreset() {
-    document.getElementById('preset-input').value = 'custom';
-    document.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.className = btn.className
-            .replace('bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-sm', '')
-            .replace('border-gray-200 text-gray-600', 'border-gray-200 text-gray-600');
+    // Update flatpickr display
+    fp.setDate([from, to]);
+
+    // Highlight active chip
+    document.querySelectorAll('.preset-btn').forEach(b => {
+        b.classList.remove('bg-gradient-to-r','from-pink-500','to-purple-600','text-white','border-transparent','shadow-sm');
+        b.classList.add('border-gray-200','text-gray-600');
     });
+    const chip = document.getElementById('preset-' + key);
+    if (chip) {
+        chip.classList.add('bg-gradient-to-r','from-pink-500','to-purple-600','text-white','border-transparent','shadow-sm');
+        chip.classList.remove('border-gray-200','text-gray-600');
+    }
+
+    document.getElementById('rekap-form').submit();
 }
 </script>
 @endpush
