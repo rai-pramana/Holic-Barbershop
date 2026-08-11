@@ -6,7 +6,7 @@
 
 @section('page-actions')
 <a href="{{ route('admin.barbers.create') }}"
-   class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2">
+   class="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
     Tambah Barber
 </a>
@@ -24,7 +24,7 @@
                 <p class="font-bold text-gray-900 truncate">{{ $barber->name }}</p>
                 <p class="text-xs text-gray-500 truncate">{{ $barber->phone ?? "-" }}</p>
                 @if($barber->specialty)
-                    <p class="text-xs text-pink-600 font-medium mt-1">{{ $barber->specialty }}</p>
+                    <p class="text-xs text-amber-700 font-medium mt-1">{{ $barber->specialty }}</p>
                 @endif
             </div>
         </div>
@@ -68,7 +68,7 @@
     </div>
     @empty
     <div class="col-span-3 bg-white rounded-2xl border border-gray-100 p-12 text-center text-gray-400">
-        Belum ada barber. <a href="{{ route('admin.barbers.create') }}" class="text-pink-600 font-medium">Tambah sekarang</a>.
+        Belum ada barber. <a href="{{ route('admin.barbers.create') }}" class="text-amber-700 font-medium">Tambah sekarang</a>.
     </div>
     @endforelse
 </div>

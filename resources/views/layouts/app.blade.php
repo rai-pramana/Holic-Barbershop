@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#ec4899">
+    <meta name="theme-color" content="#f59e0b">
     <link rel="manifest" href="/manifest.json">
     <title>@yield('title', 'HOLIC Barbershop') — HOLIC Barbershop</title>
     <meta name="description" content="@yield('description', 'Sistem Antrean Online HOLIC Barbershop — Potong rambut tanpa ribet, antri dari mana saja.')">
@@ -13,21 +13,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .gradient-text { background: linear-gradient(135deg, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .gradient-text { background: linear-gradient(135deg, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); }
 
         /* Status badges */
         .badge-pending   { background: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
         .badge-active    { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-        .badge-called    { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+        .badge-called    { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
         .badge-completed { background: #dcfce7; color: #14532d; border: 1px solid #bbf7d0; }
         .badge-skipped   { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
         .badge-expired   { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
 
         /* Nav link */
         .nav-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 500; color: #6b7280; padding: 6px 12px; border-radius: 10px; transition: all 0.15s; }
-        .nav-link:hover { color: #ec4899; background: #fdf2f8; }
-        .nav-link.active { color: #ec4899; font-weight: 600; }
+        .nav-link:hover { color: #d97706; background: #fffbeb; }
+        .nav-link.active { color: #d97706; font-weight: 600; }
 
         /* Mobile menu */
         #mobile-nav { display: none; }
@@ -61,14 +61,12 @@
 
             {{-- Logo --}}
             <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-md shadow-pink-500/25 flex-shrink-0">
-                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
+                <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md ring-2 ring-amber-400/40 flex-shrink-0 overflow-hidden">
+                    <img src="/images/holic-logo.png" alt="HOLIC Barbershop" class="w-10 h-10 object-cover">
                 </div>
                 <div class="leading-tight">
                     <p class="font-black text-gray-900 text-base tracking-tight">HOLIC</p>
-                    <p class="text-xs text-pink-500 font-semibold -mt-0.5">Barbershop</p>
+                    <p class="text-xs text-amber-600 font-semibold -mt-0.5">Barbershop</p>
                 </div>
             </a>
 
@@ -94,7 +92,7 @@
                 @auth
                     {{-- User chip --}}
                     <div class="hidden sm:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white text-xs font-bold">
                             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                         </div>
                         <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
@@ -107,8 +105,8 @@
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="text-sm font-medium text-gray-600 hover:text-pink-600 transition-colors px-3 py-2">Masuk</a>
-                    <a href="{{ route('register') }}" class="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-pink-500/20">
+                    <a href="{{ route('login') }}" class="text-sm font-medium text-gray-600 hover:text-amber-700 transition-colors px-3 py-2">Masuk</a>
+                    <a href="{{ route('register') }}" class="text-sm font-semibold bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-pink-500/20">
                         Daftar
                     </a>
                 @endauth
@@ -126,13 +124,13 @@
         @auth
         <div id="mobile-nav" class="md:hidden border-t border-gray-100 py-3 space-y-1">
             @if(auth()->user()->isCustomer())
-                <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-pink-600 transition-colors" onclick="toggleMobileNav()">
+                <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-amber-700 transition-colors" onclick="toggleMobileNav()">
                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     Dashboard Saya
                 </a>
             @endif
             <div class="px-3 py-2 flex items-center gap-2 text-sm text-gray-500">
-                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white text-xs font-bold">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </div>
                 Halo, <strong class="text-gray-800">{{ auth()->user()->name }}</strong>
@@ -181,7 +179,7 @@
 <footer class="bg-white border-t border-gray-100 mt-auto">
     <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row justify-between items-center gap-2">
         <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+            <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center">
                 <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
             </div>
             <p class="text-sm font-semibold text-gray-700">HOLIC Barbershop</p>

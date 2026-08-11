@@ -32,31 +32,31 @@
 <nav class="fixed top-0 left-0 right-0 z-50 bg-gray-950/80 backdrop-blur-xl border-b border-white/5">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-2">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center glow">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center glow">
                 <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
             </div>
-            <span class="font-bold text-lg">HOLIC <span class="text-pink-400">Barbershop</span></span>
+            <span class="font-bold text-lg">HOLIC <span class="text-amber-500">Barbershop</span></span>
         </div>
         <div class="flex items-center gap-4">
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-600 text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
+                    <a href="{{ route('admin.dashboard') }}" class="text-sm font-medium bg-gradient-to-r from-amber-500 to-amber-600 text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
                         Admin Panel
                     </a>
                 @elseif(auth()->user()->isBarber())
-                    <a href="{{ route('barber.dashboard') }}" class="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-600 text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
+                    <a href="{{ route('barber.dashboard') }}" class="text-sm font-medium bg-gradient-to-r from-amber-500 to-amber-600 text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
                         Barber Panel
                     </a>
                 @else
-                    <a href="{{ route('customer.dashboard') }}" class="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-600 text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
+                    <a href="{{ route('customer.dashboard') }}" class="text-sm font-medium bg-gradient-to-r from-amber-500 to-amber-600 text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
                         Dashboard Saya
                     </a>
                 @endif
             @else
                 <a href="{{ route('login') }}" class="text-sm text-gray-400 hover:text-white transition-colors font-medium">Masuk</a>
-                <a href="{{ route('register') }}" class="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-600 text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-pink-500/25">
+                <a href="{{ route('register') }}" class="text-sm font-semibold bg-gradient-to-r from-amber-500 to-amber-600 text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-amber-500/25">
                     Daftar Gratis
                 </a>
             @endauth
@@ -68,7 +68,7 @@
 <section class="gradient-hero min-h-screen flex items-center relative overflow-hidden pt-20">
     {{-- Background decorations --}}
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl float-anim"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl float-anim"></div>
         <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl float-anim" style="animation-delay: 3s"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-900/30 rounded-full blur-3xl"></div>
     </div>
@@ -77,13 +77,13 @@
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             {{-- Left: Text --}}
             <div>
-                <div class="inline-flex items-center gap-2 bg-pink-500/10 border border-pink-500/30 rounded-full px-4 py-2 text-sm text-pink-300 font-medium mb-6">
+                <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-pink-500/30 rounded-full px-4 py-2 text-sm text-amber-400 font-medium mb-6">
                     <span class="w-2 h-2 bg-pink-400 rounded-full pulse-ring inline-block"></span>
                     Sistem Antrean Online Tersedia
                 </div>
                 <h1 class="text-5xl lg:text-6xl font-black leading-tight mb-6">
                     Antri Cerdas,
-                    <span class="block" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    <span class="block" style="background: linear-gradient(135deg, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                         Tampil Keren
                     </span>
                 </h1>
@@ -93,13 +93,13 @@
                 <div class="flex flex-col sm:flex-row gap-4">
                     @auth
                         <a href="{{ auth()->user()->isCustomer() ? route('customer.dashboard') : (auth()->user()->isAdmin() ? route('admin.dashboard') : route('barber.dashboard')) }}"
-                           class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity shadow-xl shadow-pink-500/30 text-center">
+                           class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity shadow-xl shadow-amber-500/30 text-center">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                             Ke Dashboard
                         </a>
                     @else
                         <a href="{{ route('register') }}"
-                           class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity shadow-xl shadow-pink-500/30 text-center">
+                           class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity shadow-xl shadow-amber-500/30 text-center">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                             Ambil Antrean Sekarang
                         </a>
@@ -119,7 +119,7 @@
                         <div class="flex justify-between items-start mb-6">
                             <div>
                                 <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Nomor Antrean</p>
-                                <p class="text-5xl font-black text-white mt-1" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                <p class="text-5xl font-black text-white mt-1" style="background: linear-gradient(135deg, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                                     Q0731<br>042
                                 </p>
                             </div>
@@ -219,7 +219,7 @@
             @endphp
             @foreach($steps as $i => $step)
             <div class="relative text-center">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-pink-500/25">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/25">
                     <span class="text-white font-black text-lg">{{ $step['num'] }}</span>
                 </div>
                 @if(!$loop->last)
@@ -238,18 +238,18 @@
     <div class="max-w-3xl mx-auto px-6 text-center">
         <div class="bg-gradient-to-br from-pink-500/10 to-purple-600/10 border border-pink-500/20 rounded-3xl p-12">
             <h2 class="text-4xl font-black text-white mb-4">
-                Siap tampil <span style="background: linear-gradient(135deg, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">keren</span>?
+                Siap tampil <span style="background: linear-gradient(135deg, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">keren</span>?
             </h2>
             <p class="text-gray-400 mb-8 text-lg">Daftar sekarang dan nikmati kemudahan antrean online HOLIC Barbershop.</p>
             @guest
             <a href="{{ route('register') }}"
-               class="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold px-10 py-4 rounded-2xl hover:opacity-90 transition-opacity shadow-xl shadow-pink-500/30 text-lg">
+               class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold px-10 py-4 rounded-2xl hover:opacity-90 transition-opacity shadow-xl shadow-amber-500/30 text-lg">
                 Mulai Sekarang — Gratis!
             </a>
             @endguest
             @auth
             <a href="{{ route('customer.dashboard') }}"
-               class="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold px-10 py-4 rounded-2xl hover:opacity-90 transition-opacity shadow-xl shadow-pink-500/30 text-lg">
+               class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold px-10 py-4 rounded-2xl hover:opacity-90 transition-opacity shadow-xl shadow-amber-500/30 text-lg">
                 Ke Dashboard Saya
             </a>
             @endauth
@@ -261,7 +261,7 @@
 <footer class="bg-gray-900/50 border-t border-white/5 py-8">
     <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+            <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center">
                 <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
             </div>
             <span class="text-gray-400 text-sm">© {{ date('Y') }} HOLIC Barbershop. All rights reserved.</span>

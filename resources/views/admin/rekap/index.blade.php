@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
 .flatpickr-calendar { font-family: 'Plus Jakarta Sans', sans-serif !important; border-radius: 16px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.18) !important; border: 1px solid #f1f5f9 !important; overflow: hidden; }
-.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: linear-gradient(135deg,#ec4899,#a855f7) !important; border-color: transparent !important; color:#fff !important; }
-.flatpickr-day.inRange { background: #fce7f3 !important; border-color: transparent !important; color: #9d174d !important; }
-.flatpickr-day:hover { background: #fdf2f8 !important; border-color: #f9a8d4 !important; }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: linear-gradient(135deg,#f59e0b,#d97706) !important; border-color: transparent !important; color:#fff !important; }
+.flatpickr-day.inRange { background: #fef3c7 !important; border-color: transparent !important; color: #92400e !important; }
+.flatpickr-day:hover { background: #fffbeb !important; border-color: #fcd34d !important; }
 .flatpickr-months { background: linear-gradient(135deg,#1e293b,#334155) !important; padding: 8px 0; }
 .flatpickr-month { color:#fff !important; fill:#fff !important; }
 .flatpickr-current-month { color:#fff !important; font-size: 14px !important; font-weight: 700 !important; }
@@ -20,9 +20,9 @@
 .numInputWrapper span { border-color: rgba(255,255,255,0.3) !important; }
 .numInputWrapper span svg { fill: rgba(255,255,255,0.8) !important; }
 .flatpickr-prev-month, .flatpickr-next-month { fill: #fff !important; color: #fff !important; }
-.flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: #f9a8d4 !important; }
+.flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: #fcd34d !important; }
 .flatpickr-weekday { color: #94a3b8 !important; font-weight: 700; font-size: 10px; }
-.flatpickr-day.today { border-color: #ec4899 !important; }
+.flatpickr-day.today { border-color: #f59e0b !important; }
 .flatpickr-day.flatpickr-disabled { color: #cbd5e1 !important; }
 </style>
 @endpush
@@ -44,7 +44,7 @@
             <button type="button" onclick="setPreset('{{ $key }}')"
                     id="preset-{{ $key }}"
                     class="px-4 py-2 rounded-xl text-xs font-semibold border transition-all preset-btn
-                           {{ $preset === $key ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-sm' : 'border-gray-200 text-gray-600 hover:border-pink-300 hover:text-pink-600' }}">
+                           {{ $preset === $key ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white border-transparent shadow-sm' : 'border-gray-200 text-gray-600 hover:border-amber-300 hover:text-amber-700' }}">
                 {{ $label }}
             </button>
             @endforeach
@@ -54,7 +54,7 @@
         <div class="flex items-center gap-2 ml-auto">
             <div class="relative">
                 <button type="button" id="date-picker-btn"
-                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:border-pink-300 hover:bg-pink-50 transition-all cursor-pointer min-w-[200px]">
+                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:border-amber-300 hover:bg-amber-50 transition-all cursor-pointer min-w-[200px]">
                     <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     <span id="date-picker-label">
                         {{ $from->isoFormat('D MMM YY') . ' – ' . $to->isoFormat('D MMM YY') }}
@@ -66,7 +66,7 @@
 
             {{-- Branch filter --}}
             <select name="branch_id" onchange="this.form.submit()"
-                    class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none focus:border-pink-300 cursor-pointer">
+                    class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none focus:border-amber-300 cursor-pointer">
                 <option value="">Semua Cabang</option>
                 @foreach($branches as $branch)
                 <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
@@ -74,7 +74,7 @@
             </select>
 
             <button type="submit"
-                    class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
+                    class="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
                 Terapkan
             </button>
         </div>
@@ -106,17 +106,17 @@
     @foreach($kpis as $kpi)
     @if(!empty($kpi['link']))
     <a href="{{ $kpi['link'] }}"
-       class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-2 hover:border-pink-200 hover:shadow-md transition-all group cursor-pointer">
+       class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-2 hover:border-amber-200 hover:shadow-md transition-all group cursor-pointer">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-br {{ $kpi['color'] }} flex items-center justify-center flex-shrink-0">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $kpi['icon'] }}"/>
             </svg>
         </div>
         <div>
-            <p class="text-2xl font-black text-gray-900 group-hover:text-pink-600 transition-colors">{{ $kpi['value'] }}</p>
+            <p class="text-2xl font-black text-gray-900 group-hover:text-amber-700 transition-colors">{{ $kpi['value'] }}</p>
             <p class="text-xs font-semibold text-gray-700 leading-tight flex items-center gap-1">
                 {{ $kpi['label'] }}
-                <svg class="w-3 h-3 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                <svg class="w-3 h-3 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </p>
             <p class="text-[10px] text-gray-400">{{ $kpi['sub'] }}</p>
         </div>
@@ -169,7 +169,7 @@
             <h3 class="font-bold text-gray-900">Distribusi Antrean per Jam</h3>
             <p class="text-xs text-gray-400 mt-0.5">
                 Jam tersibuk:
-                <span class="text-pink-600 font-semibold">{{ str_pad($peakHour, 2, '0', STR_PAD_LEFT) }}:00 – {{ str_pad($peakHour+1, 2, '0', STR_PAD_LEFT) }}:00</span>
+                <span class="text-amber-700 font-semibold">{{ str_pad($peakHour, 2, '0', STR_PAD_LEFT) }}:00 – {{ str_pad($peakHour+1, 2, '0', STR_PAD_LEFT) }}:00</span>
                 ({{ $hourlyData[$peakHour] }} antrean)
             </p>
         </div>
@@ -181,7 +181,7 @@
             <div class="relative w-full">
                 @if($count > 0)
                 <div class="absolute bottom-0 w-full rounded-t-md transition-all
-                    {{ $hour === $peakHour ? 'bg-gradient-to-t from-pink-500 to-purple-500' : 'bg-gradient-to-t from-slate-300 to-slate-200 group-hover:from-pink-300 group-hover:to-purple-300' }}"
+                    {{ $hour === $peakHour ? 'bg-gradient-to-t from-amber-500 to-amber-500' : 'bg-gradient-to-t from-slate-300 to-slate-200 group-hover:from-pink-300 group-hover:to-purple-300' }}"
                      style="height: {{ max(4, $pct) }}px; max-height: 96px;">
                 </div>
                 @endif
@@ -276,7 +276,7 @@
                     </div>
                 </div>
                 <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-gradient-to-r from-pink-400 to-purple-500 rounded-full transition-all"
+                    <div class="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all"
                          style="width:{{ round($s['total']/$maxService*100) }}%"></div>
                 </div>
             </div>

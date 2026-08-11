@@ -13,45 +13,45 @@
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Cabang *</label>
                     <input type="text" name="name" value="{{ old('name') }}" required
-                           class="w-full border @error('name') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400">
+                           class="w-full border @error('name') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
                     @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Alamat *</label>
                     <textarea name="address" rows="2" required
-                              class="w-full border @error('address') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 resize-none">{{ old('address') }}</textarea>
+                              class="w-full border @error('address') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 resize-none">{{ old('address') }}</textarea>
                     @error('address') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Kota</label>
                     <input type="text" name="city" value="{{ old('city') }}"
-                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Nomor Telepon</label>
                     <input type="text" name="phone" value="{{ old('phone') }}"
-                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Jam Buka *</label>
                     <input type="time" name="open_time" value="{{ old('open_time', '09:00') }}" required
-                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Jam Tutup *</label>
                     <input type="time" name="close_time" value="{{ old('close_time', '21:00') }}" required
-                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
                 </div>
 
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Deskripsi</label>
                     <textarea name="description" rows="3"
-                              class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 resize-none">{{ old('description') }}</textarea>
+                              class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 resize-none">{{ old('description') }}</textarea>
                 </div>
 
                 <div>
@@ -60,7 +60,7 @@
                         <span class="text-gray-500 font-mono font-bold text-sm">Q</span>
                         <input type="text" name="queue_prefix" value="{{ old('queue_prefix') }}" required
                                maxlength="3" placeholder="0"
-                               class="w-24 border @error('queue_prefix') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm font-mono font-bold focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 uppercase">
+                               class="w-24 border @error('queue_prefix') border-red-400 @else border-gray-300 @enderror rounded-xl px-4 py-2.5 text-sm font-mono font-bold focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 uppercase">
                         <span class="text-xs text-gray-400">contoh: <code class="bg-gray-100 px-1 rounded">0</code> → tiket <strong>Q0001</strong></span>
                     </div>
                     @error('queue_prefix') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
@@ -70,7 +70,7 @@
                 <div class="sm:col-span-2">
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" name="is_active" value="1" {{ old('is_active', '1') ? 'checked' : '' }}
-                               class="w-5 h-5 rounded border-gray-300 text-pink-500 focus:ring-pink-400">
+                               class="w-5 h-5 rounded border-gray-300 text-amber-600 focus:ring-amber-400">
                         <span class="text-sm font-medium text-gray-700">Cabang Aktif</span>
                     </label>
                 </div>
@@ -82,7 +82,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                        class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity text-sm">
+                        class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity text-sm">
                     Simpan Cabang
                 </button>
             </div>

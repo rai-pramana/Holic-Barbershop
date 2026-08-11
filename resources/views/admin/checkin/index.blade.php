@@ -34,7 +34,7 @@
                 <button onclick="switchBranch('{{ $branch->id }}', '{{ addslashes($branch->name) }}', '{{ route('customer.checkin.scan', $branch->id) }}')"
                         id="tab-{{ $branch->id }}"
                         class="branch-tab px-4 py-2 rounded-xl text-sm font-semibold transition-all
-                               {{ $i === 0 ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                               {{ $i === 0 ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                     {{ $branch->name }}
                 </button>
                 @endforeach
@@ -74,7 +74,7 @@
                     Refresh
                 </button>
                 <button onclick="printQR()"
-                        class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity">
+                        class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                     Print QR
                 </button>
@@ -117,14 +117,14 @@
                            value="{{ old('queue_number') }}"
                            placeholder="cth: Q0005"
                            autofocus
-                           class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-mono font-bold uppercase text-gray-800 tracking-widest focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 @error('queue_number') border-red-400 @enderror">
+                           class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-mono font-bold uppercase text-gray-800 tracking-widest focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 @error('queue_number') border-red-400 @enderror">
                     @error('queue_number')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cabang (opsional)</label>
                     <select name="branch_id"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400">
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400">
                         <option value="">— Semua Cabang —</option>
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -133,7 +133,7 @@
                 </div>
 
                 <button type="submit"
-                        class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-opacity text-sm">
+                        class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-opacity text-sm">
                     🔍 Cari Antrean
                 </button>
             </form>
@@ -206,7 +206,7 @@ function switchBranch(branchId, branchName, url) {
     // Update tab styles
     document.querySelectorAll('.branch-tab').forEach(btn => {
         btn.className = btn.className
-            .replace('bg-gradient-to-r from-pink-500 to-purple-600 text-white', '')
+            .replace('bg-gradient-to-r from-amber-500 to-amber-600 text-white', '')
             .replace('bg-gray-100 text-gray-600 hover:bg-gray-200', '')
             .trim();
         btn.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');

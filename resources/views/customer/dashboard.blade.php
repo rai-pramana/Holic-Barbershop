@@ -117,7 +117,7 @@
                     </a>
                     @if($queue->isPending())
                     <a href="{{ route('customer.queue.status', $queue) }}"
-                       class="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity">
+                       class="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Scan di Loket
                     </a>
@@ -132,8 +132,8 @@
     {{-- Branch Selection --}}
     <section>
         <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center">
-                <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <div class="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center">
+                <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             </div>
             <h2 class="text-lg font-bold text-gray-900">Pilih Cabang</h2>
         </div>
@@ -144,7 +144,7 @@
                 {{-- Header --}}
                 <div class="flex items-start justify-between mb-4">
                     <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-50 to-purple-50 border border-pink-100 flex items-center justify-center group-hover:from-pink-100 group-hover:to-purple-100 transition-colors">
-                        <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     </div>
                     <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-50 border border-green-100 px-2.5 py-1 rounded-full">
                         <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
@@ -180,7 +180,7 @@
                     </a>
                 @else
                     <a href="{{ route('customer.queue.take', $branch) }}"
-                       class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold text-sm py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-pink-500/20">
+                       class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold text-sm py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-pink-500/20">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         Ambil Antrean
                     </a>
@@ -199,17 +199,17 @@
 
     {{-- Riwayat Antrean Link --}}
     <a href="{{ route('customer.queue.history') }}"
-       class="flex items-center justify-between gap-3 bg-white border border-gray-100 rounded-2xl shadow-sm p-4 hover:border-pink-200 transition-colors group">
+       class="flex items-center justify-between gap-3 bg-white border border-gray-100 rounded-2xl shadow-sm p-4 hover:border-amber-200 transition-colors group">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-pink-50 flex items-center justify-center transition-colors">
-                <svg class="w-5 h-5 text-gray-500 group-hover:text-pink-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+            <div class="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-amber-50 flex items-center justify-center transition-colors">
+                <svg class="w-5 h-5 text-gray-500 group-hover:text-amber-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
             </div>
             <div>
                 <p class="font-semibold text-gray-800 text-sm">Riwayat Antrean</p>
                 <p class="text-xs text-gray-400">Lihat semua antrean Anda sebelumnya</p>
             </div>
         </div>
-        <svg class="w-4 h-4 text-gray-400 group-hover:text-pink-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <svg class="w-4 h-4 text-gray-400 group-hover:text-amber-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
     </a>
 
 </div>
