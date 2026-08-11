@@ -18,8 +18,8 @@
         {{-- Status header --}}
         <div class="p-6 text-center
             @if($queue->status === 'pending')   bg-gradient-to-br from-yellow-400 to-orange-500
-            @elseif($queue->status === 'active') bg-gradient-to-br from-blue-500 to-cyan-600
-            @elseif($queue->status === 'called') bg-gradient-to-br from-purple-500 to-indigo-600
+            @elseif($queue->status === 'active') bg-gradient-to-br from-slate-800 to-cyan-600
+            @elseif($queue->status === 'called') bg-gradient-to-br from-purple-500 to-slate-700
             @elseif($queue->status === 'completed') bg-gradient-to-br from-green-500 to-emerald-600
             @else bg-gradient-to-br from-gray-400 to-gray-600
             @endif text-white">
@@ -65,14 +65,14 @@
                     </div>
                     @if($queue->checked_in_at)
                     <div class="flex items-center gap-3 text-sm">
-                        <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                        <div class="w-2 h-2 rounded-full bg-gray-200"></div>
                         <span class="text-gray-500">Divalidasi admin:</span>
                         <span class="font-medium">{{ $queue->checked_in_at->format('H:i') }}</span>
                     </div>
                     @endif
                     @if($queue->called_at)
                     <div class="flex items-center gap-3 text-sm">
-                        <div class="w-2 h-2 rounded-full bg-purple-400"></div>
+                        <div class="w-2 h-2 rounded-full bg-gray-100"></div>
                         <span class="text-gray-500">Dipanggil:</span>
                         <span class="font-medium">{{ $queue->called_at->format('H:i') }}</span>
                     </div>

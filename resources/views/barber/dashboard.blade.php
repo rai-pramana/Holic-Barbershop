@@ -24,7 +24,7 @@
 <div class="mb-8">
     <h2 class="text-lg font-bold text-white mb-3">Antrean Aktif Sekarang</h2>
     <div class="bg-gradient-to-br
-        {{ $activeQueue->status === 'called' ? 'from-purple-900/80 to-indigo-900/80 border-purple-500/50' : 'from-blue-900/80 to-cyan-900/80 border-blue-500/50' }}
+        {{ $activeQueue->status === 'called' ? 'from-purple-900/80 to-slate-700/80 border-gray-300/50' : 'from-slate-800/80 to-cyan-900/80 border-gray-300/50' }}
         border rounded-2xl p-6">
 
         <div class="flex justify-between items-start mb-5">
@@ -33,7 +33,7 @@
                 <p class="text-5xl font-black text-white">{{ $activeQueue->queue_number }}</p>
             </div>
             <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold
-                {{ $activeQueue->status === 'called' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40' : 'bg-blue-500/20 text-blue-300 border border-blue-500/40' }}">
+                {{ $activeQueue->status === 'called' ? 'bg-gray-100/20 text-gray-700 border border-gray-300/40' : 'bg-slate-500/20 text-gray-700 border border-gray-300/40' }}">
                 @if($activeQueue->status === 'called') 🔔 Dipanggil @else ✅ Check-in @endif
             </span>
         </div>
@@ -74,7 +74,7 @@
             <form method="POST" action="{{ route('barber.queues.call', $activeQueue) }}" class="flex-1">
                 @csrf
                 <button type="submit"
-                        class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3.5 rounded-xl hover:opacity-90 transition-opacity text-sm">
+                        class="w-full bg-gradient-to-r from-purple-500 to-slate-700 text-white font-bold py-3.5 rounded-xl hover:opacity-90 transition-opacity text-sm">
                     📣 Panggil Customer
                 </button>
             </form>
@@ -126,11 +126,11 @@
         @foreach($todayQueues->sortBy('id') as $queue)
         @if(!in_array($queue->status, ['completed', 'skipped', 'expired']))
         <div class="bg-gray-900 border border-gray-700/50 rounded-2xl p-4 flex items-center justify-between
-            @if(in_array($queue->status, ['active', 'called'])) border-blue-500/30 bg-blue-900/10 @endif">
+            @if(in_array($queue->status, ['active', 'called'])) border-gray-300/30 bg-gray-200/10 @endif">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl
-                    @if($queue->status === 'called') bg-purple-500/20 text-purple-300
-                    @elseif($queue->status === 'active') bg-blue-500/20 text-blue-300
+                    @if($queue->status === 'called') bg-gray-100/20 text-gray-700
+                    @elseif($queue->status === 'active') bg-slate-500/20 text-gray-700
                     @else bg-gray-700 text-gray-400
                     @endif
                     flex items-center justify-center font-bold text-sm">
@@ -143,8 +143,8 @@
             </div>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
                 @if($queue->status === 'pending') bg-yellow-500/15 text-yellow-400 border border-yellow-500/30
-                @elseif($queue->status === 'active') bg-blue-500/15 text-blue-400 border border-blue-500/30
-                @elseif($queue->status === 'called') bg-purple-500/15 text-purple-400 border border-purple-500/30
+                @elseif($queue->status === 'active') bg-gray-200/15 text-gray-700 border border-gray-300/30
+                @elseif($queue->status === 'called') bg-gray-100/15 text-gray-700 border border-gray-300/30
                 @endif">
                 {{ $queue->status_label }}
             </span>

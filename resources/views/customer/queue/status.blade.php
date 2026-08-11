@@ -20,9 +20,9 @@
 
         {{-- Colored Header --}}
         <div class="relative overflow-hidden text-white text-center
-            @if($queue->status === 'called')    bg-gradient-to-br from-purple-500 to-indigo-600
-            @elseif($queue->status === 'active')  bg-gradient-to-br from-blue-500 to-cyan-600
-            @elseif($queue->status === 'pending') bg-gradient-to-br from-gray-800 to-slate-900
+            @if($queue->status === 'called')    bg-gradient-to-br from-purple-500 to-slate-700
+            @elseif($queue->status === 'active')  bg-gradient-to-br from-slate-800 to-cyan-600
+            @elseif($queue->status === 'pending') bg-gradient-to-br from-slate-900 to-gray-800
             @elseif($queue->status === 'completed') bg-gradient-to-br from-green-500 to-emerald-600
             @else bg-gradient-to-br from-gray-400 to-gray-600
             @endif p-6 md:p-8">
@@ -118,9 +118,9 @@
 
             {{-- Check-in Instructions (for pending) --}}
             @if($queue->isPending())
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5">
+            <div class="bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-200 rounded-2xl p-5">
                 <div class="text-center mb-4">
-                    <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-full mb-2">
+                    <div class="inline-flex items-center gap-2 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
                         Langkah Check-in
                     </div>
@@ -128,51 +128,51 @@
 
                 <div class="space-y-3">
                     <div class="flex items-start gap-3">
-                        <div class="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">1</div>
+                        <div class="w-7 h-7 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">1</div>
                         <div>
-                            <p class="text-sm font-semibold text-blue-900">Datang ke barbershop</p>
-                            <p class="text-xs text-blue-600">{{ $queue->branch->name }}</p>
+                            <p class="text-sm font-semibold text-gray-900">Datang ke barbershop</p>
+                            <p class="text-xs text-gray-500">{{ $queue->branch->name }}</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
-                        <div class="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">2</div>
+                        <div class="w-7 h-7 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">2</div>
                         <div>
-                            <p class="text-sm font-semibold text-blue-900">Scan QR Code di loket</p>
-                            <p class="text-xs text-blue-600">Gunakan kamera HP untuk scan QR yang ditampilkan di meja loket</p>
+                            <p class="text-sm font-semibold text-gray-900">Scan QR Code di loket</p>
+                            <p class="text-xs text-gray-500">Gunakan kamera HP untuk scan QR yang ditampilkan di meja loket</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
-                        <div class="w-7 h-7 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">✓</div>
+                        <div class="w-7 h-7 rounded-full bg-gray-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">✓</div>
                         <div>
-                            <p class="text-sm font-semibold text-blue-900">Selesai! Status berubah otomatis</p>
-                            <p class="text-xs text-blue-600">Antrean Anda langsung aktif setelah scan</p>
+                            <p class="text-sm font-semibold text-gray-900">Selesai! Status berubah otomatis</p>
+                            <p class="text-xs text-gray-500">Antrean Anda langsung aktif setelah scan</p>
                         </div>
                     </div>
                 </div>
 
                 @if($queue->expired_at)
                 <div class="mt-4 text-center">
-                    <p class="text-xs text-blue-700 font-semibold">
+                    <p class="text-xs text-gray-700 font-semibold">
                         ⏰ Berlaku s.d. <span class="local-time" data-utc="{{ $queue->expired_at->toISOString() }}">{{ $queue->expired_at->format('H:i') }}</span> WITA
                     </p>
                 </div>
                 @endif
 
-                <p class="text-center text-blue-800 font-mono font-black text-2xl tracking-widest mt-4">{{ $queue->queue_number }}</p>
+                <p class="text-center text-gray-900 font-mono font-black text-2xl tracking-widest mt-4">{{ $queue->queue_number }}</p>
             </div>
             @endif
 
 
             {{-- Called alert --}}
             @if($queue->isCalled())
-            <div class="bg-purple-50 border-2 border-purple-300 rounded-2xl p-4 animate-pulse">
+            <div class="bg-gray-900 border-2 border-gray-700 rounded-2xl p-4 animate-pulse">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
                     </div>
                     <div>
-                        <p class="text-purple-900 font-bold text-sm">Nomor Anda Dipanggil!</p>
-                        <p class="text-purple-700 text-xs">Segera menuju kursi barber <strong>{{ $queue->barber->name }}</strong></p>
+                        <p class="text-white font-bold text-sm">Nomor Anda Dipanggil!</p>
+                        <p class="text-gray-300 text-xs">Segera menuju kursi barber <strong>{{ $queue->barber->name }}</strong></p>
                     </div>
                 </div>
             </div>
@@ -184,9 +184,9 @@
                 <div class="space-y-2.5">
                     @php
                         $timelineItems = [
-                            ['dot' => 'bg-green-400', 'label' => 'Antrean dibuat', 'time' => $queue->created_at],
-                            $queue->checked_in_at ? ['dot' => 'bg-blue-400', 'label' => 'Check-in tervalidasi', 'time' => $queue->checked_in_at] : null,
-                            $queue->called_at ? ['dot' => 'bg-purple-400', 'label' => 'Dipanggil barber', 'time' => $queue->called_at] : null,
+                            ['dot' => 'bg-gray-900', 'label' => 'Antrean dibuat', 'time' => $queue->created_at],
+                            $queue->checked_in_at ? ['dot' => 'bg-gray-600', 'label' => 'Check-in tervalidasi', 'time' => $queue->checked_in_at] : null,
+                            $queue->called_at ? ['dot' => 'bg-gray-400', 'label' => 'Dipanggil barber', 'time' => $queue->called_at] : null,
                             $queue->completed_at ? ['dot' => 'bg-emerald-400', 'label' => 'Layanan selesai', 'time' => $queue->completed_at] : null,
                         ];
                     @endphp
@@ -210,19 +210,19 @@
             {{-- Push Notification Subscribe (hidden) --}}
             @if(false){{-- hidden: push notification feature disabled --}}
             @if($queue->isActive_or_Pending())
-            <div id="push-banner" class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 hidden">
+            <div id="push-banner" class="bg-gray-50 border border-gray-200 rounded-2xl p-4 hidden">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                         </svg>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-indigo-900" id="push-title">Aktifkan Notifikasi</p>
-                        <p class="text-xs text-indigo-600" id="push-desc">Dapat notifikasi otomatis saat dipanggil</p>
+                        <p class="text-sm font-bold text-gray-900" id="push-title">Aktifkan Notifikasi</p>
+                        <p class="text-xs text-gray-700" id="push-desc">Dapat notifikasi otomatis saat dipanggil</p>
                     </div>
                     <button id="push-btn" onclick="handlePushSubscription()"
-                            class="flex-shrink-0 bg-indigo-600 text-white text-xs font-bold px-3 py-2 rounded-xl hover:bg-indigo-700 active:scale-95 transition-all">
+                            class="flex-shrink-0 bg-gray-900 text-white text-xs font-bold px-3 py-2 rounded-xl hover:bg-gray-800 active:scale-95 transition-all">
                         Aktifkan
                     </button>
                 </div>
@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (desc)  desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
             if (btn) {
                 btn.textContent = 'Matikan';
-                btn.classList.replace('bg-indigo-600', 'bg-gray-400');
+                btn.classList.replace('bg-gray-900', 'bg-gray-400');
                 btn.onclick = () => handleUnsubscribe(swReg, sub);
             }
         }
@@ -348,7 +348,7 @@ async function doSubscribe(swReg) {
         if (btn) {
             btn.textContent = 'Matikan';
             btn.disabled    = false;
-            btn.classList.replace('bg-indigo-600', 'bg-gray-400');
+            btn.classList.replace('bg-gray-900', 'bg-gray-400');
             btn.onclick = () => handleUnsubscribe(swReg, sub);
         }
         if (banner) banner.classList.remove('hidden');
@@ -388,15 +388,15 @@ async function handlePushSubscription() {
             desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
             btn.textContent   = 'Matikan';
             btn.disabled      = false;
-            btn.classList.replace('bg-indigo-600', 'bg-gray-400');
+            btn.classList.replace('bg-gray-900', 'bg-gray-400');
             btn.onclick = () => handleUnsubscribe(swReg, sub);
 
             // Show brief success style
             banner.classList.add('bg-green-50', 'border-green-200');
-            banner.classList.remove('bg-indigo-50', 'border-indigo-200');
+            banner.classList.remove('bg-gray-50', 'border-gray-200');
             setTimeout(() => {
                 banner.classList.remove('bg-green-50', 'border-green-200');
-                banner.classList.add('bg-indigo-50', 'border-indigo-200');
+                banner.classList.add('bg-gray-50', 'border-gray-200');
             }, 2000);
         } else {
             throw new Error('Server rejected subscription');
@@ -427,7 +427,7 @@ async function handleUnsubscribe(swReg, sub) {
     document.getElementById('push-desc').textContent  = 'Dapat notifikasi otomatis saat dipanggil';
     btn.textContent = 'Aktifkan';
     btn.disabled    = false;
-    btn.classList.replace('bg-gray-400', 'bg-indigo-600');
+    btn.classList.replace('bg-gray-400', 'bg-gray-900');
     btn.onclick = handlePushSubscription;
 }
 

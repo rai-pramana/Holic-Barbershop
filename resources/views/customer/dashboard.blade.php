@@ -46,10 +46,10 @@
                 </div>
                 <div>
                     <p class="font-bold text-sm" id="push-title">Aktifkan Notifikasi HP</p>
-                    <p class="text-xs text-indigo-100" id="push-desc">Dapatkan notifikasi otomatis saat antrean Anda dipanggil meskipun HP dikunci/aplikasi ditutup.</p>
+                    <p class="text-xs text-slate-700" id="push-desc">Dapatkan notifikasi otomatis saat antrean Anda dipanggil meskipun HP dikunci/aplikasi ditutup.</p>
                 </div>
             </div>
-            <button id="push-btn" class="w-full sm:w-auto px-4 py-2 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-xl shadow transition-colors flex-shrink-0">
+            <button id="push-btn" class="w-full sm:w-auto px-4 py-2 bg-white text-slate-700 hover:bg-slate-900 font-bold text-xs rounded-xl shadow transition-colors flex-shrink-0">
                 Aktifkan Sekarang
             </button>
         </div>
@@ -60,11 +60,11 @@
     @if($activeQueues->isNotEmpty())
     <section>
         <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center">
-                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <div class="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center">
+                <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             </div>
             <h2 class="text-lg font-bold text-gray-900">Antrean Aktif Anda</h2>
-            <span class="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">{{ $activeQueues->count() }}</span>
+            <span class="text-xs bg-gray-900 text-white font-bold px-2 py-0.5 rounded-full">{{ $activeQueues->count() }}</span>
         </div>
 
         <div class="grid sm:grid-cols-2 gap-4">
@@ -143,7 +143,7 @@
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 card-hover group">
                 {{-- Header --}}
                 <div class="flex items-start justify-between mb-4">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-100 flex items-center justify-center group-hover:from-gray-100 group-hover:to-slate-100 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-100 flex items-center justify-center group-hover:from-gray-200 group-hover:to-gray-300 transition-colors">
                         <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     </div>
                     <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-50 border border-green-100 px-2.5 py-1 rounded-full">
@@ -174,13 +174,13 @@
 
                 @if($existingQueue)
                     <a href="{{ route('customer.queue.status', $existingQueue) }}"
-                       class="w-full inline-flex items-center justify-center gap-2 bg-blue-50 text-blue-700 border border-blue-200 font-semibold text-sm py-2.5 rounded-xl hover:bg-blue-100 transition-colors">
+                       class="w-full inline-flex items-center justify-center gap-2 bg-gray-200 text-gray-700 border border-gray-300 font-semibold text-sm py-2.5 rounded-xl hover:bg-gray-200 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         Lihat Antrean #{{ $existingQueue->queue_number }}
                     </a>
                 @else
                     <a href="{{ route('customer.queue.take', $branch) }}"
-                       class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold text-sm py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-pink-500/20">
+                       class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold text-sm py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-gray-900/10">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         Ambil Antrean
                     </a>
@@ -351,7 +351,7 @@ const STATUS_MESSAGES = {
                     btn.textContent = 'Notifikasi Aktif';
                     btn.disabled = true;
                     btn.classList.replace('bg-white', 'bg-white/20');
-                    btn.classList.replace('text-indigo-700', 'text-white');
+                    btn.classList.replace('text-gray-900', 'text-white');
                 }
             }
         } else {
@@ -378,7 +378,7 @@ const STATUS_MESSAGES = {
                             desc.textContent  = 'Anda akan menerima notifikasi di layar HP saat antrean dipanggil.';
                             btn.textContent   = 'Notifikasi Aktif';
                             btn.classList.replace('bg-white', 'bg-white/20');
-                            btn.classList.replace('text-indigo-700', 'text-white');
+                            btn.classList.replace('text-gray-900', 'text-white');
                         } catch(err) {
                             console.error('Subscription error:', err);
                             btn.textContent = 'Coba Lagi';

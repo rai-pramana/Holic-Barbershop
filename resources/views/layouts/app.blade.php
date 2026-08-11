@@ -16,13 +16,13 @@
         .gradient-text { background: linear-gradient(135deg, #0f172a, #475569); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); }
 
-        /* Status badges */
-        .badge-pending   { background: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
-        .badge-active    { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-        .badge-called    { background: #f1f5f9; color: #334155; border: 1px solid #fde68a; }
-        .badge-completed { background: #dcfce7; color: #14532d; border: 1px solid #bbf7d0; }
-        .badge-skipped   { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-        .badge-expired   { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+        /* Status badges — monochrome with readable contrast */
+        .badge-pending   { background: #fef9c3; color: #713f12; border: 1px solid #fde68a; }
+        .badge-active    { background: #e0f2fe; color: #0c4a6e; border: 1px solid #bae6fd; }
+        .badge-called    { background: #0f172a; color: #f8fafc; border: 1px solid #334155; }
+        .badge-completed { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; }
+        .badge-skipped   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .badge-expired   { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
 
         /* Nav link */
         .nav-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 500; color: #6b7280; padding: 6px 12px; border-radius: 10px; transition: all 0.15s; }
@@ -106,7 +106,7 @@
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors px-3 py-2">Masuk</a>
-                    <a href="{{ route('register') }}" class="text-sm font-semibold bg-gradient-to-r from-gray-900 to-slate-800 text-white px-4 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-pink-500/20">
+                    <a href="{{ route('register') }}" class="text-sm font-semibold bg-gradient-to-r from-gray-900 to-slate-800 text-white px-4 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-gray-900/10">
                         Daftar
                     </a>
                 @endauth
@@ -156,8 +156,8 @@
         </div>
     @endif
     @if(session('info'))
-        <div class="flex items-start gap-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-2xl px-4 py-3" id="flash-info">
-            <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+        <div class="flex items-start gap-3 bg-gray-50 border border-gray-200 text-gray-800 rounded-2xl px-4 py-3" id="flash-info">
+            <svg class="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
             <span class="text-sm font-medium">{{ session('info') }}</span>
         </div>
     @endif

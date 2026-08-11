@@ -38,14 +38,14 @@
             color: #0f172a; /* dark icon on white bg */
         }
 
-        /* Badges */
+        /* Badges — monochrome with readable contrast */
         .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-        .badge-pending   { background: #fef9c3; color: #854d0e; }
-        .badge-active    { background: #dbeafe; color: #1e40af; }
-        .badge-called    { background: #f3e8ff; color: #6b21a8; }
-        .badge-completed { background: #dcfce7; color: #14532d; }
-        .badge-skipped   { background: #fee2e2; color: #991b1b; }
-        .badge-expired   { background: #f1f5f9; color: #64748b; }
+        .badge-pending   { background: #fef9c3; color: #713f12; border: 1px solid #fde68a; }  /* keep yellow — universal 'waiting' signal */
+        .badge-active    { background: #e0f2fe; color: #0c4a6e; border: 1px solid #bae6fd; }  /* keep blue — universal 'active' signal */
+        .badge-called    { background: #0f172a; color: #f8fafc; border: 1px solid #334155; }  /* black pill — stands out, urgent */
+        .badge-completed { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; }  /* keep green — universal 'success' */
+        .badge-skipped   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }  /* keep red — universal 'warning' */
+        .badge-expired   { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }  /* gray — neutral/inactive */
 
         /* Sidebar overlay */
         #sidebar-overlay { display: none; }
@@ -258,8 +258,8 @@
             </div>
         @endif
         @if(session('info'))
-            <div class="flex items-center gap-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-xl px-4 py-3 text-sm">
-                <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            <div class="flex items-center gap-3 bg-gray-50 border border-gray-200 text-gray-800 rounded-xl px-4 py-3 text-sm">
+                <svg class="w-5 h-5 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
                 <span class="font-medium">{{ session('info') }}</span>
             </div>
         @endif

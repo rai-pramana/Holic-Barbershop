@@ -78,11 +78,11 @@
         <div class="px-5 py-4 border-b border-gray-100">
             <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-3">Sedang Dilayani</p>
             @if($activeQ)
-            <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 flex items-center justify-between">
+            <div class="bg-gray-100 border border-gray-300 rounded-xl p-4 flex items-center justify-between">
                 <div>
-                    <p class="font-black text-purple-900 text-xl font-mono">{{ $activeQ->queue_number }}</p>
-                    <p class="text-purple-700 text-sm font-medium">{{ $activeQ->customer_name }}</p>
-                    <p class="text-purple-500 text-xs">{{ $activeQ->service->name }}</p>
+                    <p class="font-black text-gray-700 text-xl font-mono">{{ $activeQ->queue_number }}</p>
+                    <p class="text-gray-700 text-sm font-medium">{{ $activeQ->customer_name }}</p>
+                    <p class="text-gray-700 text-xs">{{ $activeQ->service->name }}</p>
                 </div>
                 <div class="flex flex-col gap-2">
                     <form method="POST" action="{{ route('admin.queues.complete', $activeQ) }}">
@@ -117,7 +117,7 @@
             <div class="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
                 <div class="flex-shrink-0">
                     @if($q->status === 'active')
-                        <span class="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-lg font-mono">{{ $q->queue_number }}</span>
+                        <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-bold rounded-lg font-mono">{{ $q->queue_number }}</span>
                     @else
                         <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-600 text-xs font-bold rounded-lg font-mono">{{ $q->queue_number }}</span>
                     @endif
@@ -136,7 +136,7 @@
                         </button>
                     </form>
                     @elseif($q->status === 'active')
-                    <span class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-lg">Hadir</span>
+                    <span class="text-xs text-gray-500 font-semibold bg-gray-200 px-2 py-1 rounded-lg">Hadir</span>
                     @else
                     <span class="text-xs text-yellow-600 font-semibold bg-yellow-50 px-2 py-1 rounded-lg">Menunggu</span>
                     @endif

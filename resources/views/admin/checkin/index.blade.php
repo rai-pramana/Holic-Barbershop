@@ -83,9 +83,9 @@
 
         {{-- How-to --}}
         <div class="px-5 pb-5">
-            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
-                <p class="text-xs font-bold text-blue-800 mb-2">📋 Cara Penggunaan</p>
-                <ol class="text-xs text-blue-700 space-y-1 list-decimal list-inside">
+            <div class="bg-gray-200 border border-gray-300 rounded-xl p-4">
+                <p class="text-xs font-bold text-gray-700 mb-2">📋 Cara Penggunaan</p>
+                <ol class="text-xs text-gray-700 space-y-1 list-decimal list-inside">
                     <li>Tampilkan QR ini di layar meja loket/kasir</li>
                     <li>Customer yang sudah ambil antrean online datang ke barbershop</li>
                     <li>Customer scan QR ini menggunakan kamera HP mereka</li>
@@ -165,7 +165,7 @@
                     <p class="text-xs text-gray-400">{{ $q->checked_in_at->format('H:i') }} · {{ $q->branch->name }}</p>
                 </div>
                 <span class="text-xs font-semibold px-2 py-0.5 rounded-full
-                    {{ $q->status === 'called' ? 'bg-purple-100 text-purple-700' : ($q->status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700') }}">
+                    {{ $q->status === 'called' ? 'bg-gray-100 text-gray-700' : ($q->status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700') }}">
                     {{ $q->status_label }}
                 </span>
             </div>

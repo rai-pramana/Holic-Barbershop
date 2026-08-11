@@ -31,14 +31,14 @@
                 </div>
                 <div>
                     <h2 class="text-white font-bold text-lg">Antrean Walk-in</h2>
-                    <p class="text-indigo-100 text-sm">Pelanggan tidak perlu akun — langsung aktif</p>
+                    <p class="text-slate-700 text-sm">Pelanggan tidak perlu akun — langsung aktif</p>
                 </div>
             </div>
         </div>
 
         {{-- Info banner --}}
         <div class="px-6 pt-5 pb-0">
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-start gap-2 text-sm text-blue-700">
+            <div class="bg-gray-200 border border-gray-300 rounded-xl p-3 flex items-start gap-2 text-sm text-gray-700">
                 <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span>Cocok untuk pelanggan yang tidak membawa HP, anak kecil, atau daftar bersama (misal: bapak dan anak). Antrean ini <strong>otomatis tervalidasi</strong> — tidak perlu scan QR.</span>
             </div>
@@ -53,7 +53,7 @@
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Cabang <span class="text-red-500">*</span></label>
                 <select name="branch_id" id="branch_id" required
                         onchange="this.form.action='{{ route('admin.queues.walkin') }}?branch_id='+this.value; this.form.method='GET'; this.form.submit();"
-                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('branch_id') border-red-400 @enderror">
+                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-slate-300 @error('branch_id') border-red-400 @enderror">
                     <option value="">— Pilih Cabang —</option>
                     @foreach($branches as $branch)
                     <option value="{{ $branch->id }}" @selected($selectedBranch?->id == $branch->id)>{{ $branch->name }}</option>
@@ -68,7 +68,7 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Layanan <span class="text-red-500">*</span></label>
                 <select name="service_id" required
-                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('service_id') border-red-400 @enderror">
+                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-slate-300 @error('service_id') border-red-400 @enderror">
                     <option value="">— Pilih Layanan —</option>
                     @foreach($services as $service)
                     <option value="{{ $service->id }}" @selected(old('service_id') == $service->id)>
@@ -83,7 +83,7 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Barber</label>
                 <select name="barber_id"
-                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-slate-300">
                     <option value="">🤖 Otomatis (barber paling sedikit antrean)</option>
                     @foreach($barbers as $barber)
                     <option value="{{ $barber->id }}" @selected(old('barber_id') == $barber->id)>

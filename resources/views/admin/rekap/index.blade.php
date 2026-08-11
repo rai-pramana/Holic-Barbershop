@@ -94,20 +94,21 @@
 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
     @php
     $kpis = [
-        ['label'=>'Total Antrean',    'value'=>$total,         'sub'=>'terdaftar',          'color'=>'from-slate-600 to-slate-500',   'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+        ['label'=>'Total Antrean',    'value'=>$total,         'sub'=>'terdaftar',          'color'=>'bg-gray-900',
+            'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
             'link' => route('admin.queues.index', array_filter(['date_from'=>$from->toDateString(), 'date_to'=>$to->toDateString(), 'branch_id'=>$branchId]))],
-        ['label'=>'Selesai',          'value'=>$completed,     'sub'=>'dilayani',           'color'=>'from-emerald-500 to-green-500', 'icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
-        ['label'=>'Dilewati',         'value'=>$skipped,       'sub'=>'tidak hadir',        'color'=>'from-rose-500 to-red-500',      'icon'=>'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'],
-        ['label'=>'Kedaluwarsa',      'value'=>$expired,       'sub'=>'tidak check-in',     'color'=>'from-gray-500 to-slate-400',    'icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
-        ['label'=>'Tk. Kehadiran',    'value'=>$attendRate.'%','sub'=>'check-in / daftar',  'color'=>'from-blue-500 to-cyan-500',     'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m-6 9l2 2 4-4'],
-        ['label'=>'Tk. Selesai',      'value'=>$completeRate.'%','sub'=>'selesai / hadir',  'color'=>'from-slate-700 to-gray-800', 'icon'=>'M13 10V3L4 14h7v7l9-11h-7z'],
+        ['label'=>'Selesai',          'value'=>$completed,     'sub'=>'dilayani',           'color'=>'bg-gray-700', 'icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+        ['label'=>'Dilewati',         'value'=>$skipped,       'sub'=>'tidak hadir',        'color'=>'bg-gray-500', 'icon'=>'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'],
+        ['label'=>'Kedaluwarsa',      'value'=>$expired,       'sub'=>'tidak check-in',     'color'=>'bg-gray-400', 'icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+        ['label'=>'Tk. Kehadiran',    'value'=>$attendRate.'%','sub'=>'check-in / daftar',  'color'=>'bg-gray-600', 'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m-6 9l2 2 4-4'],
+        ['label'=>'Tk. Selesai',      'value'=>$completeRate.'%','sub'=>'selesai / hadir',  'color'=>'bg-gray-800', 'icon'=>'M13 10V3L4 14h7v7l9-11h-7z'],
     ];
     @endphp
     @foreach($kpis as $kpi)
     @if(!empty($kpi['link']))
     <a href="{{ $kpi['link'] }}"
        class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-2 hover:border-gray-200 hover:shadow-md transition-all group cursor-pointer">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br {{ $kpi['color'] }} flex items-center justify-center flex-shrink-0">
+        <div class="w-9 h-9 rounded-xl {{ $kpi['color'] }} flex items-center justify-center flex-shrink-0">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $kpi['icon'] }}"/>
             </svg>
@@ -123,7 +124,7 @@
     </a>
     @else
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-2">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br {{ $kpi['color'] }} flex items-center justify-center flex-shrink-0">
+        <div class="w-9 h-9 rounded-xl {{ $kpi['color'] }} flex items-center justify-center flex-shrink-0">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $kpi['icon'] }}"/>
             </svg>
@@ -141,7 +142,7 @@
 {{-- ── Row: Avg Duration + Revenue ────────────────────────────────────────── --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-gray-800 to-slate-900 flex items-center justify-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-900 to-gray-800 flex items-center justify-center flex-shrink-0">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <div>

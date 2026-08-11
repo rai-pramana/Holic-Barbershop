@@ -29,7 +29,7 @@
         <div class="p-6
             @if($queue->isPending()) bg-gradient-to-br from-orange-400 to-pink-500
             @elseif($queue->isActive()) bg-gradient-to-br from-green-500 to-emerald-600
-            @elseif($queue->isCalled()) bg-gradient-to-br from-purple-500 to-indigo-600
+            @elseif($queue->isCalled()) bg-gradient-to-br from-purple-500 to-slate-700
             @elseif($queue->isCompleted()) bg-gradient-to-br from-gray-400 to-gray-600
             @else bg-gradient-to-br from-red-400 to-red-600
             @endif text-white text-center">

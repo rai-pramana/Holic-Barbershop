@@ -69,8 +69,8 @@
     {{-- Background decorations --}}
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-slate-500/20 rounded-full blur-3xl float-anim"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl float-anim" style="animation-delay: 3s"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-900/30 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gray-100/20 rounded-full blur-3xl float-anim" style="animation-delay: 3s"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-slate-900/30 rounded-full blur-3xl"></div>
     </div>
 
     <div class="max-w-7xl mx-auto px-6 py-20 relative z-10">
@@ -123,7 +123,7 @@
                                     Q0731<br>042
                                 </p>
                             </div>
-                            <span class="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-semibold px-3 py-1.5 rounded-full">
+                            <span class="bg-gray-100/20 text-gray-700 border border-gray-300/30 text-xs font-semibold px-3 py-1.5 rounded-full">
                                 Dipanggil
                             </span>
                         </div>
@@ -141,8 +141,8 @@
                                 <span class="text-green-400 font-medium">Segera!</span>
                             </div>
                         </div>
-                        <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-3 text-center">
-                            <p class="text-purple-300 text-sm font-medium">🎉 Anda dipanggil! Segera ke kursi.</p>
+                        <div class="bg-gray-100/10 border border-gray-300/30 rounded-xl p-3 text-center">
+                            <p class="text-gray-700 text-sm font-medium">🎉 Anda dipanggil! Segera ke kursi.</p>
                         </div>
                     </div>
 
@@ -181,8 +181,8 @@
             $features = [
                 ['icon' => '⚡', 'title' => 'Antrean Real-time', 'desc' => 'Pantau posisi antrean Anda secara langsung. Status selalu diperbarui otomatis.', 'color' => 'from-yellow-400 to-orange-500'],
                 ['icon' => '✂️', 'title' => 'Pilih Barber Favorit', 'desc' => 'Pilih barber spesifik atau biarkan sistem memilih barber tercepat untuk Anda.', 'color' => 'from-gray-800 to-slate-700'],
-                ['icon' => '📱', 'title' => 'Check-in Digital', 'desc' => 'Cukup klik tombol Check-in saat tiba. Tidak perlu scan QR code fisik.', 'color' => 'from-blue-400 to-cyan-500'],
-                ['icon' => '🔔', 'title' => 'Notifikasi Panggilan', 'desc' => 'Halaman status otomatis memberi tahu saat nomor Anda dipanggil barber.', 'color' => 'from-purple-400 to-violet-500'],
+                ['icon' => '📱', 'title' => 'Check-in Digital', 'desc' => 'Cukup klik tombol Check-in saat tiba. Tidak perlu scan QR code fisik.', 'color' => 'from-slate-800 to-cyan-500'],
+                ['icon' => '🔔', 'title' => 'Notifikasi Panggilan', 'desc' => 'Halaman status otomatis memberi tahu saat nomor Anda dipanggil barber.', 'color' => 'from-purple-400 to-gray-800'],
                 ['icon' => '⏰', 'title' => 'Estimasi Waktu', 'desc' => 'Ketahui perkiraan waktu tunggu berdasarkan antrian dan durasi layanan.', 'color' => 'from-green-400 to-emerald-500'],
                 ['icon' => '🛡️', 'title' => 'Aman & Terverifikasi', 'desc' => 'Data antrean Anda terjamin aman. 1 akun = 1 antrean aktif per cabang.', 'color' => 'from-slate-400 to-gray-500'],
             ];
