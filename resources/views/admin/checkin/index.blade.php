@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Loket Check-in')
 @section('page-title', 'Loket Check-in')
@@ -89,7 +89,7 @@
                     <li>Tampilkan QR ini di layar meja loket/kasir</li>
                     <li>Customer yang sudah ambil antrean online datang ke barbershop</li>
                     <li>Customer scan QR ini menggunakan kamera HP mereka</li>
-                    <li>Status antrean otomatis berubah menjadi <strong>Hadir ✅</strong></li>
+                    <li>Status antrean otomatis berubah menjadi <strong>Hadir (aktif)</strong></li>
                 </ol>
             </div>
         </div>
@@ -101,7 +101,7 @@
         {{-- Manual search --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
             <div class="flex items-center gap-3 mb-5">
-                <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-xl">⌨️</div>
+                <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center"><svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
                 <div>
                     <h3 class="font-bold text-gray-900">Input Manual</h3>
                     <p class="text-xs text-gray-400">Cari antrean dengan nomor tiket</p>
@@ -142,7 +142,7 @@
         {{-- Recent validated today --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
             <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span>✅ Tervalidasi Hari Ini</span>
+                <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Tervalidasi Hari Ini</span>
                 <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-2 py-0.5 rounded-full">
                     {{ \App\Models\Queue::whereDate('created_at', today())->where('status', 'active')->count() +
                        \App\Models\Queue::whereDate('created_at', today())->where('status', 'called')->count() +
