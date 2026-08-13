@@ -20,7 +20,15 @@ class RekapController extends Controller
         $dateFrom = $request->get('date_from');
         $dateTo   = $request->get('date_to');
 
-        if ($dateFrom && $dateTo) {
+        // If preset is a known shortcut, always use it (ignore date_from/date_to)
+        if (in_array($preset, ['today', 'yesterday', 'week', 'month'])) {
+            [$from, $to] = match ($preset) {
+                'yesterday' => [now()->subDay()->startOfDay(), now()->subDay()->endOfDay()],
+                'week'      => [now()->startOfWeek(), now()->endOfWeek()],
+                'month'     => [now()->startOfMonth(), now()->endOfMonth()],
+                default     => [now()->startOfDay(), now()->endOfDay()], // today
+            };
+        } elseif ($dateFrom && $dateTo) {
             $from = Carbon::parse($dateFrom)->startOfDay();
             $to   = Carbon::parse($dateTo)->endOfDay();
             $preset = 'custom';
@@ -29,12 +37,9 @@ class RekapController extends Controller
             $to   = Carbon::parse($dateFrom)->endOfDay();
             $preset = 'custom';
         } else {
-            [$from, $to] = match ($preset) {
-                'yesterday' => [now()->subDay()->startOfDay(), now()->subDay()->endOfDay()],
-                'week'      => [now()->startOfWeek(), now()->endOfWeek()],
-                'month'     => [now()->startOfMonth(), now()->endOfMonth()],
-                default     => [now()->startOfDay(), now()->endOfDay()], // today
-            };
+            $from = now()->startOfDay();
+            $to   = now()->endOfDay();
+            $preset = 'today';
         }
 
         $branchId = $request->get('branch_id');
