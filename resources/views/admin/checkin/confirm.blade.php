@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Konfirmasi Check-in')
 @section('page-title', 'Konfirmasi Kehadiran Customer')

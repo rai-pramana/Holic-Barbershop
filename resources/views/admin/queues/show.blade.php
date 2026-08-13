@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Detail Antrean #' . $queue->queue_number)
 @section('page-title', 'Detail Antrean')

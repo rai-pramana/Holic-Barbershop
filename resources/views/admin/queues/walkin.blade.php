@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Daftarkan Antrean Walk-in')
 @section('page-title', 'Daftarkan Antrean Walk-in')
