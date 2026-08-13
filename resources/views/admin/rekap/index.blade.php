@@ -72,11 +72,6 @@
                 <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                 @endforeach
             </select>
-
-            <button type="submit"
-                    class="bg-gradient-to-r from-gray-900 to-slate-800 text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
-                Terapkan
-            </button>
         </div>
     </div>
 

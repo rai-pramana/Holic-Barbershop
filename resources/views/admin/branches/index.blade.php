@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Kelola Cabang')
 @section('page-title', 'Cabang Barbershop')
@@ -57,7 +57,7 @@
                             </a>
                             <a href="{{ route('admin.branches.edit', $branch) }}"
                                title="Edit"
-                               class="inline-flex items-center gap-1 text-xs font-semibold bg-gray-900 text-white px-2.5 py-1.5 rounded-lg hover:bg-gray-800 active:scale-95 transition-all">
+                               class="inline-flex items-center gap-1 text-xs font-semibold bg-white text-gray-900 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 border border-gray-200 active:scale-95 transition-all">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 Edit
                             </a>
