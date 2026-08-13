@@ -76,7 +76,7 @@
     </style>
     @stack('styles')
 </head>
-<body class="h-full bg-slate-100 flex">
+<body class="h-screen bg-slate-100 flex overflow-hidden">
 
 {{-- Notification permission banner: disabled --}}
 {{-- <div id="notif-banner" ...></div> --}}
@@ -88,7 +88,7 @@
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 lg:hidden" onclick="toggleSidebar()"></div>
 
 {{-- Sidebar --}}
-<aside id="sidebar" class="w-64 h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col flex-shrink-0 shadow-2xl sticky top-0 overflow-y-auto">
+<aside id="sidebar" class="w-64 h-full bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col flex-shrink-0 shadow-2xl overflow-y-auto">
 
     {{-- Logo --}}
     <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
@@ -215,7 +215,7 @@
 </aside>
 
 {{-- Main Content --}}
-<div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+<div class="flex-1 flex flex-col h-full overflow-y-auto overflow-x-hidden">
 
     {{-- Top bar --}}
     <header class="bg-white border-b border-gray-200 px-4 md:px-8 py-3 md:py-4 flex justify-between items-center sticky top-0 z-30">
