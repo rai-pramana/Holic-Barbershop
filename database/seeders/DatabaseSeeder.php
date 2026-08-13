@@ -24,42 +24,29 @@ class DatabaseSeeder extends Seeder
             'email'    => 'admin@holic.com',
             'password' => Hash::make('password'),
             'role'     => 'admin',
-            'phone'    => '081200000001',
+            'phone'    => '089606299992',
         ]);
 
         // ── Branches ────────────────────────────────────────────────────────
         $branch1 = Branch::create([
-            'name'         => 'HOLIC Barbershop - Pusat',
-            'address'      => 'Jl. Sudirman No. 1, Jakarta Pusat',
-            'phone'        => '021-1234567',
-            'city'         => 'Jakarta',
-            'description'  => 'Cabang utama HOLIC Barbershop dengan 5 barber profesional.',
+            'name'         => 'Cabang Gianyar',
+            'address'      => 'Jalan Kesatrian No. 15, Gianyar',
+            'phone'        => '089606299992',
+            'city'         => 'Gianyar',
+            'description'  => 'Cabang utama HOLIC Barbershop di Gianyar. Lokasi strategis di pusat kota dengan suasana nyaman dan peralatan modern.',
             'open_time'    => '09:00',
             'close_time'   => '21:00',
             'is_active'    => true,
             'queue_prefix' => '0',
         ]);
 
-        $branch2 = Branch::create([
-            'name'         => 'HOLIC Barbershop - Selatan',
-            'address'      => 'Jl. TB Simatupang No. 25, Jakarta Selatan',
-            'phone'        => '021-7654321',
-            'city'         => 'Jakarta',
-            'description'  => 'Cabang HOLIC di Jakarta Selatan.',
-            'open_time'    => '09:00',
-            'close_time'   => '21:00',
-            'is_active'    => true,
-            'queue_prefix' => '1',
-        ]);
-
-        // ── Barbers (no user account required) ──────────────────────────────
-        // Branch 1
+        // ── Barbers (dummy names, with descriptions) ────────────────────────
         Barber::create([
             'name'         => 'Budi Santoso',
             'phone'        => '081200000002',
             'branch_id'    => $branch1->id,
             'specialty'    => 'Fade & Modern Cut',
-            'bio'          => 'Spesialis fade dan modern haircut dengan 5 tahun pengalaman.',
+            'bio'          => 'Spesialis fade dan modern haircut dengan 5 tahun pengalaman. Ahli dalam teknik skin fade, taper fade, dan gaya rambut kekinian.',
             'is_available' => true,
         ]);
         Barber::create([
@@ -67,40 +54,48 @@ class DatabaseSeeder extends Seeder
             'phone'        => '081200000003',
             'branch_id'    => $branch1->id,
             'specialty'    => 'Classic & Pompadour',
-            'bio'          => 'Master classic cut dan pompadour style.',
+            'bio'          => 'Master classic cut dan pompadour style. Berpengalaman menangani berbagai tipe rambut dengan hasil rapi dan presisi.',
             'is_available' => true,
         ]);
-
-        // Branch 2
         Barber::create([
             'name'         => 'Deni Kurnia',
             'phone'        => '081200000004',
-            'branch_id'    => $branch2->id,
+            'branch_id'    => $branch1->id,
             'specialty'    => 'Skin Fade & Design',
-            'bio'          => 'Ahli skin fade dan desain rambut kreatif.',
+            'bio'          => 'Ahli skin fade dan desain rambut kreatif. Selalu update dengan tren gaya rambut terbaru.',
             'is_available' => true,
         ]);
 
-        // ── Services Branch 1 ───────────────────────────────────────────────
-        $services1 = [
-            ['name' => 'Potong Rambut',      'desc' => 'Potong rambut standar dengan konsultasi gaya.',                'dur' => 30, 'price' => 35000],
-            ['name' => 'Cukur Jenggot',      'desc' => 'Cukur dan rapikan jenggot dengan teknik barbershop klasik.',   'dur' => 20, 'price' => 25000],
-            ['name' => 'Potong + Cukur',     'desc' => 'Paket lengkap potong rambut dan cukur jenggot.',               'dur' => 45, 'price' => 55000],
-            ['name' => 'Creambath & Potong', 'desc' => 'Creambath relaxing ditambah potong rambut.',                   'dur' => 60, 'price' => 80000],
-            ['name' => 'Warna Rambut',       'desc' => 'Pewarnaan rambut dengan cat berkualitas.',                     'dur' => 90, 'price' => 150000],
+        // ── Services ────────────────────────────────────────────────────────
+        $services = [
+            [
+                'name'  => 'Cukur Rambut',
+                'desc'  => 'Layanan cukur rambut standar dengan konsultasi gaya. Termasuk finishing dan styling ringan.',
+                'dur'   => 30,
+                'price' => 35000,
+            ],
+            [
+                'name'  => 'Cukur + Keramas',
+                'desc'  => 'Paket cukur rambut lengkap dengan keramas menggunakan shampoo berkualitas. Rambut bersih dan segar setelah potong.',
+                'dur'   => 40,
+                'price' => 40000,
+            ],
+            [
+                'name'  => 'Cat Rambut Hitam',
+                'desc'  => 'Pewarnaan rambut hitam untuk menutupi uban atau menyegarkan warna rambut. Menggunakan cat rambut berkualitas yang aman.',
+                'dur'   => 40,
+                'price' => 55000,
+            ],
         ];
-        foreach ($services1 as $s) {
-            Service::create(['branch_id' => $branch1->id, 'name' => $s['name'], 'description' => $s['desc'], 'duration_minutes' => $s['dur'], 'price' => $s['price'], 'is_active' => true]);
-        }
-
-        // ── Services Branch 2 ───────────────────────────────────────────────
-        $services2 = [
-            ['name' => 'Potong Rambut',  'desc' => 'Potong rambut standar.',    'dur' => 30, 'price' => 35000],
-            ['name' => 'Cukur Jenggot',  'desc' => 'Cukur jenggot presisi.',    'dur' => 20, 'price' => 25000],
-            ['name' => 'Potong + Cukur', 'desc' => 'Paket lengkap.',            'dur' => 45, 'price' => 55000],
-        ];
-        foreach ($services2 as $s) {
-            Service::create(['branch_id' => $branch2->id, 'name' => $s['name'], 'description' => $s['desc'], 'duration_minutes' => $s['dur'], 'price' => $s['price'], 'is_active' => true]);
+        foreach ($services as $s) {
+            Service::create([
+                'branch_id'        => $branch1->id,
+                'name'             => $s['name'],
+                'description'      => $s['desc'],
+                'duration_minutes' => $s['dur'],
+                'price'            => $s['price'],
+                'is_active'        => true,
+            ]);
         }
 
         // ── Demo Customer ───────────────────────────────────────────────────
