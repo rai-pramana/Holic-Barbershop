@@ -54,8 +54,8 @@
 
                 {{-- Phone --}}
                 <div class="mb-4">
-                    <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Nomor HP <span class="text-gray-600 font-normal">(opsional)</span></label>
-                    <input type="text" id="phone" name="phone" value="{{ old('phone') }}"
+                    <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Nomor HP</label>
+                    <input type="text" id="phone" name="phone" value="{{ old('phone') }}" required
                            class="w-full bg-gray-800/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="08xxxxxxxxxx">
                 </div>
