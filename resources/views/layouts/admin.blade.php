@@ -57,6 +57,7 @@
                 position: fixed; top: 0; left: 0; bottom: 0; z-index: 50;
                 transform: translateX(-100%);
                 transition: transform 0.25s ease;
+                overflow-y: auto;
             }
             #sidebar.open { transform: translateX(0); }
         }
