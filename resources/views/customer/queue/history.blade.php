@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Riwayat Antrean')
 
@@ -22,9 +22,9 @@
         <select name="status" onchange="this.form.submit()"
                 class="rounded-xl border-gray-200 bg-white text-sm px-3 py-2 text-gray-700 focus:ring-2 focus:ring-gray-500 focus:border-gray-400">
             <option value="">Semua Status</option>
-            <option value="completed" @selected(request('status') === 'completed')>✅ Selesai</option>
-            <option value="skipped"   @selected(request('status') === 'skipped')>⚠️ Dilewati</option>
-            <option value="expired"   @selected(request('status') === 'expired')>🕐 Kedaluwarsa</option>
+            <option value="completed" @selected(request('status') === 'completed')>Selesai</option>
+            <option value="skipped"   @selected(request('status') === 'skipped')>Dilewati</option>
+            <option value="expired"   @selected(request('status') === 'expired')>Kedaluwarsa</option>
         </select>
     </form>
 
@@ -35,28 +35,39 @@
             <div class="flex items-center gap-4">
                 {{-- Queue Number --}}
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl font-mono flex-shrink-0
-                    @if($queue->status === 'completed') bg-green-100 text-green-700
-                    @elseif($queue->status === 'skipped') bg-red-100 text-red-600
-                    @else bg-gray-100 text-gray-500 @endif">
+                    @if($queue->status === 'completed') bg-gray-100 text-gray-700
+                    @elseif($queue->status === 'skipped') bg-gray-200 text-gray-500
+                    @else bg-gray-100 text-gray-400 @endif">
                     {{ $queue->queue_number }}
                 </div>
                 <div>
                     <p class="font-bold text-gray-900 text-sm">{{ $queue->branch->name }}</p>
                     <p class="text-xs text-gray-500 mt-0.5">{{ $queue->service->name }}</p>
+                    {{-- Biaya --}}
+                    <p class="text-xs font-semibold text-gray-700 mt-0.5 flex items-center gap-1">
+                        <svg class="w-3 h-3 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        {{ $queue->service->formatted_price }}
+                    </p>
                     @if($queue->barber)
-                    <p class="text-xs text-gray-400">Barber: {{ $queue->barber->name }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Barber: {{ $queue->barber->name }}</p>
                     @endif
                 </div>
             </div>
 
             {{-- Status Badge --}}
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0
-                @if($queue->status === 'completed') bg-green-100 text-green-700
-                @elseif($queue->status === 'skipped') bg-red-100 text-red-600
-                @else bg-gray-100 text-gray-500 @endif">
-                @if($queue->status === 'completed') ✅
-                @elseif($queue->status === 'skipped') ⚠️
-                @else 🕐 @endif
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0
+                @if($queue->status === 'completed') bg-gray-100 text-gray-700
+                @elseif($queue->status === 'skipped') bg-gray-200 text-gray-500
+                @else bg-gray-100 text-gray-400 @endif">
+                @if($queue->status === 'completed')
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                @elseif($queue->status === 'skipped')
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                @else
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                @endif
                 {{ $queue->status_label }}
             </span>
         </div>

@@ -1,7 +1,7 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Loket Check-in')
-@section('page-title', '📲 Loket Check-in')
+@section('page-title', 'Loket Check-in')
 @section('page-subtitle', 'Tampilkan QR kepada customer atau input manual nomor antrean')
 
 @section('content')

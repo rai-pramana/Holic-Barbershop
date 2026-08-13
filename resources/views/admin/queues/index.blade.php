@@ -1,7 +1,7 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Riwayat Antrean')
-@section('page-title', '📋 Riwayat Antrean')
+@section('page-title', 'Riwayat Antrean')
 @section('page-subtitle', 'Periode: ' . $dateLabel)
 
 @push('styles')

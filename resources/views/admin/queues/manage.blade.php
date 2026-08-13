@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Kelola Antrean')
-@section('page-title', '💈 Kelola Antrean')
+@section('page-title', 'Kelola Antrean')
 @section('page-subtitle', 'Monitor dan kelola antrean per barber secara real-time')
 
 @section('content')
@@ -42,7 +42,9 @@
 
 @if($barbers->isEmpty())
 <div class="text-center py-16 text-gray-400">
-    <p class="text-4xl mb-3">💈</p>
+    <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/></svg>
+    </div>
     <p class="font-semibold text-gray-500">Tidak ada barber aktif di cabang ini.</p>
     <a href="{{ route('admin.barbers.create') }}" class="mt-3 inline-block text-sm text-gray-900 hover:underline">+ Tambah Barber</a>
 </div>
@@ -88,22 +90,24 @@
                     <form method="POST" action="{{ route('admin.queues.complete', $activeQ) }}">
                         @csrf
                         <button type="submit"
-                                class="w-full bg-gray-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-colors">
-                            ✅ Selesai
+                                class="w-full bg-gray-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            Selesai
                         </button>
                     </form>
                     <form method="POST" action="{{ route('admin.queues.skip', $activeQ) }}">
                         @csrf
                         <button type="submit"
-                                class="w-full bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-200 transition-colors">
-                            ⚠️ Lewati
+                                class="w-full bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Lewati
                         </button>
                     </form>
                 </div>
             </div>
             @else
             <div class="text-center py-4 text-gray-300">
-                <p class="text-2xl mb-1">💤</p>
+                <svg class="w-8 h-8 text-gray-200 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <p class="text-xs text-gray-400">Belum ada yang dilayani</p>
             </div>
             @endif
@@ -131,14 +135,15 @@
                     <form method="POST" action="{{ route('admin.queues.call', $q) }}">
                         @csrf
                         <button type="submit"
-                                class="bg-gradient-to-r from-gray-900 to-slate-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity">
-                            🔔 Panggil
+                                class="bg-gradient-to-r from-gray-900 to-slate-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                            Panggil
                         </button>
                     </form>
                     @elseif($q->status === 'active')
                     <span class="text-xs text-gray-500 font-semibold bg-gray-200 px-2 py-1 rounded-lg">Hadir</span>
                     @else
-                    <span class="text-xs text-yellow-600 font-semibold bg-gray-50 px-2 py-1 rounded-lg">Menunggu</span>
+                    <span class="text-xs text-gray-600 font-semibold bg-gray-50 border border-gray-200 px-2 py-1 rounded-lg">Menunggu</span>
                     @endif
                 </div>
             </div>
@@ -158,7 +163,9 @@
 
 @else
 <div class="text-center py-16 text-gray-400">
-    <p class="text-4xl mb-3">🏪</p>
+    <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+    </div>
     <p class="font-semibold text-gray-500">Pilih cabang di atas untuk melihat antrean.</p>
 </div>
 @endif

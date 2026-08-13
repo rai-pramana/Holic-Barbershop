@@ -93,16 +93,20 @@
                 </div>
 
                 {{-- Details grid --}}
-                <div class="grid grid-cols-3 gap-2 mb-4 text-center">
-                    <div class="bg-gray-50 rounded-xl px-2 py-2.5">
-                        <p class="text-xs text-gray-400 mb-0.5">Barber</p>
-                        <p class="text-xs font-semibold text-gray-800 truncate">{{ $queue->barber->name }}</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-xl px-2 py-2.5">
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="bg-gray-50 rounded-xl px-2 py-2.5 text-center">
                         <p class="text-xs text-gray-400 mb-0.5">Layanan</p>
                         <p class="text-xs font-semibold text-gray-800 truncate">{{ $queue->service->name }}</p>
                     </div>
-                    <div class="bg-gray-50 rounded-xl px-2 py-2.5">
+                    <div class="bg-gray-50 rounded-xl px-2 py-2.5 text-center">
+                        <p class="text-xs text-gray-400 mb-0.5">Biaya</p>
+                        <p class="text-xs font-semibold text-gray-800">{{ $queue->service->formatted_price }}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl px-2 py-2.5 text-center">
+                        <p class="text-xs text-gray-400 mb-0.5">Barber</p>
+                        <p class="text-xs font-semibold text-gray-800 truncate">{{ $queue->barber->name }}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl px-2 py-2.5 text-center">
                         <p class="text-xs text-gray-400 mb-0.5">Durasi</p>
                         <p class="text-xs font-semibold text-gray-800">{{ $queue->service->duration_minutes }}m</p>
                     </div>

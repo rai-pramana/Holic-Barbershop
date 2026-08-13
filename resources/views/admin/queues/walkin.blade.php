@@ -1,7 +1,7 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Daftarkan Antrean Walk-in')
-@section('page-title', '➕ Daftarkan Antrean Walk-in')
+@section('page-title', 'Daftarkan Antrean Walk-in')
 @section('page-subtitle', 'Buat antrean untuk pelanggan tanpa HP atau tanpa akun (otomatis tervalidasi)')
 
 @section('content')

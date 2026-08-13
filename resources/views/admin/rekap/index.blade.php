@@ -1,7 +1,7 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Rekap Kinerja')
-@section('page-title', '📊 Rekap Kinerja')
+@section('page-title', 'Rekap Kinerja')
 @section('page-subtitle', 'Rangkuman performa barbershop berdasarkan periode')
 
 @push('styles')
@@ -82,7 +82,8 @@
 
     {{-- Active period label --}}
     <p class="mt-3 text-xs text-gray-400 font-medium">
-        📅 Periode:
+        <svg class="w-3.5 h-3.5 inline-block mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Periode:
+        
         <span class="text-gray-600 font-semibold">
             {{ $from->isSameDay($to) ? $from->isoFormat('dddd, D MMMM YYYY') : $from->isoFormat('D MMM YYYY') . ' — ' . $to->isoFormat('D MMM YYYY') }}
         </span>

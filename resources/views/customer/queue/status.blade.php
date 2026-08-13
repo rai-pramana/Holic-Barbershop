@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Status Antrean #' . $queue->queue_number)
 
@@ -114,6 +114,10 @@
                     </p>
                     <p class="font-bold text-gray-900 text-sm leading-tight">{{ $queue->service->name }} <span class="text-xs font-normal text-gray-400">({{ $queue->service->duration_minutes }}m)</span></p>
                 </div>
+                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg> Biaya</p>
+                    <p class="font-bold text-gray-900 text-sm">{{ $queue->service->formatted_price }}</p>
+                </div>
             </div>
 
             {{-- Check-in Instructions (for pending) --}}
@@ -142,7 +146,7 @@
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
-                        <div class="w-7 h-7 rounded-full bg-gray-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">✓</div>
+                        <div class="w-7 h-7 rounded-full bg-gray-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">3</div>
                         <div>
                             <p class="text-sm font-semibold text-gray-900">Selesai! Status berubah otomatis</p>
                             <p class="text-xs text-gray-500">Antrean Anda langsung aktif setelah scan</p>
@@ -150,10 +154,11 @@
                     </div>
                 </div>
 
+                <button onclick="openQrScanner()" class="w-full mt-5 inline-flex items-center justify-center gap-2 bg-gray-900 text-white font-bold py-3 rounded-2xl hover:bg-gray-800 active:scale-95 transition-all text-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg> Buka Scanner QR Check-in</button>
+
                 @if($queue->expired_at)
                 <div class="mt-4 text-center">
-                    <p class="text-xs text-gray-700 font-semibold">
-                        ⏰ Berlaku s.d. <span class="local-time" data-utc="{{ $queue->expired_at->toISOString() }}">{{ $queue->expired_at->format('H:i') }}</span> WITA
+                    <p class="text-xs text-gray-700 font-semibold flex items-center justify-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Berlaku s.d. <span class="local-time" data-utc="{{ $queue->expired_at->toISOString() }}">{{ $queue->expired_at->format('H:i') }}</span> WITA
                     </p>
                 </div>
                 @endif
@@ -246,8 +251,71 @@
         <p class="text-sm text-gray-700">{{ $queue->notes }}</p>
     </div>
     @endif
-</div>
 
+{{-- QR Scanner Modal --}}
+<div id="qr-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+        <div class="flex items-center justify-between p-4 border-b border-gray-100">
+            <div>
+                <h3 class="font-bold text-gray-900">Scan QR Check-in</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Arahkan kamera ke QR di loket barbershop</p>
+            </div>
+            <button onclick="closeQrScanner()" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="p-4">
+            <div id="qr-reader" class="rounded-xl overflow-hidden"></div>
+            <p id="qr-status" class="text-center text-sm text-gray-500 mt-3">Menginisialisasi kamera...</p>
+        </div>
+    </div>
+</div>
+</div>
+@push('scripts')
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+let html5QrCode = null;
+function openQrScanner() {
+    const modal = document.getElementById('qr-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.getElementById('qr-status').textContent = 'Menginisialisasi kamera...';
+    html5QrCode = new Html5Qrcode('qr-reader');
+    html5QrCode.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 240, height: 240 } },
+        (decodedText) => {
+            document.getElementById('qr-status').textContent = 'QR berhasil dibaca, mengalihkan...';
+            html5QrCode.stop().then(() => {
+                try {
+                    const url = new URL(decodedText);
+                    if (url.host === window.location.host) {
+                        window.location.href = decodedText;
+                    } else {
+                        document.getElementById('qr-status').textContent = 'QR tidak valid untuk aplikasi ini.';
+                    }
+                } catch(e) {
+                    document.getElementById('qr-status').textContent = 'Format QR tidak dikenali.';
+                }
+            }).catch(() => { window.location.href = decodedText; });
+        },
+        () => {}
+    ).then(() => {
+        document.getElementById('qr-status').textContent = 'Arahkan kamera ke QR di loket barbershop';
+    }).catch((err) => {
+        document.getElementById('qr-status').textContent = 'Tidak dapat mengakses kamera: ' + err;
+    });
+}
+function closeQrScanner() {
+    const modal = document.getElementById('qr-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    if (html5QrCode) { html5QrCode.stop().catch(() => {}); html5QrCode = null; }
+}
+document.getElementById('qr-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeQrScanner();
+});
+</script>
 
 @push('scripts')
 <script>
@@ -312,7 +380,7 @@ async function pollStatus() {
         const positionEl = document.getElementById('queue-position');
 
         if (positionEl && data.position !== undefined) {
-            positionEl.textContent = data.position > 0 ? 'ke-' + data.position : '�';
+            positionEl.textContent = data.position > 0 ? 'ke-' + data.position : '�';
         }
         if (aheadEl && data.queues_ahead !== undefined) {
             const total = (data.queues_ahead ?? 0) + (data.pending_ahead ?? 0);
