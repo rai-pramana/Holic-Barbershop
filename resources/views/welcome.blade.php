@@ -79,10 +79,6 @@
                     <a href="{{ route('admin.dashboard') }}" class="text-sm font-semibold bg-white/10 border border-white/15 text-white px-5 py-2 rounded-xl hover:bg-white/15 transition-colors">
                         Admin Panel
                     </a>
-                @elseif(auth()->user()->isBarber())
-                    <a href="{{ route('barber.dashboard') }}" class="text-sm font-semibold bg-white/10 border border-white/15 text-white px-5 py-2 rounded-xl hover:bg-white/15 transition-colors">
-                        Barber Panel
-                    </a>
                 @else
                     <a href="{{ route('customer.dashboard') }}" class="text-sm font-semibold bg-white/10 border border-white/15 text-white px-5 py-2 rounded-xl hover:bg-white/15 transition-colors">
                         Dashboard Saya

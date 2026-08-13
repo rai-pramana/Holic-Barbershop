@@ -146,8 +146,8 @@
                     <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-100 flex items-center justify-center group-hover:from-gray-200 group-hover:to-gray-300 transition-colors">
                         <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     </div>
-                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-50 border border-green-100 px-2.5 py-1 rounded-full">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-gray-700 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">
+                        <span class="w-1.5 h-1.5 bg-gray-500 rounded-full"></span>
                         Buka
                     </span>
                 </div>
@@ -300,110 +300,16 @@ document.getElementById('qr-modal').addEventListener('click', function(e) {
 
 @push('scripts')
 <script>
-// ─── Dashboard Notification System ────────────────────────────────────────────
-const CSRF_TOKEN       = document.querySelector('meta[name="csrf-token"]')?.content;
-const VAPID_PUBLIC_KEY = "{{ config('webpush.vapid.public_key') }}";
-const SUBSCRIBE_URL    = "{{ route('customer.push.subscribe') }}";
-
-// Queue status messages
-const STATUS_MESSAGES = {
-    called:    { title: '📢 Dipanggil!',         body: 'Giliran Anda telah tiba! Segera ke barber Anda.' },
-    completed: { title: '✅ Selesai!',            body: 'Layanan selesai. Terima kasih!' },
-    skipped:   { title: '⚠️ Antrean Dilewati',   body: 'Antrean Anda dilewati. Hubungi petugas.' },
-    active:    { title: '✅ Check-in Berhasil',   body: 'Antrean Anda aktif. Tunggu dipanggil.' },
-};
-
-// ─── Service Worker + Push Subscription ──────────────────────────────────────
-(async function initPush() {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-    if (!VAPID_PUBLIC_KEY) return;
-
-    const banner = document.getElementById('push-banner');
-    const title  = document.getElementById('push-title');
-    const desc   = document.getElementById('push-desc');
-    const btn    = document.getElementById('push-btn');
-
-    try {
-        const swReg = await navigator.serviceWorker.register('/sw.js');
-        await navigator.serviceWorker.ready;
-
-        const permission = Notification.permission;
-        if (permission === 'denied') {
-            if (banner) banner.classList.add('hidden');
-            return;
-        }
-
-        let sub = await swReg.pushManager.getSubscription();
-
-        if (sub) {
-            // Already subscribed
-            await fetch(SUBSCRIBE_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-                body: JSON.stringify(sub.toJSON()),
-            }).catch(() => {});
-
-            if (banner) {
-                banner.classList.remove('hidden');
-                if (title) title.textContent = 'Notifikasi HP Aktif ✓';
-                if (desc)  desc.textContent  = 'Anda akan menerima notifikasi di layar HP saat antrean dipanggil.';
-                if (btn) {
-                    btn.textContent = 'Notifikasi Aktif';
-                    btn.disabled = true;
-                    btn.classList.replace('bg-white', 'bg-white/20');
-                    btn.classList.replace('text-gray-900', 'text-white');
-                }
-            }
-        } else {
-            // Not subscribed yet — show banner to prompt user
-            if (banner) banner.classList.remove('hidden');
-
-            if (btn) {
-                btn.onclick = async () => {
-                    btn.disabled = true;
-                    btn.textContent = 'Memproses...';
-                    const result = await Notification.requestPermission();
-                    if (result === 'granted') {
-                        try {
-                            const newSub = await swReg.pushManager.subscribe({
-                                userVisibleOnly: true,
-                                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-                            });
-                            await fetch(SUBSCRIBE_URL, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-                                body: JSON.stringify(newSub.toJSON()),
-                            });
-                            title.textContent = 'Notifikasi HP Aktif ✓';
-                            desc.textContent  = 'Anda akan menerima notifikasi di layar HP saat antrean dipanggil.';
-                            btn.textContent   = 'Notifikasi Aktif';
-                            btn.classList.replace('bg-white', 'bg-white/20');
-                            btn.classList.replace('text-gray-900', 'text-white');
-                        } catch(err) {
-                            console.error('Subscription error:', err);
-                            btn.textContent = 'Coba Lagi';
-                            btn.disabled = false;
-                        }
-                    } else {
-                        btn.textContent = 'Izin Ditolak';
-                    }
-                };
-            }
-        }
-    } catch(e) {
-        console.warn('Push init failed:', e.message);
-    }
-})();
-
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    return new Uint8Array([...window.atob(base64)].map(c => c.charCodeAt(0)));
-}
-
-// ─── Active Queue Status Polling (for browser notification on dashboard) ──────
+// ─── Active Queue Status Polling ───────────────────────────────────────────────
 @if($activeQueues->isNotEmpty())
 (function() {
+    const STATUS_MESSAGES = {
+        called:    { title: 'Dipanggil!',           body: 'Giliran Anda telah tiba! Segera ke barber Anda.' },
+        completed: { title: 'Selesai!',              body: 'Layanan selesai. Terima kasih!' },
+        skipped:   { title: 'Antrean Dilewati',      body: 'Antrean Anda dilewati. Hubungi petugas.' },
+        active:    { title: 'Check-in Berhasil',     body: 'Antrean Anda aktif. Tunggu dipanggil.' },
+    };
+
     const queues = [
         @foreach($activeQueues as $q)
         { id: {{ $q->id }}, status: '{{ $q->status }}', pollUrl: '{{ route('customer.queue.poll', $q) }}' },
@@ -412,10 +318,7 @@ function urlBase64ToUint8Array(base64String) {
     const prevStatuses = {};
     queues.forEach(q => prevStatuses[q.id] = q.status);
 
-    function showBrowserNotif(title, body) {
-        if (Notification.permission === 'granted') {
-            new Notification(title, { body, icon: '/icons/icon-192.png', tag: 'queue-dashboard' });
-        }
+    function playSound() {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             [523, 659, 784].forEach((f, i) => {
@@ -434,8 +337,7 @@ function urlBase64ToUint8Array(base64String) {
                 const res  = await fetch(q.pollUrl);
                 const data = await res.json();
                 if (data.status !== prevStatuses[q.id]) {
-                    const msg = STATUS_MESSAGES[data.status];
-                    if (msg) showBrowserNotif(msg.title, msg.body);
+                    playSound();
                     prevStatuses[q.id] = data.status;
                     setTimeout(() => window.location.reload(), 1000);
                 }

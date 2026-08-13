@@ -248,208 +248,21 @@
     @endif
 </div>
 
+
 @push('scripts')
 <script>
-// ─── Config ──────────────────────────────────────────────────────────────────
-const VAPID_PUBLIC_KEY = "{{ config('webpush.vapid.public_key') }}";
-const SUBSCRIBE_URL    = "{{ route('customer.push.subscribe') }}";
-const UNSUBSCRIBE_URL  = "{{ route('customer.push.unsubscribe') }}";
-const CSRF_TOKEN       = document.querySelector('meta[name="csrf-token"]')?.content;
-
-// ─── Service Worker + Push Subscribe ─────────────────────────────────────────
-@if($queue->isActive_or_Pending())
-document.addEventListener('DOMContentLoaded', async () => {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        return;
-    }
-
-    // Register service worker
-    let swReg;
-    try {
-        swReg = await navigator.serviceWorker.register('/sw.js');
-        await navigator.serviceWorker.ready;
-    } catch (e) {
-        console.warn('SW register failed:', e);
-        return;
-    }
-
-    const banner = document.getElementById('push-banner');
-    const btn    = document.getElementById('push-btn');
-    const title  = document.getElementById('push-title');
-    const desc   = document.getElementById('push-desc');
-
-    const permission = Notification.permission;
-
-    if (permission === 'denied') {
-        // Blocked — hide banner
-        if (banner) banner.classList.add('hidden');
-        return;
-    }
-
-    // Check existing subscription
-    const sub = await swReg.pushManager.getSubscription();
-
-    if (sub) {
-        // Already subscribed — sync to server silently & show active state
-        await syncSubscription(sub);
-        if (banner) {
-            banner.classList.remove('hidden');
-            if (title) title.textContent = 'Notifikasi Aktif ✓';
-            if (desc)  desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
-            if (btn) {
-                btn.textContent = 'Matikan';
-                btn.classList.replace('bg-gray-900', 'bg-gray-400');
-                btn.onclick = () => handleUnsubscribe(swReg, sub);
-            }
-        }
-    } else if (permission === 'granted') {
-        // Permission already granted — subscribe automatically
-        await doSubscribe(swReg);
-    } else {
-        // Not yet asked — show banner with subscribe button
-        if (banner) banner.classList.remove('hidden');
-    }
-});
-
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const raw     = window.atob(base64);
-    return new Uint8Array([...raw].map(c => c.charCodeAt(0)));
-}
-
-// Sync existing subscription to server (re-save in case keys changed)
-async function syncSubscription(sub) {
-    try {
-        await fetch(SUBSCRIBE_URL, {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-            body:    JSON.stringify(sub.toJSON()),
-        });
-    } catch(e) { /* silent */ }
-}
-
-// Subscribe and save to server
-async function doSubscribe(swReg) {
-    try {
-        const sub = await swReg.pushManager.subscribe({
-            userVisibleOnly:      true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-        });
-        await syncSubscription(sub);
-
-        // Update UI
-        const banner = document.getElementById('push-banner');
-        const title  = document.getElementById('push-title');
-        const desc   = document.getElementById('push-desc');
-        const btn    = document.getElementById('push-btn');
-        if (title)  title.textContent = 'Notifikasi Aktif ✓';
-        if (desc)   desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
-        if (btn) {
-            btn.textContent = 'Matikan';
-            btn.disabled    = false;
-            btn.classList.replace('bg-gray-900', 'bg-gray-400');
-            btn.onclick = () => handleUnsubscribe(swReg, sub);
-        }
-        if (banner) banner.classList.remove('hidden');
-        return sub;
-    } catch(e) {
-        console.warn('Auto-subscribe failed:', e.message);
-        return null;
-    }
-}
-
-async function handlePushSubscription() {
-    const swReg = await navigator.serviceWorker.ready;
-    const btn   = document.getElementById('push-btn');
-
-    btn.disabled    = true;
-    btn.textContent = '...';
-
-    try {
-        const sub = await swReg.pushManager.subscribe({
-            userVisibleOnly:      true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-        });
-
-        // Save to server
-        const res = await fetch(SUBSCRIBE_URL, {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-            body:    JSON.stringify(sub.toJSON()),
-        });
-
-        if (res.ok) {
-            const title = document.getElementById('push-title');
-            const desc  = document.getElementById('push-desc');
-            const banner = document.getElementById('push-banner');
-
-            title.textContent = 'Notifikasi Aktif ✓';
-            desc.textContent  = 'Anda akan dapat notifikasi saat dipanggil';
-            btn.textContent   = 'Matikan';
-            btn.disabled      = false;
-            btn.classList.replace('bg-gray-900', 'bg-gray-400');
-            btn.onclick = () => handleUnsubscribe(swReg, sub);
-
-            // Show brief success style
-            banner.classList.add('bg-green-50', 'border-green-200');
-            banner.classList.remove('bg-gray-50', 'border-gray-200');
-            setTimeout(() => {
-                banner.classList.remove('bg-green-50', 'border-green-200');
-                banner.classList.add('bg-gray-50', 'border-gray-200');
-            }, 2000);
-        } else {
-            throw new Error('Server rejected subscription');
-        }
-    } catch (e) {
-        console.error('Subscribe failed:', e);
-        btn.disabled    = false;
-        btn.textContent = 'Coba Lagi';
-        if (e.name === 'NotAllowedError') {
-            document.getElementById('push-desc').textContent = 'Izin notifikasi ditolak di browser.';
-        }
-    }
-}
-
-async function handleUnsubscribe(swReg, sub) {
-    const btn = document.getElementById('push-btn');
-    btn.disabled    = true;
-    btn.textContent = '...';
-
-    await sub.unsubscribe();
-    await fetch(UNSUBSCRIBE_URL, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-        body:    JSON.stringify({ endpoint: sub.endpoint }),
-    });
-
-    document.getElementById('push-title').textContent = 'Aktifkan Notifikasi';
-    document.getElementById('push-desc').textContent  = 'Dapat notifikasi otomatis saat dipanggil';
-    btn.textContent = 'Aktifkan';
-    btn.disabled    = false;
-    btn.classList.replace('bg-gray-400', 'bg-gray-900');
-    btn.onclick = handlePushSubscription;
-}
-
-// ─── Live Polling ──────────────────────────────────────────────────────────────
+// --- Live Polling -------------------------------------------------------------
 const pollUrl  = "{{ route('customer.queue.poll', $queue) }}";
 let prevStatus = "{{ $queue->status }}";
 
-// Request notification permission on first visit
-if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
-}
-
-// Notification sound
+// --- Notification Sound -------------------------------------------------------
 function playCustomerNotifSound() {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const freqs = [523, 659, 784]; // C5, E5, G5 — pleasant chime
-        freqs.forEach((freq, i) => {
+        [523, 659, 784].forEach((freq, i) => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
+            osc.connect(gain); gain.connect(ctx.destination);
             osc.type = 'sine';
             osc.frequency.value = freq;
             gain.gain.value = 0.25;
@@ -460,12 +273,13 @@ function playCustomerNotifSound() {
 }
 
 const statusMessages = {
-    'called':    { title: '📢 Giliran Anda!', body: 'Silakan menuju barber Anda sekarang.' },
-    'active':    { title: '✅ Check-in Berhasil', body: 'Antrean Anda sekarang aktif. Tunggu dipanggil.' },
-    'completed': { title: '🎉 Selesai!', body: 'Layanan selesai. Terima kasih telah berkunjung!' },
-    'skipped':   { title: '⚠️ Antrean Dilewati', body: 'Antrean Anda dilewati. Hubungi petugas jika ada kesalahan.' },
+    'called':    { title: 'Giliran Anda!',         body: 'Silakan menuju barber Anda sekarang.' },
+    'active':    { title: 'Check-in Berhasil',     body: 'Antrean Anda sekarang aktif. Tunggu dipanggil.' },
+    'completed': { title: 'Selesai!',              body: 'Layanan selesai. Terima kasih telah berkunjung!' },
+    'skipped':   { title: 'Antrean Dilewati',      body: 'Antrean Anda dilewati. Hubungi petugas jika ada kesalahan.' },
 };
 
+@if($queue->isActive_or_Pending())
 async function pollStatus() {
     try {
         const res  = await fetch(pollUrl);
@@ -473,12 +287,9 @@ async function pollStatus() {
 
         if (data.status !== prevStatus) {
             const newStatus = data.status;
-
-            // Send browser notification
             const msgData = statusMessages[newStatus];
             if (msgData) {
                 playCustomerNotifSound();
-
                 if (Notification.permission === 'granted') {
                     new Notification(msgData.title, {
                         body: msgData.body,
@@ -488,7 +299,6 @@ async function pollStatus() {
                     });
                 }
             }
-
             prevStatus = newStatus;
             if (newStatus === 'called' && navigator.vibrate) {
                 navigator.vibrate([300, 100, 300, 100, 300]);
@@ -502,7 +312,7 @@ async function pollStatus() {
         const positionEl = document.getElementById('queue-position');
 
         if (positionEl && data.position !== undefined) {
-            positionEl.textContent = data.position > 0 ? 'ke-' + data.position : '—';
+            positionEl.textContent = data.position > 0 ? 'ke-' + data.position : '�';
         }
         if (aheadEl && data.queues_ahead !== undefined) {
             const total = (data.queues_ahead ?? 0) + (data.pending_ahead ?? 0);
@@ -516,7 +326,7 @@ async function pollStatus() {
 setInterval(pollStatus, 10000);
 @endif
 
-// ─── Local Time Display ───────────────────────────────────────────────────────
+// --- Local Time Display -------------------------------------------------------
 document.querySelectorAll('.local-time').forEach(el => {
     const utc = el.dataset.utc;
     if (utc) {

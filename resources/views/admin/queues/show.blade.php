@@ -17,10 +17,10 @@
 
         {{-- Status header --}}
         <div class="p-6 text-center
-            @if($queue->status === 'pending')   bg-gradient-to-br from-yellow-400 to-orange-500
-            @elseif($queue->status === 'active') bg-gradient-to-br from-slate-800 to-cyan-600
-            @elseif($queue->status === 'called') bg-gradient-to-br from-purple-500 to-slate-700
-            @elseif($queue->status === 'completed') bg-gradient-to-br from-green-500 to-emerald-600
+            @if($queue->status === 'pending')   bg-gradient-to-br from-slate-700 to-gray-800
+            @elseif($queue->status === 'active') bg-gradient-to-br from-slate-800 to-slate-900
+            @elseif($queue->status === 'called') bg-gradient-to-br from-gray-900 to-slate-800
+            @elseif($queue->status === 'completed') bg-gradient-to-br from-slate-600 to-gray-700
             @else bg-gradient-to-br from-gray-400 to-gray-600
             @endif text-white">
             <p class="text-white/70 text-xs font-semibold uppercase tracking-widest mb-2">{{ $queue->branch->name }}</p>
@@ -59,7 +59,7 @@
                 <p class="text-xs text-gray-500 font-medium uppercase tracking-wide mb-3">Timeline</p>
                 <div class="space-y-2">
                     <div class="flex items-center gap-3 text-sm">
-                        <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                        <div class="w-2 h-2 rounded-full bg-gray-600"></div>
                         <span class="text-gray-500">Dibuat:</span>
                         <span class="font-medium">{{ $queue->created_at->format('H:i') }}</span>
                     </div>
@@ -79,7 +79,7 @@
                     @endif
                     @if($queue->completed_at)
                     <div class="flex items-center gap-3 text-sm">
-                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        <div class="w-2 h-2 rounded-full bg-gray-400"></div>
                         <span class="text-gray-500">Selesai:</span>
                         <span class="font-medium">{{ $queue->completed_at->format('H:i') }}</span>
                     </div>
@@ -88,9 +88,9 @@
             </div>
 
             @if($queue->notes)
-            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-sm">
-                <p class="font-medium text-yellow-800 mb-1">Catatan:</p>
-                <p class="text-yellow-900">{{ $queue->notes }}</p>
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm">
+                <p class="font-medium text-gray-700 mb-1">Catatan:</p>
+                <p class="text-gray-800">{{ $queue->notes }}</p>
             </div>
             @endif
 
@@ -98,7 +98,7 @@
             @if($queue->isPending())
             <div class="border-t border-gray-100 pt-4">
                 <a href="{{ route('admin.checkin.confirm', $queue->validation_token) }}"
-                   class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-opacity text-sm">
+                   class="w-full inline-flex items-center justify-center gap-2 bg-gray-900 text-white font-semibold py-3 rounded-xl hover:bg-gray-800 transition-colors text-sm">
                     📲 Validasi Kehadiran Customer
                 </a>
             </div>

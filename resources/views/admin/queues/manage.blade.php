@@ -88,14 +88,14 @@
                     <form method="POST" action="{{ route('admin.queues.complete', $activeQ) }}">
                         @csrf
                         <button type="submit"
-                                class="w-full bg-green-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-600 transition-colors">
+                                class="w-full bg-gray-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-colors">
                             ✅ Selesai
                         </button>
                     </form>
                     <form method="POST" action="{{ route('admin.queues.skip', $activeQ) }}">
                         @csrf
                         <button type="submit"
-                                class="w-full bg-red-100 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-200 transition-colors">
+                                class="w-full bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-200 transition-colors">
                             ⚠️ Lewati
                         </button>
                     </form>
@@ -138,7 +138,7 @@
                     @elseif($q->status === 'active')
                     <span class="text-xs text-gray-500 font-semibold bg-gray-200 px-2 py-1 rounded-lg">Hadir</span>
                     @else
-                    <span class="text-xs text-yellow-600 font-semibold bg-yellow-50 px-2 py-1 rounded-lg">Menunggu</span>
+                    <span class="text-xs text-yellow-600 font-semibold bg-gray-50 px-2 py-1 rounded-lg">Menunggu</span>
                     @endif
                 </div>
             </div>

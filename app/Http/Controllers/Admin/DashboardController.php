@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Barber;
 use App\Models\Branch;
 use App\Models\Queue;
 use App\Models\User;
@@ -16,8 +17,8 @@ class DashboardController extends Controller
         Queue::expirePending();
         Queue::autoSkipCalled();
 
-        $totalBranches = Branch::where('is_active', true)->count();
-        $totalBarbers  = User::where('role', 'barber')->count();
+        $totalBranches  = Branch::where('is_active', true)->count();
+        $totalBarbers   = Barber::count();
         $totalCustomers = User::where('role', 'customer')->count();
 
         $todayQueues = Queue::whereDate('created_at', today())->get();

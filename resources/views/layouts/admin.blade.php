@@ -74,12 +74,8 @@
 </head>
 <body class="h-full bg-slate-100 flex">
 
-{{-- Notification permission banner --}}
-<div id="notif-banner" class="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-gray-900 to-slate-800 text-white px-4 py-3 text-sm font-medium items-center justify-center gap-3 shadow-lg" style="display:none">
-    <span>🔔 Aktifkan notifikasi untuk mendapat pemberitahuan antrean baru</span>
-    <button onclick="requestNotifPermission()" class="bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-1 rounded-lg transition-colors text-xs ml-3">Aktifkan</button>
-    <button onclick="this.parentElement.style.display='none'" class="ml-2 text-white/70 hover:text-white">✕</button>
-</div>
+{{-- Notification permission banner: disabled --}}
+{{-- <div id="notif-banner" ...></div> --}}
 
 {{-- Toast container --}}
 <div id="toast-container" class="fixed top-4 right-4 z-[60] flex flex-col gap-3 max-w-sm"></div>
@@ -274,7 +270,7 @@
 
 {{-- Live sync indicator --}}
 <div id="sync-dot" class="fixed bottom-4 right-4 z-50 flex items-center gap-2 bg-white/90 backdrop-blur border border-gray-200 rounded-full px-3 py-1.5 shadow-lg text-xs font-medium text-gray-500 opacity-0 transition-opacity duration-300 pointer-events-none">
-    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+    <span class="w-2 h-2 rounded-full bg-slate-400 animate-pulse"></span>
     <span>Sinkronisasi...</span>
 </div>
 

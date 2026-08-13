@@ -37,22 +37,12 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isBarber(): bool
-    {
-        return $this->role === 'barber';
-    }
-
     public function isCustomer(): bool
     {
         return $this->role === 'customer';
     }
 
     // Relationships
-    public function barber()
-    {
-        return $this->hasOne(Barber::class);
-    }
-
     public function queues()
     {
         return $this->hasMany(Queue::class, 'customer_id');

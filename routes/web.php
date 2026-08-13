@@ -91,8 +91,4 @@ Route::middleware(['auth', 'role:customer'])
 
         Route::get('queue/{queue}/status', [Customer\QueueController::class, 'status'])->name('queue.status');
         Route::get('queue/{queue}/poll', [Customer\QueueController::class, 'poll'])->name('queue.poll');
-
-        // Push notification subscription
-        Route::post('push/subscribe',   [Customer\PushSubscriptionController::class, 'store'])->name('push.subscribe');
-        Route::post('push/unsubscribe', [Customer\PushSubscriptionController::class, 'destroy'])->name('push.unsubscribe');
     });

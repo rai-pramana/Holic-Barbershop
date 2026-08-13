@@ -121,8 +121,8 @@
                                     <p class="text-xs text-gray-400 truncate">{{ $barber->specialty }}</p>
                                 @endif
                                 <span class="inline-flex items-center gap-1 text-xs font-medium mt-0.5
-                                    {{ $barber->pending_count === 0 ? 'text-green-600' : 'text-gray-900' }}">
-                                    <span class="w-1.5 h-1.5 rounded-full {{ $barber->pending_count === 0 ? 'bg-green-400' : 'bg-gray-400' }}"></span>
+                                    {{ $barber->pending_count === 0 ? 'text-gray-700' : 'text-gray-900' }}">
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $barber->pending_count === 0 ? 'bg-gray-600' : 'bg-gray-400' }}"></span>
                                     {{ $barber->pending_count === 0 ? 'Kosong' : $barber->pending_count.' antrean' }}
                                 </span>
                             </div>
