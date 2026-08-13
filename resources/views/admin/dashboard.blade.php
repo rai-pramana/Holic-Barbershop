@@ -87,8 +87,8 @@
                             <p class="text-xs text-gray-500">{{ $queue->branch->name }}</p>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ $queue->barber?->name ?? '—' }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-700">{{ $queue->service->name }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $queue->service->formatted_price }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ $queue->service?->name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $queue->service?->formatted_price ?? '-' }}</td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-{{ $queue->status }}">
                                 {{ $queue->status_label }}
