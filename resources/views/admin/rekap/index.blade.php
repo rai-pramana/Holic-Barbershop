@@ -54,7 +54,7 @@
         <div class="flex items-center gap-2 ml-auto">
             <div class="relative">
                 <button type="button" id="date-picker-btn"
-                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all cursor-pointer min-w-[200px]">
+                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-white transition-all cursor-pointer min-w-[200px]">
                     <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     <span id="date-picker-label">
                         {{ $from->isoFormat('D MMM YY') . ' – ' . $to->isoFormat('D MMM YY') }}
@@ -66,7 +66,7 @@
 
             {{-- Branch filter --}}
             <select name="branch_id" onchange="this.form.submit()"
-                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
+                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
                 <option value="">Semua Cabang</option>
                 @foreach($branches as $branch)
                 <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>

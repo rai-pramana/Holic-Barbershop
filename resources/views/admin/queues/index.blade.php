@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Riwayat Antrean')
 @section('page-title', 'Riwayat Antrean')
@@ -34,13 +34,14 @@
 <input type="hidden" name="date_from" id="h_date_from" value="{{ request('date_from', today()->toDateString()) }}">
 <input type="hidden" name="date_to"   id="h_date_to"   value="{{ request('date_to', today()->toDateString()) }}">
 
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6">
-    <div class="flex flex-wrap gap-3 items-center">
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 mb-6">
+    <div class="flex flex-wrap gap-2 items-end">
 
         {{-- Branch filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Cabang</label>
-            <select name="branch_id" class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
+            <select name="branch_id" id="filter-branch" onchange="onBranchChange(this.value)"
+                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
                 <option value="">Semua Cabang</option>
                 @foreach($branches as $branch)
                     <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
@@ -51,7 +52,8 @@
         {{-- Status filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
-            <select name="status" class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
+            <select name="status" onchange="this.form.submit()"
+                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
                 <option value="">Semua Status</option>
                 @foreach(['pending'=>'Menunggu','active'=>'Check-in','called'=>'Dipanggil','completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'] as $val => $lbl)
                     <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
@@ -62,43 +64,34 @@
         {{-- Barber filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Barber</label>
-            <select name="barber_id" class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
+            <select name="barber_id" id="filter-barber" onchange="this.form.submit()"
+                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
                 <option value="">Semua Barber</option>
                 @foreach($barbers as $barber)
-                    <option value="{{ $barber->id }}" {{ request('barber_id') == $barber->id ? 'selected' : '' }}>{{ $barber->name }}</option>
+                    <option value="{{ $barber->id }}"
+                            data-branch="{{ $barber->branch_id }}"
+                            {{ request('barber_id') == $barber->id ? 'selected' : '' }}>{{ $barber->name }}</option>
                 @endforeach
             </select>
         </div>
 
         {{-- Flatpickr range button --}}
-        <div class="ml-auto flex items-center gap-3">
-            <div>
-                <label class="block text-xs font-medium text-gray-500 mb-1">Periode</label>
-                <div class="relative">
-                    <button type="button" id="h-date-btn"
-                            class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all cursor-pointer min-w-[200px]">
-                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <span id="h-date-label">{{ $dateLabel }}</span>
-                        <svg class="w-3 h-3 text-gray-400 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <input type="text" id="h-flatpickr" class="absolute opacity-0 pointer-events-none w-0 h-0">
-                </div>
-            </div>
-
-            <div class="flex items-end gap-2">
-                <button type="submit"
-                        class="bg-gradient-to-r from-gray-900 to-slate-800 text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
-                    Filter
+        <div class="ml-auto">
+            <label class="block text-xs font-medium text-gray-500 mb-1">Periode</label>
+            <div class="relative">
+                <button type="button" id="h-date-btn"
+                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-white transition-all cursor-pointer min-w-[180px]">
+                    <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span id="h-date-label">{{ $dateLabel }}</span>
+                    <svg class="w-3 h-3 text-gray-400 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <a href="{{ route('admin.queues.index') }}"
-                   class="text-sm text-gray-400 hover:text-gray-600 py-2 transition-colors">
-                    Reset
-                </a>
+                <input type="text" id="h-flatpickr" class="absolute opacity-0 pointer-events-none w-0 h-0">
             </div>
         </div>
     </div>
 </div>
 </form>
+
 
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
@@ -192,5 +185,19 @@ const hFp = flatpickr('#h-flatpickr', {
 });
 
 document.getElementById('h-date-btn').addEventListener('click', () => hFp.open());
+
+// --- Cascade: branch -> barber filter ---
+function onBranchChange(branchId) {
+    const barberSelect = document.getElementById('filter-barber');
+    const options = barberSelect.querySelectorAll('option[data-branch]');
+    options.forEach(opt => {
+        opt.style.display = (!branchId || opt.dataset.branch === branchId) ? '' : 'none';
+        // Reset selection if current barber doesn't belong to selected branch
+        if (branchId && opt.selected && opt.dataset.branch !== branchId) {
+            barberSelect.value = '';
+        }
+    });
+    document.getElementById('history-form').submit();
+}
 </script>
 @endpush
