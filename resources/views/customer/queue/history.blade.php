@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Riwayat Antrean')
 
@@ -34,7 +34,7 @@
         <div class="flex justify-between items-start gap-3">
             <div class="flex items-center gap-4">
                 {{-- Queue Number --}}
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl font-mono flex-shrink-0
+                <div class="w-16 h-14 px-1 rounded-2xl flex items-center justify-center font-black text-lg font-mono flex-shrink-0
                     @if($queue->status === 'completed') bg-emerald-50 text-emerald-700
                     @elseif($queue->status === 'skipped') bg-red-50 text-red-500
                     @else bg-amber-50 text-amber-600 @endif">

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -86,7 +86,7 @@
                 @endif
             @else
                 <a href="{{ route('login') }}" class="text-sm text-gray-400 hover:text-white transition-colors font-medium">Masuk</a>
-                <a href="{{ route('register') }}" class="text-sm font-bold bg-white text-gray-900 px-5 py-2 rounded-xl hover:bg-gray-100 transition-colors shadow-md">
+                <a href="{{ route('register') }}" class="text-sm font-bold bg-white text-gray-900 px-5 py-2 rounded-xl hover:bg-gray-100 transition-colors shadow-md inline-flex items-center justify-center text-center">
                     Daftar Gratis
                 </a>
             @endauth
