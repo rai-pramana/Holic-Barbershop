@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Loket Check-in')
 @section('page-title', 'Loket Check-in')
@@ -164,8 +164,7 @@
                     <p class="text-sm font-medium text-gray-800 truncate">{{ $q->customer_name }}</p>
                     <p class="text-xs text-gray-400">{{ $q->checked_in_at->format('H:i') }} · {{ $q->branch->name }}</p>
                 </div>
-                <span class="text-xs font-semibold px-2 py-0.5 rounded-full
-                    {{ $q->status === 'called' ? 'bg-gray-100 text-gray-700' : ($q->status === 'completed' ? 'bg-gray-100 text-gray-700' : 'bg-gray-100 text-gray-700') }}">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full badge badge-{{ $q->status }}">
                     {{ $q->status_label }}
                 </span>
             </div>
