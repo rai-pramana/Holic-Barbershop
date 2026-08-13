@@ -165,7 +165,14 @@ class QueueController extends Controller
 
         $waitMinutes = ($queuesAhead + $pendingAhead) * ($queue->service->duration_minutes ?? 30);
 
-        return view('customer.queue.status', compact('queue', 'queuesAhead', 'pendingAhead', 'waitMinutes'));
+        // Currently serving queue number at same barber
+        $currentServing = Queue::where('barber_id', $queue->barber_id)
+            ->whereIn('status', ['called', 'active'])
+            ->whereDate('created_at', today())
+            ->orderBy('id', 'asc')
+            ->value('queue_number');
+
+        return view('customer.queue.status', compact('queue', 'queuesAhead', 'pendingAhead', 'waitMinutes', 'currentServing'));
     }
 
     /**
@@ -201,15 +208,22 @@ class QueueController extends Controller
             ->where('id', '<=', $queue->id)
             ->count();
 
+        $currentServing = Queue::where('barber_id', $queue->barber_id)
+            ->whereIn('status', ['called', 'active'])
+            ->whereDate('created_at', today())
+            ->orderBy('id', 'asc')
+            ->value('queue_number');
+
         return response()->json([
-            'status'        => $queue->status,
-            'status_label'  => $queue->status_label,
-            'queues_ahead'  => $queuesAhead,
-            'pending_ahead' => $pendingAhead,
-            'wait_minutes'  => $waitMinutes,
-            'position'      => $position,
-            'called_at'     => $queue->called_at?->toIso8601String(),
-            'completed_at'  => $queue->completed_at?->toIso8601String(),
+            'status'          => $queue->status,
+            'status_label'    => $queue->status_label,
+            'queues_ahead'    => $queuesAhead,
+            'pending_ahead'   => $pendingAhead,
+            'wait_minutes'    => $waitMinutes,
+            'position'        => $position,
+            'current_serving' => $currentServing,
+            'called_at'       => $queue->called_at?->toIso8601String(),
+            'completed_at'    => $queue->completed_at?->toIso8601String(),
         ]);
     }
 

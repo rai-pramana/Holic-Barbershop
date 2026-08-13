@@ -71,7 +71,7 @@ class RekapController extends Controller
             ->get(['called_at', 'completed_at']);
 
         if ($durationRows->isNotEmpty()) {
-            $avgSeconds = $durationRows->avg(fn($q) => Carbon::parse($q->completed_at)->diffInSeconds(Carbon::parse($q->called_at)));
+            $avgSeconds = $durationRows->avg(fn($q) => abs(Carbon::parse($q->completed_at)->diffInSeconds(Carbon::parse($q->called_at))));
             $avgMinutes = round($avgSeconds / 60);
         }
 

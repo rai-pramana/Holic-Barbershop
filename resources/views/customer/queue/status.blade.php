@@ -61,7 +61,16 @@
         <div class="p-5 md:p-6 space-y-5">
 
             {{-- Stats Grid --}}
-            <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-4 gap-3">
+                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
+                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        Saat Ini
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm font-mono" id="current-serving">
+                        {{ $currentServing ?? '—' }}
+                    </p>
+                </div>
                 <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
                     <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
@@ -81,7 +90,7 @@
                     </p>
                     <p class="font-bold text-gray-900 text-sm" id="queues-ahead">
                         @if($queue->isActive_or_Pending())
-                            {{ $queuesAhead + $pendingAhead > 0 ? ($queuesAhead + $pendingAhead).' org' : 'Hampir!' }}
+                            {{ $queuesAhead + $pendingAhead > 0 ? ($queuesAhead + $pendingAhead).' orang' : 'Hampir!' }}
                         @else —
                         @endif
                     </p>
@@ -378,16 +387,20 @@ async function pollStatus() {
         const aheadEl    = document.getElementById('queues-ahead');
         const waitEl     = document.getElementById('wait-time');
         const positionEl = document.getElementById('queue-position');
+        const servingEl  = document.getElementById('current-serving');
 
         if (positionEl && data.position !== undefined) {
-            positionEl.textContent = data.position > 0 ? 'ke-' + data.position : '�';
+            positionEl.textContent = data.position > 0 ? 'ke-' + data.position : '—';
         }
         if (aheadEl && data.queues_ahead !== undefined) {
             const total = (data.queues_ahead ?? 0) + (data.pending_ahead ?? 0);
-            aheadEl.textContent = total > 0 ? total + ' org' : 'Hampir!';
+            aheadEl.textContent = total > 0 ? total + ' orang' : 'Hampir!';
         }
         if (waitEl && data.wait_minutes !== undefined) {
             waitEl.textContent = data.wait_minutes > 0 ? '~' + data.wait_minutes + 'm' : 'Segera!';
+        }
+        if (servingEl && data.current_serving !== undefined) {
+            servingEl.textContent = data.current_serving ?? '—';
         }
     } catch(e) { /* silent */ }
 }
