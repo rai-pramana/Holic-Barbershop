@@ -69,6 +69,9 @@
         /* Toast animations */
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .animate-slide-in { animation: slideIn 0.3s ease-out; transition: opacity 0.3s, transform 0.3s; }
+
+        /* Select dropdown — ensure arrow has breathing room */
+        select { padding-right: 2.25rem !important; }
     </style>
     @stack('styles')
 </head>

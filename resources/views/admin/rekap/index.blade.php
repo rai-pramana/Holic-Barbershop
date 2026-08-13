@@ -66,7 +66,7 @@
 
             {{-- Branch filter --}}
             <select name="branch_id" onchange="this.form.submit()"
-                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none focus:border-gray-300 cursor-pointer">
+                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
                 <option value="">Semua Cabang</option>
                 @foreach($branches as $branch)
                 <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
@@ -364,7 +364,7 @@ function setPreset(key) {
     document.getElementById('preset-input').value     = key;
 
     // Update flatpickr display
-    fp.setDate([from, to]);
+    fp.setDate([from, to], false);
 
     // Highlight active chip
     document.querySelectorAll('.preset-btn').forEach(b => {
