@@ -29,6 +29,9 @@ class QueueController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+        if ($request->filled('barber_id')) {
+            $query->where('barber_id', $request->barber_id);
+        }
 
         // Support both single date and date range
         if ($request->filled('date_from') && $request->filled('date_to')) {
@@ -52,8 +55,9 @@ class QueueController extends Controller
 
         $queues   = $query->paginate(25)->withQueryString();
         $branches = Branch::where('is_active', true)->get();
+        $barbers  = Barber::orderBy('name')->get();
 
-        return view('admin.queues.index', compact('queues', 'branches', 'dateLabel'));
+        return view('admin.queues.index', compact('queues', 'branches', 'barbers', 'dateLabel'));
     }
 
     /**

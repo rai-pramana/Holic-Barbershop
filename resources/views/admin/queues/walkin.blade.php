@@ -130,7 +130,7 @@
                 </a>
                 <button type="submit"
                         class="flex-1 py-3 rounded-xl bg-gradient-to-r from-gray-800 to-slate-700 text-white text-sm font-bold hover:opacity-90 transition-opacity shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Daftarkan Antrean
+                    Daftarkan Antrean
                 </button>
             </div>
 

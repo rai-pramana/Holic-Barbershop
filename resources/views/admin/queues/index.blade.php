@@ -59,6 +59,17 @@
             </select>
         </div>
 
+        {{-- Barber filter --}}
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Barber</label>
+            <select name="barber_id" class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
+                <option value="">Semua Barber</option>
+                @foreach($barbers as $barber)
+                    <option value="{{ $barber->id }}" {{ request('barber_id') == $barber->id ? 'selected' : '' }}>{{ $barber->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
         {{-- Flatpickr range button --}}
         <div class="ml-auto flex items-center gap-3">
             <div>
@@ -112,7 +123,7 @@
                         <p class="font-medium text-gray-900">{{ $queue->customer_name }}</p>
                         <p class="text-xs text-gray-500">{{ $queue->customer->phone }}</p>
                     </td>
-                    <td class="px-5 py-3 text-sm text-gray-700">{{ $queue->barber?->user?->name ?? '—' }}</td>
+                    <td class="px-5 py-3 text-sm text-gray-700">{{ $queue->barber?->name ?? '—' }}</td>
                     <td class="px-5 py-3 text-sm text-gray-700">
                         <p>{{ $queue->service->name }}</p>
                         <p class="text-xs text-gray-500">{{ $queue->service->duration_minutes }} menit</p>

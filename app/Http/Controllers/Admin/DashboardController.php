@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Admin;
 
@@ -34,7 +34,7 @@ class DashboardController extends Controller
         $recentQueues = Queue::with(['customer', 'barber', 'service', 'branch'])
             ->whereDate('created_at', today())
             ->latest()
-            ->take(10)
+            ->take(3)
             ->get();
 
         return view('admin.dashboard', compact(

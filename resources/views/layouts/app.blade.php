@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
@@ -49,6 +49,9 @@
             content: ''; position: absolute; inset: 0; border-radius: inherit;
             border: 2px solid currentColor; animation: pulse-ring 1.5s ease-out infinite;
         }
+
+        /* Select dropdown — ensure arrow has breathing room */
+        select { padding-right: 2.25rem !important; }
     </style>
     @stack('styles')
 </head>
