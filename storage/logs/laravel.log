@@ -1580,3 +1580,7 @@
 #31 C:/Users/raipr/Documents/Code/holic-barbershop/artisan(13): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
 #32 {main}
 "} 
+[2026-08-13 12:22:01] local.ERROR: Namespace declaration statement has to be the very first statement or after any declare call in the script {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Namespace declaration statement has to be the very first statement or after any declare call in the script at C:/Users/raipr/Documents/Code/holic-barbershop/app/Http/Controllers/Admin/DashboardController.php:3)
+[stacktrace]
+#0 {main}
+"} 

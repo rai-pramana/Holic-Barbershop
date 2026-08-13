@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Dashboard Admin')
 @section('page-title', 'Dashboard')
@@ -73,6 +73,7 @@
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Customer</th>
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Barber</th>
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Layanan</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Biaya</th>
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Status</th>
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Waktu</th>
                     </tr>
@@ -87,6 +88,7 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ $queue->barber?->name ?? '—' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ $queue->service->name }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $queue->service->formatted_price }}</td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-{{ $queue->status }}">
                                 {{ $queue->status_label }}
@@ -96,7 +98,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-gray-400 text-sm">
+                        <td colspan="8" class="px-6 py-10 text-center text-gray-400 text-sm">
                             Belum ada antrean hari ini.
                         </td>
                     </tr>
