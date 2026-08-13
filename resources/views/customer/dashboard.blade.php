@@ -135,33 +135,33 @@
             <h2 class="text-lg font-bold text-gray-900">Pilih Cabang</h2>
         </div>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             @forelse($branches as $branch)
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 card-hover group">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 card-hover group">
                 {{-- Header --}}
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-100 flex items-center justify-center group-hover:from-gray-200 group-hover:to-gray-300 transition-colors">
-                        <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <div class="flex items-start justify-between mb-5">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-100 flex items-center justify-center group-hover:from-gray-200 group-hover:to-gray-300 transition-colors">
+                        <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     </div>
-                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1 rounded-full">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                         Buka
                     </span>
                 </div>
 
-                <h3 class="font-bold text-gray-900 mb-1 text-sm md:text-base">{{ $branch->name }}</h3>
-                <div class="space-y-1 mb-4">
-                    <p class="text-xs text-gray-500 flex items-start gap-1.5">
-                        <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <h3 class="font-bold text-gray-900 mb-2 text-base md:text-lg">{{ $branch->name }}</h3>
+                <div class="space-y-1.5 mb-5">
+                    <p class="text-sm text-gray-500 flex items-start gap-2">
+                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         {{ $branch->address }}
                     </p>
-                    <p class="text-xs text-gray-500 flex items-center gap-1.5">
-                        <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p class="text-sm text-gray-500 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         {{ $branch->open_time }} – {{ $branch->close_time }}
                     </p>
                     @if($branch->phone)
-                    <p class="text-xs text-gray-500 flex items-center gap-1.5">
-                        <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    <p class="text-sm text-gray-500 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                         {{ $branch->phone }}
                     </p>
                     @endif
@@ -171,13 +171,13 @@
 
                 @if($existingQueue)
                     <a href="{{ route('customer.queue.status', $existingQueue) }}"
-                       class="w-full inline-flex items-center justify-center gap-2 bg-gray-200 text-gray-700 border border-gray-300 font-semibold text-sm py-2.5 rounded-xl hover:bg-gray-200 transition-colors">
+                       class="w-full inline-flex items-center justify-center gap-2 bg-gray-200 text-gray-700 border border-gray-300 font-semibold text-sm py-3 rounded-xl hover:bg-gray-300 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         Lihat Antrean #{{ $existingQueue->queue_number }}
                     </a>
                 @else
                     <a href="{{ route('customer.queue.take', $branch) }}"
-                       class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold text-sm py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-gray-900/10">
+                       class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold text-sm py-3 rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-gray-900/10">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         Ambil Antrean
                     </a>
