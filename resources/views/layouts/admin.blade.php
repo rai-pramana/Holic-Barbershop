@@ -88,7 +88,7 @@
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 lg:hidden" onclick="toggleSidebar()"></div>
 
 {{-- Sidebar --}}
-<aside id="sidebar" class="w-64 min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col flex-shrink-0 shadow-2xl">
+<aside id="sidebar" class="w-64 h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col flex-shrink-0 shadow-2xl sticky top-0 overflow-y-auto">
 
     {{-- Logo --}}
     <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
