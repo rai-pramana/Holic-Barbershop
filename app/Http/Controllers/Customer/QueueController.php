@@ -7,6 +7,7 @@ use App\Models\Barber;
 use App\Models\Branch;
 use App\Models\Queue;
 use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -150,20 +151,33 @@ class QueueController extends Controller
 
         $queue->load(['branch', 'barber', 'service']);
 
-        // Queues ahead in same barber queue
-        $queuesAhead = Queue::where('barber_id', $queue->barber_id)
-            ->whereIn('status', ['active', 'called'])
+        // Queues ahead in same barber queue (with actual service durations)
+        $aheadQueues = Queue::where('barber_id', $queue->barber_id)
+            ->whereIn('status', ['active', 'called', 'pending'])
             ->whereDate('created_at', today())
             ->where('id', '<', $queue->id)
-            ->count();
+            ->with('service')
+            ->get();
 
-        $pendingAhead = Queue::where('barber_id', $queue->barber_id)
-            ->where('status', 'pending')
-            ->whereDate('created_at', today())
-            ->where('id', '<', $queue->id)
-            ->count();
+        $queuesAhead  = $aheadQueues->whereIn('status', ['active', 'called'])->count();
+        $pendingAhead = $aheadQueues->where('status', 'pending')->count();
 
-        $waitMinutes = ($queuesAhead + $pendingAhead) * ($queue->service->duration_minutes ?? 30);
+        // Calculate wait: sum each queue's own service duration
+        $waitMinutes = 0;
+        foreach ($aheadQueues as $aq) {
+            $dur = $aq->service?->duration_minutes ?? 30;
+
+            if (in_array($aq->status, ['called', 'active'])) {
+                // Already being served — subtract elapsed time since check-in
+                $startedAt = $aq->checked_in_at ?? $aq->called_at ?? $aq->created_at;
+                $elapsed   = max(0, Carbon::parse($startedAt)->diffInMinutes(now()));
+                $remaining = max(0, $dur - $elapsed);
+                $waitMinutes += $remaining;
+            } else {
+                // Pending — full duration still to come
+                $waitMinutes += $dur;
+            }
+        }
 
         // Currently serving queue number at same barber
         $currentServing = Queue::where('barber_id', $queue->barber_id)
@@ -188,19 +202,27 @@ class QueueController extends Controller
         $queue->refresh();
         $queue->load(['barber', 'service']);
 
-        $queuesAhead = Queue::where('barber_id', $queue->barber_id)
-            ->whereIn('status', ['active', 'called'])
+        $aheadQueues = Queue::where('barber_id', $queue->barber_id)
+            ->whereIn('status', ['active', 'called', 'pending'])
             ->whereDate('created_at', today())
             ->where('id', '<', $queue->id)
-            ->count();
+            ->with('service')
+            ->get();
 
-        $pendingAhead = Queue::where('barber_id', $queue->barber_id)
-            ->where('status', 'pending')
-            ->whereDate('created_at', today())
-            ->where('id', '<', $queue->id)
-            ->count();
+        $queuesAhead  = $aheadQueues->whereIn('status', ['active', 'called'])->count();
+        $pendingAhead = $aheadQueues->where('status', 'pending')->count();
 
-        $waitMinutes = ($queuesAhead + $pendingAhead) * ($queue->service->duration_minutes ?? 30);
+        $waitMinutes = 0;
+        foreach ($aheadQueues as $aq) {
+            $dur = $aq->service?->duration_minutes ?? 30;
+            if (in_array($aq->status, ['called', 'active'])) {
+                $startedAt   = $aq->checked_in_at ?? $aq->called_at ?? $aq->created_at;
+                $elapsed     = max(0, Carbon::parse($startedAt)->diffInMinutes(now()));
+                $waitMinutes += max(0, $dur - $elapsed);
+            } else {
+                $waitMinutes += $dur;
+            }
+        }
 
         $position = Queue::where('barber_id', $queue->barber_id)
             ->whereIn('status', ['active', 'called', 'pending'])
