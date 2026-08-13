@@ -8,13 +8,13 @@
 
 {{-- Flash messages --}}
 @if(session('success'))
-<div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm font-medium flex items-center gap-2">
+<div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 text-sm font-medium flex items-center gap-2">
     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
     {{ session('success') }}
 </div>
 @endif
 @if(session('error'))
-<div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-sm font-medium flex items-center gap-2">
+<div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 text-sm font-medium flex items-center gap-2">
     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
     {{ session('error') }}
 </div>
@@ -31,7 +31,7 @@
                 </div>
                 <div>
                     <h2 class="text-white font-bold text-lg">Antrean Walk-in</h2>
-                    <p class="text-slate-700 text-sm">Pelanggan tidak perlu akun — langsung aktif</p>
+                    <p class="text-gray-300 text-sm">Pelanggan tidak perlu akun — langsung aktif</p>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Cabang <span class="text-red-500">*</span></label>
                 <select name="branch_id" id="branch_id" required
                         onchange="this.form.action='{{ route('admin.queues.walkin') }}?branch_id='+this.value; this.form.method='GET'; this.form.submit();"
-                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-slate-300 @error('branch_id') border-red-400 @enderror">
+                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-gray-500 focus:border-slate-300 @error('branch_id') border-red-400 @enderror">
                     <option value="">— Pilih Cabang —</option>
                     @foreach($branches as $branch)
                     <option value="{{ $branch->id }}" @selected($selectedBranch?->id == $branch->id)>{{ $branch->name }}</option>
@@ -68,7 +68,7 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Layanan <span class="text-red-500">*</span></label>
                 <select name="service_id" required
-                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-slate-300 @error('service_id') border-red-400 @enderror">
+                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-gray-500 focus:border-slate-300 @error('service_id') border-red-400 @enderror">
                     <option value="">— Pilih Layanan —</option>
                     @foreach($services as $service)
                     <option value="{{ $service->id }}" @selected(old('service_id') == $service->id)>
@@ -83,8 +83,8 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Barber</label>
                 <select name="barber_id"
-                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-slate-300">
-                    <option value="">🤖 Otomatis (barber paling sedikit antrean)</option>
+                        class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-gray-500 focus:border-slate-300">
+                    <option value="">Otomatis (barber paling sedikit antrean)</option>
                     @foreach($barbers as $barber)
                     <option value="{{ $barber->id }}" @selected(old('barber_id') == $barber->id)>
                         {{ $barber->name }} — {{ $barber->pending_count }} antrean menunggu
@@ -104,21 +104,21 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Pelanggan <span class="text-red-500">*</span></label>
                         <input type="text" name="guest_name" value="{{ old('guest_name') }}" required
                                placeholder="Contoh: Budi Santoso"
-                               class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 @error('guest_name') border-red-400 @enderror">
+                               class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-gray-500 @error('guest_name') border-red-400 @enderror">
                         @error('guest_name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nomor HP <span class="text-gray-400 font-normal">(opsional)</span></label>
                         <input type="tel" name="guest_phone" value="{{ old('guest_phone') }}"
                                placeholder="Contoh: 081234567890"
-                               class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500">
+                               class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-gray-500">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1.5">Catatan <span class="text-gray-400 font-normal">(opsional)</span></label>
                     <textarea name="notes" rows="2" placeholder="Contoh: 2 orang (bapak dan anak), potong pendek"
-                              class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 resize-none">{{ old('notes') }}</textarea>
+                              class="w-full rounded-xl border-gray-200 bg-gray-50 text-sm px-4 py-2.5 focus:ring-2 focus:ring-gray-500 resize-none">{{ old('notes') }}</textarea>
                 </div>
             </div>
 

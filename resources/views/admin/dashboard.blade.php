@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Dashboard Admin')
 @section('page-title', 'Dashboard')
@@ -96,7 +96,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-10 text-center text-gray-400 text-sm">
+                        <td colspan="7" class="px-6 py-10 text-center text-gray-400 text-sm">
                             Belum ada antrean hari ini.
                         </td>
                     </tr>

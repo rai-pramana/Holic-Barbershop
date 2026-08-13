@@ -143,7 +143,7 @@
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
             <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span>✅ Tervalidasi Hari Ini</span>
-                <span class="text-xs bg-green-100 text-green-700 font-semibold px-2 py-0.5 rounded-full">
+                <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-2 py-0.5 rounded-full">
                     {{ \App\Models\Queue::whereDate('created_at', today())->where('status', 'active')->count() +
                        \App\Models\Queue::whereDate('created_at', today())->where('status', 'called')->count() +
                        \App\Models\Queue::whereDate('created_at', today())->where('status', 'completed')->count() }}
@@ -165,7 +165,7 @@
                     <p class="text-xs text-gray-400">{{ $q->checked_in_at->format('H:i') }} · {{ $q->branch->name }}</p>
                 </div>
                 <span class="text-xs font-semibold px-2 py-0.5 rounded-full
-                    {{ $q->status === 'called' ? 'bg-gray-100 text-gray-700' : ($q->status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700') }}">
+                    {{ $q->status === 'called' ? 'bg-gray-100 text-gray-700' : ($q->status === 'completed' ? 'bg-gray-100 text-gray-700' : 'bg-gray-100 text-gray-700') }}">
                     {{ $q->status_label }}
                 </span>
             </div>

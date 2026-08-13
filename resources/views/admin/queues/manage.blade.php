@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Kelola Antrean')
 @section('page-title', 'Kelola Antrean')
@@ -98,7 +98,7 @@
                     <form method="POST" action="{{ route('admin.queues.skip', $activeQ) }}">
                         @csrf
                         <button type="submit"
-                                class="w-full bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-1">
+                                class="w-full bg-gray-200 text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-300 border border-gray-300 transition-colors flex items-center justify-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             Lewati
                         </button>

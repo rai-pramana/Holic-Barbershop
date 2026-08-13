@@ -40,7 +40,7 @@
         {{-- Branch filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Cabang</label>
-            <select name="branch_id" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 cursor-pointer">
+            <select name="branch_id" class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
                 <option value="">Semua Cabang</option>
                 @foreach($branches as $branch)
                     <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
@@ -51,7 +51,7 @@
         {{-- Status filter --}}
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
-            <select name="status" class="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 cursor-pointer">
+            <select name="status" class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
                 <option value="">Semua Status</option>
                 @foreach(['pending'=>'Menunggu','active'=>'Check-in','called'=>'Dipanggil','completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'] as $val => $lbl)
                     <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
@@ -98,6 +98,7 @@
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Customer</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Barber</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Layanan</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Biaya</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Cabang</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Status</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Dibuat</th>
@@ -116,6 +117,7 @@
                         <p>{{ $queue->service->name }}</p>
                         <p class="text-xs text-gray-500">{{ $queue->service->duration_minutes }} menit</p>
                     </td>
+                    <td class="px-5 py-3 text-sm font-medium text-gray-800">{{ $queue->service->formatted_price }}</td>
                     <td class="px-5 py-3 text-sm text-gray-600">{{ $queue->branch->name }}</td>
                     <td class="px-5 py-3">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-{{ $queue->status }}">
@@ -126,7 +128,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-5 py-12 text-center text-gray-400 text-sm">Tidak ada antrean ditemukan.</td>
+                    <td colspan="8" class="px-5 py-12 text-center text-gray-400 text-sm">Tidak ada antrean ditemukan.</td>
                 </tr>
                 @endforelse
             </tbody>

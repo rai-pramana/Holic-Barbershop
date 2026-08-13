@@ -270,7 +270,6 @@
         </div>
     </div>
 </div>
-</div>
 @push('scripts')
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
@@ -316,6 +315,7 @@ document.getElementById('qr-modal').addEventListener('click', function(e) {
     if (e.target === this) closeQrScanner();
 });
 </script>
+@endpush
 
 @push('scripts')
 <script>

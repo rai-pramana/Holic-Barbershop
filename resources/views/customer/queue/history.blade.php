@@ -20,7 +20,7 @@
     {{-- Filter --}}
     <form method="GET" action="{{ route('customer.queue.history') }}" class="flex gap-2 flex-wrap">
         <select name="status" onchange="this.form.submit()"
-                class="rounded-xl border-gray-200 bg-white text-sm px-3 py-2 text-gray-700 focus:ring-2 focus:ring-gray-500 focus:border-gray-400">
+                class="rounded-xl border border-gray-200 bg-white text-sm px-3 py-2 text-gray-700 focus:ring-2 focus:ring-gray-500 focus:border-gray-400 hover:border-gray-300 hover:bg-gray-50 cursor-pointer transition-colors">
             <option value="">Semua Status</option>
             <option value="completed" @selected(request('status') === 'completed')>Selesai</option>
             <option value="skipped"   @selected(request('status') === 'skipped')>Dilewati</option>
@@ -35,9 +35,9 @@
             <div class="flex items-center gap-4">
                 {{-- Queue Number --}}
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl font-mono flex-shrink-0
-                    @if($queue->status === 'completed') bg-gray-100 text-gray-700
-                    @elseif($queue->status === 'skipped') bg-gray-200 text-gray-500
-                    @else bg-gray-100 text-gray-400 @endif">
+                    @if($queue->status === 'completed') bg-emerald-50 text-emerald-700
+                    @elseif($queue->status === 'skipped') bg-red-50 text-red-500
+                    @else bg-amber-50 text-amber-600 @endif">
                     {{ $queue->queue_number }}
                 </div>
                 <div>
@@ -58,9 +58,9 @@
 
             {{-- Status Badge --}}
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0
-                @if($queue->status === 'completed') bg-gray-100 text-gray-700
-                @elseif($queue->status === 'skipped') bg-gray-200 text-gray-500
-                @else bg-gray-100 text-gray-400 @endif">
+                @if($queue->status === 'completed') bg-emerald-100 text-emerald-700
+                @elseif($queue->status === 'skipped') bg-red-100 text-red-600
+                @else bg-amber-100 text-amber-600 @endif">
                 @if($queue->status === 'completed')
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                 @elseif($queue->status === 'skipped')
