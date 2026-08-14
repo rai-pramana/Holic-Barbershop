@@ -62,7 +62,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('notifications/poll', [Admin\QueueController::class, 'notificationPoll'])->name('notifications.poll');
 
         // ── Loket Check-in ────────────────────────────────────────────────
-        Route::get('checkin', [Admin\CheckinController::class, 'index'])->name('checkin.index');
+        Route::get('checkin', fn() => redirect()->route('admin.queues.manage'))->name('checkin.index');
         Route::post('checkin/search', [Admin\CheckinController::class, 'search'])->name('checkin.search');
         Route::get('checkin/{token}', [Admin\CheckinController::class, 'confirm'])->name('checkin.confirm');
         Route::post('checkin/{queue}/validate', [Admin\CheckinController::class, 'validate_checkin'])->name('checkin.validate');

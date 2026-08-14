@@ -81,7 +81,7 @@ class CheckinController extends Controller
             'checked_in_at' => now(),
         ]);
 
-        return redirect()->route('admin.checkin.index')
-            ->with('success', "✅ Antrean #{$queue->queue_number} ({$queue->customer_name}) berhasil divalidasi!");
+        return redirect()->route('admin.queues.manage')
+            ->with('success', "Antrean #{$queue->queue_number} ({$queue->customer_name}) berhasil divalidasi!");
     }
 }

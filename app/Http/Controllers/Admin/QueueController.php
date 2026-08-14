@@ -96,7 +96,15 @@ class QueueController extends Controller
                 ->get();
         }
 
-        return view('admin.queues.manage', compact('branches', 'selectedBranch', 'barbers'));
+        // Recent check-ins today (for merged check-in panel)
+        $recent = Queue::with(['customer', 'branch'])
+            ->whereDate('created_at', today())
+            ->whereNotNull('checked_in_at')
+            ->orderByDesc('checked_in_at')
+            ->take(8)
+            ->get();
+
+        return view('admin.queues.manage', compact('branches', 'selectedBranch', 'barbers', 'recent'));
     }
 
     /**

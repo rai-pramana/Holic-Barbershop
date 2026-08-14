@@ -123,19 +123,11 @@
         </div>
 
         <a href="{{ route('admin.queues.manage') }}"
-           class="sidebar-link {{ request()->routeIs('admin.queues.manage') ? 'active' : '' }}">
+           class="sidebar-link {{ request()->routeIs('admin.queues.manage') || request()->routeIs('admin.checkin.*') ? 'active' : '' }}">
             <span class="icon-wrap">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
             </span>
-            Kelola Antrean
-        </a>
-
-        <a href="{{ route('admin.checkin.index') }}"
-           class="sidebar-link {{ request()->routeIs('admin.checkin.*') ? 'active' : '' }}">
-            <span class="icon-wrap">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-            </span>
-            Loket Check-in
+            Loket Operasional
         </a>
 
         <a href="{{ route('admin.queues.walkin') }}"
