@@ -77,11 +77,11 @@ class Barber extends Model
         // Estimate total wait: remaining time for active/called + full time for pending
         $waitMinutes = 0;
         foreach ($queues as $q) {
-            $dur = $q->service?->duration_minutes ?? 30;
+            $dur = (int) ($q->service?->duration_minutes ?? 30);
             if (in_array($q->status, ['called', 'active'])) {
                 $startedAt   = $q->checked_in_at ?? $q->called_at ?? $q->created_at;
-                $elapsed     = max(0, \Carbon\Carbon::parse($startedAt)->diffInMinutes(now()));
-                $waitMinutes += max(0, $dur - $elapsed);
+                $elapsed     = (int) round(max(0, \Carbon\Carbon::parse($startedAt)->diffInMinutes(now())));
+                $waitMinutes += (int) max(0, $dur - $elapsed);
             } else {
                 $waitMinutes += $dur;
             }
@@ -90,7 +90,7 @@ class Barber extends Model
         return [
             'pending_count'          => $pendingCount,
             'current_serving'        => $currentServing,
-            'estimated_wait_minutes' => $waitMinutes,
+            'estimated_wait_minutes' => (int) round($waitMinutes),
         ];
     }
 }

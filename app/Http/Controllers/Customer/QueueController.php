@@ -168,19 +168,20 @@ class QueueController extends Controller
         // Calculate wait: sum each queue's own service duration
         $waitMinutes = 0;
         foreach ($aheadQueues as $aq) {
-            $dur = $aq->service?->duration_minutes ?? 30;
+            $dur = (int) ($aq->service?->duration_minutes ?? 30);
 
             if (in_array($aq->status, ['called', 'active'])) {
                 // Already being served — subtract elapsed time since check-in
                 $startedAt = $aq->checked_in_at ?? $aq->called_at ?? $aq->created_at;
-                $elapsed   = max(0, Carbon::parse($startedAt)->diffInMinutes(now()));
-                $remaining = max(0, $dur - $elapsed);
+                $elapsed   = (int) round(max(0, Carbon::parse($startedAt)->diffInMinutes(now())));
+                $remaining = (int) max(0, $dur - $elapsed);
                 $waitMinutes += $remaining;
             } else {
                 // Pending — full duration still to come
                 $waitMinutes += $dur;
             }
         }
+        $waitMinutes = (int) round($waitMinutes);
 
         // Currently serving queue number at same barber
         $currentServing = Queue::where('barber_id', $queue->barber_id)
@@ -217,15 +218,16 @@ class QueueController extends Controller
 
         $waitMinutes = 0;
         foreach ($aheadQueues as $aq) {
-            $dur = $aq->service?->duration_minutes ?? 30;
+            $dur = (int) ($aq->service?->duration_minutes ?? 30);
             if (in_array($aq->status, ['called', 'active'])) {
                 $startedAt   = $aq->checked_in_at ?? $aq->called_at ?? $aq->created_at;
-                $elapsed     = max(0, Carbon::parse($startedAt)->diffInMinutes(now()));
-                $waitMinutes += max(0, $dur - $elapsed);
+                $elapsed     = (int) round(max(0, Carbon::parse($startedAt)->diffInMinutes(now())));
+                $waitMinutes += (int) max(0, $dur - $elapsed);
             } else {
                 $waitMinutes += $dur;
             }
         }
+        $waitMinutes = (int) round($waitMinutes);
 
         $position = Queue::where('barber_id', $queue->barber_id)
             ->whereIn('status', ['active', 'called', 'pending'])

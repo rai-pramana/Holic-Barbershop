@@ -397,7 +397,8 @@ async function pollStatus() {
             aheadEl.textContent = total > 0 ? total + ' orang' : 'Hampir!';
         }
         if (waitEl && data.wait_minutes !== undefined) {
-            waitEl.textContent = data.wait_minutes > 0 ? '~' + data.wait_minutes + 'm' : 'Segera!';
+            const roundedWait = Math.round(data.wait_minutes);
+            waitEl.textContent = roundedWait > 0 ? '~' + roundedWait + 'm' : 'Segera!';
         }
         if (servingEl && data.current_serving !== undefined) {
             servingEl.textContent = data.current_serving ?? '—';
