@@ -92,16 +92,41 @@
             </div>
             <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {{-- Auto option --}}
+                @php
+                    $fastestBarber = $barbers->first();
+                @endphp
                 <label for="barber_auto" class="cursor-pointer">
                     <input type="radio" id="barber_auto" name="barber_id" value="" class="peer sr-only" checked>
-                    <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-gray-400 peer-checked:bg-gray-50/60 hover:border-gray-200 transition-all">
-                        <div class="flex items-center gap-3">
+                    <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-gray-400 peer-checked:bg-gray-50/60 hover:border-gray-200 transition-all h-full">
+                        <div class="flex items-start gap-3">
                             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-900 to-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm shadow-gray-900/20">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                             </div>
-                            <div>
-                                <p class="font-semibold text-gray-900 text-sm">Otomatis</p>
-                                <p class="text-xs text-gray-500">Barber dengan antrean tercepat</p>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-2 mb-0.5">
+                                    <p class="font-semibold text-gray-900 text-sm">Otomatis</p>
+                                    <span class="flex-shrink-0 text-xs font-bold px-2 py-0.5 rounded-full bg-slate-900 text-white">
+                                        Rekomendasi
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-400 truncate mb-1.5">Pilih barber dengan giliran tercepat</p>
+
+                                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                    @if($fastestBarber)
+                                        <span class="inline-flex items-center gap-1 text-xs text-gray-600">
+                                            <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                            Paling luang: <strong class="font-semibold text-gray-800">{{ $fastestBarber->name }}</strong>
+                                        </span>
+                                        <span class="inline-flex items-center gap-1 text-xs text-gray-500">
+                                            <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            {{ $fastestBarber->estimated_wait_minutes > 0 ? '~'.$fastestBarber->estimated_wait_minutes.' menit' : 'Langsung dilayani' }}
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 text-xs text-gray-400">
+                                            Barber tersedia
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -111,20 +136,54 @@
                 <label for="barber_{{ $barber->id }}" class="cursor-pointer">
                     <input type="radio" id="barber_{{ $barber->id }}" name="barber_id" value="{{ $barber->id }}" class="peer sr-only">
                     <div class="border-2 border-gray-100 rounded-xl p-4 peer-checked:border-gray-400 peer-checked:bg-gray-50/60 hover:border-gray-200 transition-all">
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-start gap-3">
                             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                                 {{ strtoupper(substr($barber->name, 0, 1)) }}
                             </div>
                             <div class="min-w-0 flex-1">
-                                <p class="font-semibold text-gray-900 text-sm truncate">{{ $barber->name }}</p>
+                                <div class="flex items-center justify-between gap-2 mb-0.5">
+                                    <p class="font-semibold text-gray-900 text-sm truncate">{{ $barber->name }}</p>
+                                    {{-- Queue count badge --}}
+                                    <span class="flex-shrink-0 text-xs font-bold px-2 py-0.5 rounded-full
+                                        {{ $barber->pending_count === 0
+                                            ? 'bg-gray-100 text-gray-500'
+                                            : ($barber->pending_count <= 2 ? 'bg-amber-100 text-amber-700' : 'bg-red-50 text-red-600') }}">
+                                        {{ $barber->pending_count === 0 ? 'Kosong' : $barber->pending_count . ' antrean' }}
+                                    </span>
+                                </div>
                                 @if($barber->specialty)
-                                    <p class="text-xs text-gray-400 truncate">{{ $barber->specialty }}</p>
+                                    <p class="text-xs text-gray-400 truncate mb-1.5">{{ $barber->specialty }}</p>
                                 @endif
-                                <span class="inline-flex items-center gap-1 text-xs font-medium mt-0.5
-                                    {{ $barber->pending_count === 0 ? 'text-gray-700' : 'text-gray-900' }}">
-                                    <span class="w-1.5 h-1.5 rounded-full {{ $barber->pending_count === 0 ? 'bg-gray-600' : 'bg-gray-400' }}"></span>
-                                    {{ $barber->pending_count === 0 ? 'Kosong' : $barber->pending_count.' antrean' }}
-                                </span>
+
+                                {{-- Stats row --}}
+                                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                                    {{-- Currently serving --}}
+                                    @if($barber->current_serving)
+                                    <span class="inline-flex items-center gap-1 text-xs text-gray-600">
+                                        <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                        <span class="font-mono font-bold text-gray-700">{{ $barber->current_serving }}</span>
+                                        <span class="text-gray-400">dilayani</span>
+                                    </span>
+                                    @else
+                                    <span class="inline-flex items-center gap-1 text-xs text-gray-400">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        Sedang kosong
+                                    </span>
+                                    @endif
+
+                                    {{-- Estimated wait --}}
+                                    @if($barber->estimated_wait_minutes > 0)
+                                    <span class="inline-flex items-center gap-1 text-xs text-gray-500">
+                                        <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        ~{{ $barber->estimated_wait_minutes }} menit
+                                    </span>
+                                    @else
+                                    <span class="inline-flex items-center gap-1 text-xs text-gray-500">
+                                        <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        Langsung dilayani
+                                    </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>

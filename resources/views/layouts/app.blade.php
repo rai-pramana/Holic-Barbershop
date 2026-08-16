@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#0f172a">
+    @auth
+    <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
+    <meta name="push-subscribe-url" content="{{ route('customer.push.subscribe') }}">
+    <meta name="push-unsubscribe-url" content="{{ route('customer.push.unsubscribe') }}">
+    @endauth
     <link rel="manifest" href="/manifest.json">
     <title>@yield('title', 'HOLIC Barbershop') — HOLIC Barbershop</title>
     <meta name="description" content="@yield('description', 'Sistem Antrean Online HOLIC Barbershop — Potong rambut tanpa ribet, antri dari mana saja.')">
@@ -93,6 +98,20 @@
             {{-- Right: user + hamburger --}}
             <div class="flex items-center gap-2">
                 @auth
+                    @if(auth()->user()->isCustomer())
+                    {{-- Push Notification Toggle Button --}}
+                    <button id="push-bell-btn" type="button"
+                            class="p-2 rounded-xl bg-white/70 text-gray-500 hover:text-gray-900 border border-gray-200 transition-all shadow-sm flex items-center justify-center"
+                            title="Aktifkan notifikasi browser">
+                        <svg class="w-4 h-4 bell-off" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <svg class="w-4 h-4 bell-on hidden" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
+                        </svg>
+                    </button>
+                    @endif
+
                     {{-- User chip --}}
                     <div class="hidden sm:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
                         <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-800 to-slate-700 flex items-center justify-center text-white text-xs font-bold">
@@ -210,10 +229,122 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// ─── Service Worker Registration (for PWA + Push Notifications) ────────────
+// ── Service Worker Registration ───────────────────────────────────────────
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
+
+// ── Web Push Notification Subscription ────────────────────────────────────
+(function () {
+    const vapidMeta = document.querySelector('meta[name="vapid-public-key"]');
+    if (!vapidMeta) return; // not logged in
+
+    const VAPID_KEY     = vapidMeta.content;
+    const SUBSCRIBE_URL = document.querySelector('meta[name="push-subscribe-url"]').content;
+    const UNSUB_URL     = document.querySelector('meta[name="push-unsubscribe-url"]').content;
+    const CSRF          = document.querySelector('meta[name="csrf-token"]').content;
+
+    // Convert VAPID base64url key to Uint8Array
+    function urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+        const raw     = atob(base64);
+        return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+    }
+
+    async function getSubscription() {
+        const reg = await navigator.serviceWorker.ready;
+        return await reg.pushManager.getSubscription();
+    }
+
+    async function subscribe() {
+        if (!('PushManager' in window)) return;
+        const reg  = await navigator.serviceWorker.ready;
+        const sub  = await reg.pushManager.subscribe({
+            userVisibleOnly:      true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_KEY),
+        });
+        const j = sub.toJSON();
+        await fetch(SUBSCRIBE_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+            body:    JSON.stringify({
+                endpoint:         j.endpoint,
+                public_key:       j.keys.p256dh,
+                auth_token:       j.keys.auth,
+                content_encoding: 'aes128gcm',
+            }),
+        });
+        return sub;
+    }
+
+    async function unsubscribe(sub) {
+        await fetch(UNSUB_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+            body:    JSON.stringify({ endpoint: sub.endpoint }),
+        });
+        await sub.unsubscribe();
+    }
+
+    // Bell button state helper
+    function setBellState(btn, active) {
+        if (!btn) return;
+        if (active) {
+            btn.title = 'Notifikasi aktif — klik untuk nonaktifkan';
+            btn.querySelector('.bell-on').classList.remove('hidden');
+            btn.querySelector('.bell-off').classList.add('hidden');
+            btn.classList.remove('bg-white/70', 'text-gray-500');
+            btn.classList.add('bg-gray-900', 'text-white');
+        } else {
+            btn.title = 'Aktifkan notifikasi browser';
+            btn.querySelector('.bell-on').classList.add('hidden');
+            btn.querySelector('.bell-off').classList.remove('hidden');
+            btn.classList.add('bg-white/70', 'text-gray-500');
+            btn.classList.remove('bg-gray-900', 'text-white');
+        }
+    }
+
+    async function init() {
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+        const btn = document.getElementById('push-bell-btn');
+        const perm = Notification.permission;
+
+        // Check existing subscription
+        let sub = await getSubscription();
+        setBellState(btn, !!sub && perm === 'granted');
+
+        // Auto-subscribe if permission already granted and no subscription yet
+        if (perm === 'granted' && !sub) {
+            try { sub = await subscribe(); setBellState(btn, !!sub); } catch(e){}
+        }
+
+        if (!btn) return;
+
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            try {
+                let current = await getSubscription();
+                if (current) {
+                    await unsubscribe(current);
+                    setBellState(btn, false);
+                } else {
+                    const permission = await Notification.requestPermission();
+                    if (permission !== 'granted') {
+                        alert('Izin notifikasi ditolak. Aktifkan dari pengaturan browser.');
+                        return;
+                    }
+                    await subscribe();
+                    setBellState(btn, true);
+                }
+            } catch(e) { console.warn('Push toggle error:', e); }
+            finally { btn.disabled = false; }
+        });
+    }
+
+    init();
+})();
 
 // ─── Live Content Polling ──────────────────────────────────────────────────
 (function() {

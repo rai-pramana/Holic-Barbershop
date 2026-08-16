@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Customer;
+use App\Http\Controllers\PushSubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Routes ─────────────────────────────────────────────────────────
@@ -91,4 +92,8 @@ Route::middleware(['auth', 'role:customer'])
 
         Route::get('queue/{queue}/status', [Customer\QueueController::class, 'status'])->name('queue.status');
         Route::get('queue/{queue}/poll', [Customer\QueueController::class, 'poll'])->name('queue.poll');
+
+        // Push notifications
+        Route::post('push/subscribe',   [PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
+        Route::post('push/unsubscribe',  [PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
     });

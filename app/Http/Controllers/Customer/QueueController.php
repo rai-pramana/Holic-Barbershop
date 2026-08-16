@@ -60,7 +60,10 @@ class QueueController extends Controller
             ->where('is_available', true)
             ->get()
             ->map(function ($barber) {
-                $barber->pending_count = $barber->getPendingQueueCount();
+                $stats = $barber->getQueueStats();
+                $barber->pending_count          = $stats['pending_count'];
+                $barber->current_serving        = $stats['current_serving'];
+                $barber->estimated_wait_minutes = $stats['estimated_wait_minutes'];
                 return $barber;
             })
             ->sortBy('pending_count');
