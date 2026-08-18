@@ -71,29 +71,7 @@
                 <a href="{{ route('register') }}" class="text-white hover:text-gray-300 font-semibold underline underline-offset-2">Daftar sekarang</a>
             </p>
 
-            {{-- Demo Accounts --}}
-            <div class="mt-6 pt-6 border-t border-white/5">
-                <p class="text-xs text-gray-500 text-center mb-3">Demo Accounts:</p>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="fillLogin('admin@holic.com')" type="button"
-                            class="text-xs bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 py-2 px-3 rounded-lg transition-colors">
-                        👑 Admin
-                    </button>
-                    <button onclick="fillLogin('customer@demo.com')" type="button"
-                            class="text-xs bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 py-2 px-3 rounded-lg transition-colors">
-                        👤 Customer
-                    </button>
-                </div>
-                <p class="text-xs text-gray-500 text-center mt-2">Password: <code class="text-gray-300">password</code></p>
-            </div>
         </div>
     </div>
-
-    <script>
-    function fillLogin(email) {
-        document.getElementById('email').value = email;
-        document.getElementById('password').value = 'password';
-    }
-    </script>
 </body>
 </html>
