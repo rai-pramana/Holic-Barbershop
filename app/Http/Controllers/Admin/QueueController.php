@@ -27,13 +27,13 @@ class QueueController extends Controller
         $query = Queue::with(['customer', 'barber', 'service', 'branch']);
 
         if ($request->filled('branch_id')) {
-            $query->where('branch_id', $request->branch_id);
+            $query->where('queues.branch_id', $request->branch_id);
         }
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('queues.status', $request->status);
         }
         if ($request->filled('barber_id')) {
-            $query->where('barber_id', $request->barber_id);
+            $query->where('queues.barber_id', $request->barber_id);
         }
 
         // Support both single date and date range
