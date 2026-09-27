@@ -40,7 +40,7 @@ class QueueController extends Controller
     /**
      * Show form to take a queue at a specific branch
      */
-    public function take(Branch $branch): View
+    public function take(Branch $branch): View|RedirectResponse
     {
         abort_unless($branch->is_active, 404);
         $user = Auth::user();
