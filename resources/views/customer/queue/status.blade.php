@@ -46,7 +46,7 @@
             <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-28 h-28 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
 
-            <div class="relative z-10">
+            <div class="relative z-10 w-full">
                 <p class="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">{{ $queue->branch->name }}</p>
 
                 {{-- Queue Number --}}
