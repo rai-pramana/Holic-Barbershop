@@ -75,11 +75,17 @@
                 <div class="px-5 py-4 border-b border-gray-100">
                     <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-3">Sedang Dilayani</p>
                     @if($activeQ)
-                    <div class="bg-gray-100 border border-gray-300 rounded-xl p-4 flex items-center justify-between">
-                        <div>
+                    <div class="bg-gray-100 border border-gray-300 rounded-xl p-4 flex items-center justify-between gap-3">
+                        <div class="min-w-0">
                             <p class="font-black text-gray-700 text-xl font-mono">{{ $activeQ->queue_number }}</p>
                             <p class="text-gray-700 text-sm font-medium">{{ $activeQ->customer_name }}</p>
                             <p class="text-gray-700 text-xs">{{ $activeQ->service->name }}</p>
+                            @if($activeQ->notes)
+                            <p class="text-gray-600 text-xs italic mt-1 flex items-start gap-1">
+                                <svg class="w-3 h-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                                <span>{{ $activeQ->notes }}</span>
+                            </p>
+                            @endif
                         </div>
                         <div class="flex flex-col gap-2">
                             <form method="POST" action="{{ route('admin.queues.complete', $activeQ) }}">
@@ -114,6 +120,9 @@
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-gray-800 truncate">{{ $q->customer_name }}</p>
                             <p class="text-xs text-gray-400 truncate">{{ $q->service->name }}</p>
+                            @if($q->notes)
+                            <p class="text-xs text-gray-500 italic truncate" title="{{ $q->notes }}">📝 {{ $q->notes }}</p>
+                            @endif
                         </div>
                         <div class="flex-shrink-0">
                             @if($q->status === 'active' && !$activeQ)
