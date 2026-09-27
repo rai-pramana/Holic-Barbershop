@@ -19,17 +19,13 @@
 
         @foreach($stats as $stat)
         <div class="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm min-w-0">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-gray-500 text-[11px] sm:text-xs font-medium uppercase tracking-wide truncate">{{ $stat['label'] }}</p>
-                    <p class="text-2xl sm:text-3xl font-black text-gray-900 mt-2">{{ $stat['value'] }}</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl {{ $stat['shade'] }} flex items-center justify-center flex-shrink-0">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        {!! $stat['icon'] !!}
-                    </svg>
-                </div>
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl {{ $stat['shade'] }} flex items-center justify-center flex-shrink-0 mb-3">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {!! $stat['icon'] !!}
+                </svg>
             </div>
+            <p class="text-2xl sm:text-3xl font-black text-gray-900">{{ $stat['value'] }}</p>
+            <p class="text-gray-500 text-[11px] sm:text-xs font-medium uppercase tracking-wide mt-1 leading-snug">{{ $stat['label'] }}</p>
         </div>
         @endforeach
     </div>
