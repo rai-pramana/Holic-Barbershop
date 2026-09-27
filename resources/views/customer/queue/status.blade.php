@@ -3,7 +3,7 @@
 @section('title', 'Status Antrean #' . $queue->queue_number)
 
 @section('content')
-<div class="max-w-lg mx-auto">
+<div class="max-w-2xl mx-auto">
 
     {{-- Breadcrumb --}}
     <nav class="flex items-center gap-2 text-sm text-gray-500 mb-5">
