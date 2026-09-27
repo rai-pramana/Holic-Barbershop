@@ -113,12 +113,12 @@
                     @endif
 
                     {{-- User chip --}}
-                    <div class="hidden sm:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
+                    <a href="{{ route('profile.edit') }}" class="hidden sm:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 hover:border-gray-300 hover:bg-gray-100 transition-colors" title="Kelola profil">
                         <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-800 to-slate-700 flex items-center justify-center text-white text-xs font-bold">
                             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                         </div>
                         <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
-                    </div>
+                    </a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit" class="flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-red-600 transition-colors px-3 py-2 rounded-xl hover:bg-red-50">
@@ -151,6 +151,10 @@
                     Dashboard Saya
                 </a>
             @endif
+            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors" onclick="toggleMobileNav()">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                Profil Saya
+            </a>
             <div class="px-3 py-2 flex items-center gap-2 text-sm text-gray-500">
                 <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-gray-800 to-slate-700 flex items-center justify-center text-white text-xs font-bold">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}

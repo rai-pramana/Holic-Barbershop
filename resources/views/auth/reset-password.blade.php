@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk — HOLIC Barbershop</title>
+    <title>Reset Password — HOLIC Barbershop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>* { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
@@ -24,22 +24,17 @@
         </div>
 
         <div class="bg-gray-900/80 backdrop-blur border border-white/10 rounded-3xl p-8 shadow-2xl">
-            <h1 class="text-2xl font-bold text-white mb-1">Selamat Datang Kembali</h1>
-            <p class="text-gray-400 text-sm mb-6">Masuk untuk mengakses antrean Anda</p>
+            <h1 class="text-2xl font-bold text-white mb-1">Buat Password Baru</h1>
+            <p class="text-gray-400 text-sm mb-6">Masukkan password baru untuk akun Anda</p>
 
-            @if(session('status'))
-                <div class="bg-green-500/10 border border-green-500/30 text-green-300 rounded-xl px-4 py-3 text-sm mb-5">
-                    {{ session('status') }}
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('login') }}" id="login-form">
+            <form method="POST" action="{{ route('password.store') }}">
                 @csrf
+                <input type="hidden" name="token" value="{{ $token }}">
 
                 {{-- Email --}}
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
+                    <input type="email" id="email" name="email" value="{{ old('email', $email) }}" required autofocus
                            class="w-full bg-gray-800/60 border @error('email') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
                            placeholder="email@contoh.com">
                     @error('email')
@@ -47,37 +42,30 @@
                     @enderror
                 </div>
 
-                {{-- Password --}}
+                {{-- Password baru --}}
                 <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password Baru</label>
                     <input type="password" id="password" name="password" required
                            class="w-full bg-gray-800/60 border @error('password') border-red-500 @else border-white/10 @enderror rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
-                           placeholder="••••••••">
+                           placeholder="Minimal 8 karakter">
                     @error('password')
                         <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Remember --}}
-                <div class="flex items-center justify-between mb-6">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="remember" class="rounded border-white/10 bg-gray-800 text-gray-900 focus:ring-gray-500">
-                        <span class="text-sm text-gray-400">Ingat saya</span>
-                    </label>
-                    <a href="{{ route('password.request') }}" class="text-sm text-gray-300 hover:text-white font-medium underline underline-offset-2">Lupa password?</a>
+                {{-- Konfirmasi --}}
+                <div class="mb-6">
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-300 mb-2">Konfirmasi Password Baru</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation" required
+                           class="w-full bg-gray-800/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-500 transition-colors"
+                           placeholder="Ulangi password baru">
                 </div>
 
                 <button type="submit"
                         class="w-full bg-slate-600 hover:bg-slate-500 text-white font-bold py-3.5 rounded-xl active:scale-[0.98] transition-all shadow-lg">
-                    Masuk
+                    Reset Password
                 </button>
             </form>
-
-            <p class="text-center text-gray-400 text-sm mt-6">
-                Belum punya akun?
-                <a href="{{ route('register') }}" class="text-white hover:text-gray-300 font-semibold underline underline-offset-2">Daftar sekarang</a>
-            </p>
-
         </div>
     </div>
 </body>
