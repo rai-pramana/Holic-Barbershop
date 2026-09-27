@@ -3,7 +3,7 @@
 @section('title', 'Riwayat Antrean')
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-5">
+<div class="max-w-2xl mx-auto">
 
     {{-- Breadcrumb --}}
     <nav class="flex items-center gap-2 text-sm text-gray-500 mb-5">
@@ -16,7 +16,7 @@
     </nav>
 
     {{-- Header hero (konsisten dgn Ambil Antrean) --}}
-    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 md:p-6 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 md:p-6 text-white mb-6 relative overflow-hidden">
         <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
         <div class="flex items-center gap-4 relative z-10">
             <div class="w-12 h-12 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -31,7 +31,7 @@
     </div>
 
     {{-- Filter --}}
-    <form method="GET" action="{{ route('customer.queue.history') }}" id="cust-history-form" class="flex gap-2 flex-wrap">
+    <form method="GET" action="{{ route('customer.queue.history') }}" id="cust-history-form" class="flex gap-2 flex-wrap mb-6">
         @include('components.filter-dropdown', [
             'id' => 'c-status', 'name' => 'status', 'label' => '',
             'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
@@ -44,7 +44,7 @@
 
     {{-- History List --}}
     @forelse($histories as $queue)
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-4">
         <div class="flex justify-between items-start gap-3">
             <div class="flex items-center gap-4">
                 {{-- Queue Number --}}
