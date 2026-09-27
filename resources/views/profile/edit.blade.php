@@ -5,7 +5,34 @@
 @section('page-subtitle', 'Kelola data akun dan keamanan Anda')
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-6">
+<div class="{{ auth()->user()->isAdmin() ? '' : 'max-w-2xl mx-auto' }} space-y-6">
+
+    @if(!auth()->user()->isAdmin())
+    {{-- Breadcrumb --}}
+    <nav class="flex items-center gap-2 text-sm text-gray-500">
+        <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-1 hover:text-gray-900 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Dashboard
+        </a>
+        <svg class="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-700 font-medium">Profil Saya</span>
+    </nav>
+
+    {{-- Header hero (konsisten dgn Riwayat & Ambil Antrean) --}}
+    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 md:p-6 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white text-xl font-black flex-shrink-0">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            </div>
+            <div class="min-w-0">
+                <p class="text-white/60 text-xs font-medium uppercase tracking-wide mb-0.5">Pelanggan</p>
+                <h1 class="text-lg md:text-xl font-bold truncate">{{ auth()->user()->name }}</h1>
+                <p class="text-white/60 text-sm mt-0.5">Kelola data akun dan keamanan Anda</p>
+            </div>
+        </div>
+    </div>
+    @endif
 
     {{-- Informasi Profil --}}
     <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">

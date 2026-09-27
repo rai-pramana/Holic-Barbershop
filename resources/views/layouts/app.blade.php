@@ -36,7 +36,7 @@
         /* Nav link */
         .nav-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 500; color: #6b7280; padding: 6px 12px; border-radius: 10px; transition: all 0.15s; }
         .nav-link:hover { color: #0f172a; background: #f1f5f9; }
-        .nav-link.active { color: #0f172a; font-weight: 700; }
+        .nav-link.active { color: #0f172a; background: #f1f5f9; }
 
         /* Mobile menu */
         #mobile-nav { display: none; }

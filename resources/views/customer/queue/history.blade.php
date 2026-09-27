@@ -1,19 +1,32 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Riwayat Antrean')
 
 @section('content')
-<div class="space-y-5">
+<div class="max-w-2xl mx-auto space-y-5">
 
-    {{-- Header --}}
-    <div class="flex items-center gap-3">
-        <a href="{{ route('customer.dashboard') }}"
-           class="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors flex-shrink-0">
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+    {{-- Breadcrumb --}}
+    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-5">
+        <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-1 hover:text-gray-900 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Dashboard
         </a>
-        <div>
-            <h1 class="text-xl font-black text-gray-900">Riwayat Antrean</h1>
-            <p class="text-sm text-gray-500">Semua antrean Anda sebelumnya</p>
+        <svg class="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-700 font-medium">Riwayat Antrean</span>
+    </nav>
+
+    {{-- Header hero (konsisten dgn Ambil Antrean) --}}
+    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 md:p-6 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="min-w-0">
+                <p class="text-white/60 text-xs font-medium uppercase tracking-wide mb-0.5">Pelanggan</p>
+                <h1 class="text-lg md:text-xl font-bold truncate">Riwayat Antrean</h1>
+                <p class="text-white/60 text-sm mt-0.5">Semua antrean Anda sebelumnya</p>
+            </div>
         </div>
     </div>
 
