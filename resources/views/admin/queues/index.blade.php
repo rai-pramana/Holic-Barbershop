@@ -38,42 +38,31 @@
     <div class="flex flex-wrap gap-2 items-end">
 
         {{-- Branch filter --}}
-        <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">Cabang</label>
-            <select name="branch_id" id="filter-branch" onchange="onBranchChange(this.value)"
-                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
-                <option value="">Semua Cabang</option>
-                @foreach($branches as $branch)
-                    <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                @endforeach
-            </select>
-        </div>
+        @include('components.filter-dropdown', [
+            'id' => 'f-branch', 'name' => 'branch_id', 'label' => 'Cabang',
+            'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+            'options' => $branches->pluck('name', 'id')->toArray(),
+            'value' => request('branch_id', ''),
+            'allLabel' => 'Semua Cabang',
+        ])
 
         {{-- Status filter --}}
-        <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
-            <select name="status" onchange="this.form.submit()"
-                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
-                <option value="">Semua Status</option>
-                @foreach(['pending'=>'Menunggu','active'=>'Check-in','called'=>'Dipanggil','completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'] as $val => $lbl)
-                    <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
-                @endforeach
-            </select>
-        </div>
+        @include('components.filter-dropdown', [
+            'id' => 'f-status', 'name' => 'status', 'label' => 'Status',
+            'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+            'options' => ['pending'=>'Menunggu','active'=>'Check-in','called'=>'Dipanggil','completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'],
+            'value' => request('status', ''),
+            'allLabel' => 'Semua Status',
+        ])
 
         {{-- Barber filter --}}
-        <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">Barber</label>
-            <select name="barber_id" id="filter-barber" onchange="this.form.submit()"
-                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
-                <option value="">Semua Barber</option>
-                @foreach($barbers as $barber)
-                    <option value="{{ $barber->id }}"
-                            data-branch="{{ $barber->branch_id }}"
-                            {{ request('barber_id') == $barber->id ? 'selected' : '' }}>{{ $barber->name }}</option>
-                @endforeach
-            </select>
-        </div>
+        @include('components.filter-dropdown', [
+            'id' => 'f-barber', 'name' => 'barber_id', 'label' => 'Barber',
+            'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>',
+            'options' => $barbers->pluck('name', 'id')->toArray(),
+            'value' => request('barber_id', ''),
+            'allLabel' => 'Semua Barber',
+        ])
 
         {{-- Flatpickr range button --}}
         <div class="ml-auto">
@@ -185,19 +174,6 @@ const hFp = flatpickr('#h-flatpickr', {
 });
 
 document.getElementById('h-date-btn').addEventListener('click', () => hFp.open());
-
-// --- Cascade: branch -> barber filter ---
-function onBranchChange(branchId) {
-    const barberSelect = document.getElementById('filter-barber');
-    const options = barberSelect.querySelectorAll('option[data-branch]');
-    options.forEach(opt => {
-        opt.style.display = (!branchId || opt.dataset.branch === branchId) ? '' : 'none';
-        // Reset selection if current barber doesn't belong to selected branch
-        if (branchId && opt.selected && opt.dataset.branch !== branchId) {
-            barberSelect.value = '';
-        }
-    });
-    document.getElementById('history-form').submit();
-}
 </script>
+@include('components.filter-dropdown-script')
 @endpush

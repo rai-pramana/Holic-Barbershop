@@ -18,14 +18,15 @@
     </div>
 
     {{-- Filter --}}
-    <form method="GET" action="{{ route('customer.queue.history') }}" class="flex gap-2 flex-wrap">
-        <select name="status" onchange="this.form.submit()"
-                class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors focus:border-gray-400">
-            <option value="">Semua Status</option>
-            <option value="completed" @selected(request('status') === 'completed')>Selesai</option>
-            <option value="skipped"   @selected(request('status') === 'skipped')>Dilewati</option>
-            <option value="expired"   @selected(request('status') === 'expired')>Kedaluwarsa</option>
-        </select>
+    <form method="GET" action="{{ route('customer.queue.history') }}" id="cust-history-form" class="flex gap-2 flex-wrap">
+        @include('components.filter-dropdown', [
+            'id' => 'c-status', 'name' => 'status', 'label' => '',
+            'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+            'options' => ['completed'=>'Selesai','skipped'=>'Dilewati','expired'=>'Kedaluwarsa'],
+            'value' => request('status', ''),
+            'allLabel' => 'Semua Status',
+            'formId' => 'cust-history-form',
+        ])
     </form>
 
     {{-- History List --}}
@@ -111,3 +112,7 @@
 
 </div>
 @endsection
+
+@push('scripts')
+@include('components.filter-dropdown-script')
+@endpush

@@ -11,12 +11,13 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Cabang *</label>
-                    <select name="branch_id" required
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400">
-                        @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ old('branch_id', $service->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
+                    @include('components.filter-dropdown', [
+                        'id' => 'se-branch', 'name' => 'branch_id', 'label' => '', 'icon' => '',
+                        'options' => $branches->pluck('name', 'id')->toArray(),
+                        'value' => (string)old('branch_id', $service->branch_id),
+                        'allLabel' => 'Pilih Cabang',
+                        'theme' => 'form', 'noreload' => true,
+                    ])
                 </div>
 
                 <div>
@@ -67,3 +68,7 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+@include('components.filter-dropdown-script')
+@endpush

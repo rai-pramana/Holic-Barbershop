@@ -51,14 +51,14 @@
             {{-- Pilih Cabang --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Cabang <span class="text-red-500">*</span></label>
-                <select name="branch_id" id="branch_id" required
-                        onchange="this.form.action='{{ route('admin.queues.walkin') }}?branch_id='+this.value; this.form.method='GET'; this.form.submit();"
-                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 cursor-pointer transition-colors @error('branch_id') border-red-400 @enderror">
-                    <option value="">— Pilih Cabang —</option>
-                    @foreach($branches as $branch)
-                    <option value="{{ $branch->id }}" @selected($selectedBranch?->id == $branch->id)>{{ $branch->name }}</option>
-                    @endforeach
-                </select>
+                @include('components.filter-dropdown', [
+                    'id' => 'w-branch', 'name' => 'branch_id', 'label' => '',
+                    'icon' => '',
+                    'options' => $branches->pluck('name', 'id')->toArray(),
+                    'value' => (string)($selectedBranch?->id ?? ''),
+                    'allLabel' => '— Pilih Cabang —',
+                    'theme' => 'form', 'noreload' => true,
+                ])
                 @error('branch_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -67,30 +67,28 @@
             {{-- Pilih Layanan --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Layanan <span class="text-red-500">*</span></label>
-                <select name="service_id" required
-                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 cursor-pointer transition-colors @error('service_id') border-red-400 @enderror">
-                    <option value="">— Pilih Layanan —</option>
-                    @foreach($services as $service)
-                    <option value="{{ $service->id }}" @selected(old('service_id') == $service->id)>
-                        {{ $service->name }} — Rp {{ number_format($service->price, 0, ',', '.') }} ({{ $service->duration_minutes }} menit)
-                    </option>
-                    @endforeach
-                </select>
+                @include('components.filter-dropdown', [
+                    'id' => 'w-service', 'name' => 'service_id', 'label' => '',
+                    'icon' => '',
+                    'options' => $services->mapWithKeys(fn($s) => [$s->id => $s->name.' — Rp '.number_format($s->price, 0, ',', '.').' ('.$s->duration_minutes.' menit)'])->toArray(),
+                    'value' => (string)old('service_id', ''),
+                    'allLabel' => '— Pilih Layanan —',
+                    'theme' => 'form', 'noreload' => true,
+                ])
                 @error('service_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             {{-- Pilih Barber --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Barber</label>
-                <select name="barber_id"
-                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 cursor-pointer transition-colors">
-                    <option value="">Otomatis (barber paling sedikit antrean)</option>
-                    @foreach($barbers as $barber)
-                    <option value="{{ $barber->id }}" @selected(old('barber_id') == $barber->id)>
-                        {{ $barber->name }} — {{ $barber->pending_count }} antrean menunggu
-                    </option>
-                    @endforeach
-                </select>
+                @include('components.filter-dropdown', [
+                    'id' => 'w-barber', 'name' => 'barber_id', 'label' => '',
+                    'icon' => '',
+                    'options' => $barbers->mapWithKeys(fn($b) => [$b->id => $b->name.' — '.$b->pending_count.' antrean menunggu'])->toArray(),
+                    'value' => (string)old('barber_id', ''),
+                    'allLabel' => 'Otomatis (barber paling sedikit antrean)',
+                    'theme' => 'form', 'noreload' => true,
+                ])
             </div>
 
             <hr class="border-gray-100">
@@ -146,3 +144,12 @@
 </div>
 
 @endsection
+
+@push('scripts')
+@include('components.filter-dropdown-script')
+<script>
+window['dd-change-w-branch'] = function (val) {
+    if (val) window.location.href = '{{ route('admin.queues.walkin') }}?branch_id=' + encodeURIComponent(val);
+};
+</script>
+@endpush

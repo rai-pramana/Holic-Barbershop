@@ -206,12 +206,13 @@
                 <input type="text" name="queue_number" value="{{ old('queue_number') }}" placeholder="cth: Q0005"
                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-mono font-bold uppercase tracking-widest focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 @error('queue_number') border-red-400 @enderror">
                 @error('queue_number')<p class="text-red-500 text-xs">{{ $message }}</p>@enderror
-                <select name="branch_id" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 cursor-pointer transition-colors">
-                    <option value="">— Semua Cabang —</option>
-                    @foreach($branches as $branch)
-                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                    @endforeach
-                </select>
+                @include('components.filter-dropdown', [
+                    'id' => 'm-branch', 'name' => 'branch_id', 'label' => '', 'icon' => '',
+                    'options' => $branches->pluck('name', 'id')->toArray(),
+                    'value' => (string)request('branch_id', ''),
+                    'allLabel' => '— Semua Cabang —',
+                    'theme' => 'form', 'noreload' => true,
+                ])
                 <button type="submit" class="w-full bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold py-2.5 rounded-xl hover:opacity-90 text-sm flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     Cari Antrean
@@ -297,5 +298,6 @@ setTimeout(() => {
     if(f) f.style.transition='opacity 0.5s', f.style.opacity='0', setTimeout(()=>f.remove(),500);
 }, 4000);
 </script>
+@include('components.filter-dropdown-script')
 @endpush
 @endsection

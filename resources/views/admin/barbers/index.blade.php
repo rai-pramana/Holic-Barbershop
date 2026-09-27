@@ -17,11 +17,14 @@
     $sortQs = fn($s, $d) => request()->url() . '?' . http_build_query(array_merge(request()->except(['sort', 'dir', 'page']), ['sort' => $s, 'dir' => $d]));
 @endphp
 <div class="flex justify-end mb-4">
-    <select onchange="window.location.href=this.value" class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 bg-gray-50 text-sm text-gray-700 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors focus:border-gray-400">
-        <option value="{{ $sortQs('created_at', 'desc') }}" {{ ($sort ?? '') === 'created_at' ? 'selected' : '' }}>Terbaru</option>
-        <option value="{{ $sortQs('name', 'asc') }}" {{ ($sort ?? '') === 'name' && ($dir ?? '') === 'asc' ? 'selected' : '' }}>Nama A–Z</option>
-        <option value="{{ $sortQs('name', 'desc') }}" {{ ($sort ?? '') === 'name' && ($dir ?? '') === 'desc' ? 'selected' : '' }}>Nama Z–A</option>
-    </select>
+    @include('components.filter-dropdown', [
+        'id' => 'b-sort', 'name' => '', 'label' => '',
+        'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>',
+        'options' => [$sortQs('created_at', 'desc') => 'Terbaru', $sortQs('name', 'asc') => 'Nama A–Z', $sortQs('name', 'desc') => 'Nama Z–A'],
+        'value' => ($sort ?? 'created_at') === 'name' ? (($dir ?? 'desc') === 'asc' ? $sortQs('name', 'asc') : $sortQs('name', 'desc')) : $sortQs('created_at', 'desc'),
+        'allLabel' => 'Terbaru',
+        'redirect' => true,
+    ])
 </div>
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
     @forelse($barbers as $barber)
@@ -87,3 +90,7 @@
 <div class="mt-6">{{ $barbers->links() }}</div>
 @endif
 @endsection
+
+@push('scripts')
+@include('components.filter-dropdown-script')
+@endpush

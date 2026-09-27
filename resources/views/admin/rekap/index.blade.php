@@ -65,13 +65,14 @@
             </div>
 
             {{-- Branch filter --}}
-            <select name="branch_id" onchange="this.form.submit()"
-                    class="border border-gray-200 rounded-xl pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors">
-                <option value="">Semua Cabang</option>
-                @foreach($branches as $branch)
-                <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                @endforeach
-            </select>
+            @include('components.filter-dropdown', [
+                'id' => 'r-branch', 'name' => 'branch_id', 'label' => '',
+                'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+                'options' => $branches->pluck('name', 'id')->toArray(),
+                'value' => (string)($branchId ?? ''),
+                'allLabel' => 'Semua Cabang',
+                'formId' => 'rekap-form',
+            ])
         </div>
     </div>
 
@@ -375,4 +376,5 @@ function setPreset(key) {
     document.getElementById('rekap-form').submit();
 }
 </script>
+@include('components.filter-dropdown-script')
 @endpush
