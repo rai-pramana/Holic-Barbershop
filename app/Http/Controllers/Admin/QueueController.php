@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Concerns\Sortable;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendQueuePushNotification;
 use App\Models\Barber;
@@ -14,6 +15,8 @@ use Illuminate\View\View;
 
 class QueueController extends Controller
 {
+    use Sortable;
+
     /**
      * List all queues (filterable)
      */
@@ -21,7 +24,7 @@ class QueueController extends Controller
     {
         Queue::expirePending();
 
-        $query = Queue::with(['customer', 'barber', 'service', 'branch'])->latest();
+        $query = Queue::with(['customer', 'barber', 'service', 'branch']);
 
         if ($request->filled('branch_id')) {
             $query->where('branch_id', $request->branch_id);
@@ -53,11 +56,12 @@ class QueueController extends Controller
             $dateLabel = now()->isoFormat('dddd, D MMMM YYYY');
         }
 
+        [$query, $sort, $dir] = $this->applySort($query, $request, ['queue_number', 'status', 'created_at'], 'created_at', 'desc');
         $queues   = $query->paginate(25)->withQueryString();
         $branches = Branch::where('is_active', true)->get();
         $barbers  = Barber::orderBy('name')->get();
 
-        return view('admin.queues.index', compact('queues', 'branches', 'barbers', 'dateLabel'));
+        return view('admin.queues.index', compact('queues', 'branches', 'barbers', 'dateLabel', 'sort', 'dir'));
     }
 
     /**

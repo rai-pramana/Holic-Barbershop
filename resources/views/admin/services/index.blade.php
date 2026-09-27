@@ -18,10 +18,10 @@
         <table class="w-full">
             <thead>
                 <tr class="border-b border-gray-100 bg-gray-50">
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Nama Layanan</th>
+                    @include('components.sort-th', ['label' => 'Nama Layanan', 'key' => 'name', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Cabang</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Durasi</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Harga</th>
+                    @include('components.sort-th', ['label' => 'Durasi', 'key' => 'duration_minutes', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
+                    @include('components.sort-th', ['label' => 'Harga', 'key' => 'price', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Status</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Aksi</th>
                 </tr>

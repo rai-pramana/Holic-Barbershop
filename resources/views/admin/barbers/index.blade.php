@@ -13,6 +13,16 @@
 @endsection
 
 @section('content')
+@php
+    $sortQs = fn($s, $d) => request()->url() . '?' . http_build_query(array_merge(request()->except(['sort', 'dir', 'page']), ['sort' => $s, 'dir' => $d]));
+@endphp
+<div class="flex justify-end mb-4">
+    <select onchange="window.location.href=this.value" class="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 focus:outline-none focus:border-gray-400">
+        <option value="{{ $sortQs('created_at', 'desc') }}" {{ ($sort ?? '') === 'created_at' ? 'selected' : '' }}>Terbaru</option>
+        <option value="{{ $sortQs('name', 'asc') }}" {{ ($sort ?? '') === 'name' && ($dir ?? '') === 'asc' ? 'selected' : '' }}>Nama A–Z</option>
+        <option value="{{ $sortQs('name', 'desc') }}" {{ ($sort ?? '') === 'name' && ($dir ?? '') === 'desc' ? 'selected' : '' }}>Nama Z–A</option>
+    </select>
+</div>
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
     @forelse($barbers as $barber)
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">

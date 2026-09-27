@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Concerns\Sortable;
 use App\Http\Controllers\Controller;
 use App\Models\Barber;
 use App\Models\Branch;
@@ -11,10 +12,13 @@ use Illuminate\View\View;
 
 class BarberController extends Controller
 {
-    public function index(): View
+    use Sortable;
+
+    public function index(Request $request): View
     {
-        $barbers = Barber::with('branch')->latest()->paginate(15);
-        return view('admin.barbers.index', compact('barbers'));
+        [$query, $sort, $dir] = $this->applySort(Barber::with('branch'), $request, ['name', 'created_at'], 'created_at', 'desc');
+        $barbers = $query->paginate(15);
+        return view('admin.barbers.index', compact('barbers', 'sort', 'dir'));
     }
 
     public function create(): View

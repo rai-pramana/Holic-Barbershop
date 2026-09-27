@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Concerns\Sortable;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Service;
@@ -11,10 +12,13 @@ use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
-    public function index(): View
+    use Sortable;
+
+    public function index(Request $request): View
     {
-        $services = Service::with('branch')->latest()->paginate(15);
-        return view('admin.services.index', compact('services'));
+        [$query, $sort, $dir] = $this->applySort(Service::with('branch'), $request, ['name', 'price', 'duration_minutes', 'created_at'], 'created_at', 'desc');
+        $services = $query->paginate(15);
+        return view('admin.services.index', compact('services', 'sort', 'dir'));
     }
 
     public function create(): View

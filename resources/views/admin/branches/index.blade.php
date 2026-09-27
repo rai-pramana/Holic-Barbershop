@@ -18,7 +18,7 @@
         <table class="w-full">
             <thead>
                 <tr class="border-b border-gray-100 bg-gray-50">
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Nama Cabang</th>
+                    @include('components.sort-th', ['label' => 'Nama Cabang', 'key' => 'name', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Alamat</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Barber</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Layanan</th>

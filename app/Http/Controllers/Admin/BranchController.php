@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Concerns\Sortable;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use Illuminate\Http\RedirectResponse;
@@ -10,10 +11,13 @@ use Illuminate\View\View;
 
 class BranchController extends Controller
 {
-    public function index(): View
+    use Sortable;
+
+    public function index(Request $request): View
     {
-        $branches = Branch::withCount(['barbers', 'services'])->latest()->paginate(10);
-        return view('admin.branches.index', compact('branches'));
+        [$query, $sort, $dir] = $this->applySort(Branch::withCount(['barbers', 'services']), $request, ['name', 'created_at'], 'created_at', 'desc');
+        $branches = $query->paginate(10);
+        return view('admin.branches.index', compact('branches', 'sort', 'dir'));
     }
 
     public function create(): View
