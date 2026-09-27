@@ -5,7 +5,7 @@
 @section('page-subtitle', 'Kelola data akun dan keamanan Anda')
 
 @section('content')
-<div class="{{ auth()->user()->isAdmin() ? '' : 'max-w-2xl mx-auto' }} space-y-6">
+<div class="max-w-2xl mx-auto space-y-6">
 
     @if(!auth()->user()->isAdmin())
     {{-- Breadcrumb --}}
