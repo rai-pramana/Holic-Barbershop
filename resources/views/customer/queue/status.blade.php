@@ -15,6 +15,21 @@
         <span class="text-gray-700 font-medium">Status Antrean</span>
     </nav>
 
+    {{-- Header hero (konsisten dgn Riwayat & Ambil Antrean) --}}
+    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 md:p-6 text-white mb-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center flex-shrink-0 font-black text-lg font-mono">
+                {{ $queue->queue_number }}
+            </div>
+            <div class="min-w-0">
+                <p class="text-white/60 text-xs font-medium uppercase tracking-wide mb-0.5">{{ $queue->branch->name }}</p>
+                <h1 class="text-lg md:text-xl font-bold truncate">Status Antrean</h1>
+                <p class="text-white/60 text-sm mt-0.5">{{ $queue->service->name }} — {{ $queue->status_label }}</p>
+            </div>
+        </div>
+    </div>
+
     {{-- Main Status Card --}}
     <div class="bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden mb-5" id="status-card">
 
