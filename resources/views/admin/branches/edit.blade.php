@@ -4,7 +4,7 @@
 @section('page-title', 'Edit Cabang: ' . $branch->name)
 
 @section('content')
-<div class="max-w-2xl">
+<div class="max-w-2xl mx-auto">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <form method="POST" action="{{ route('admin.branches.update', $branch) }}">
             @csrf @method('PUT')

@@ -4,7 +4,7 @@
 @section('page-title', 'Tambah Layanan Baru')
 
 @section('content')
-<div class="max-w-xl">
+<div class="max-w-xl mx-auto">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <form method="POST" action="{{ route('admin.services.store') }}">
             @csrf
