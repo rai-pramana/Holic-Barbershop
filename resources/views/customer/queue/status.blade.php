@@ -34,7 +34,7 @@
     <div class="bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden mb-5" id="status-card">
 
         {{-- Colored Header --}}
-        <div class="relative overflow-hidden text-white text-center
+        <div class="relative overflow-hidden text-white text-center flex items-center justify-center min-h-[240px] md:min-h-[280px]
             @if($queue->status === 'called')    bg-gradient-to-br from-purple-500 to-slate-700
             @elseif($queue->status === 'active')  bg-gradient-to-br from-slate-800 to-cyan-600
             @elseif($queue->status === 'pending') bg-gradient-to-br from-slate-900 to-gray-800
