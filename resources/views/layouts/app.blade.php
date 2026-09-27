@@ -323,6 +323,25 @@ if ('serviceWorker' in navigator) {
         }
     }
 
+    // Daftarkan ulang endpoint ini ke server bila belum terdaftar
+    // (mis. terhapus cleanup / basi). Dipanggil tiap kunjungan dashboard.
+    async function ensureServerRegistered(sub) {
+        try {
+            const j = sub.toJSON();
+            const res = await fetch(SUBSCRIBE_URL, {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+                body:    JSON.stringify({
+                    endpoint:         j.endpoint,
+                    public_key:       j.keys.p256dh,
+                    auth_token:       j.keys.auth,
+                    content_encoding: 'aes128gcm',
+                }),
+            });
+            return res.ok;
+        } catch(e) { return false; }
+    }
+
     async function init() {
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
 
@@ -332,6 +351,11 @@ if ('serviceWorker' in navigator) {
         // Check existing subscription
         let sub = await getSubscription();
         setBellState(btn, !!sub && perm === 'granted');
+
+        // Pastikan endpoint terdaftar di server (self-heal bila terhapus)
+        if (sub) {
+            await ensureServerRegistered(sub);
+        }
 
         // Auto-subscribe if permission already granted and no subscription yet
         if (perm === 'granted' && !sub) {

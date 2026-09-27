@@ -61,6 +61,7 @@ class WebPushService
 
         // Send all queued notifications and handle results
         $expiredEndpoints = [];
+        $forbiddenEndpoints = [];
         foreach ($this->webPush->flush() as $report) {
             if (! $report->isSuccess()) {
                 $reason = $report->getReason();
@@ -70,9 +71,14 @@ class WebPushService
                 ]);
 
                 // Remove expired/invalid subscriptions
-                // (410 = Gone, 404 = Not Found, 403 Forbidden = VAPID mismatch/stale)
-                if (in_array($report->getResponse()?->getStatusCode(), [403, 404, 410])) {
+                // (410 = Gone, 404 = Not Found)
+                // NOTE: 403 TIDAK ikut dihapus — biasanya sementara
+                // (VAPID/kunci belum propagasi, endpoint dirotasi).
+                // Endpoint 403 dipertahankan agar user tidak perlu subscribe ulang.
+                if (in_array($report->getResponse()?->getStatusCode(), [404, 410])) {
                     $expiredEndpoints[] = $report->getRequest()->getUri()->__toString();
+                } elseif ($report->getResponse()?->getStatusCode() === 403) {
+                    $forbiddenEndpoints[] = $report->getRequest()->getUri()->__toString();
                 }
             }
         }
