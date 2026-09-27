@@ -74,9 +74,13 @@
                 @enderror
             </div>
 
-            <div class="flex justify-center pt-1">
+            <div class="flex justify-center gap-3 pt-1">
+                <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('customer.dashboard') }}"
+                   class="flex-1 text-center py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors">
+                    Kembali
+                </a>
                 <button type="submit"
-                        class="w-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+                        class="flex-[2] bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
                     Simpan Perubahan
                 </button>
             </div>
