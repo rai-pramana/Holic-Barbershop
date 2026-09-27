@@ -86,7 +86,7 @@
 {{-- <div id="notif-banner" ...></div> --}}
 
 {{-- Toast container --}}
-<div id="toast-container" class="fixed top-4 right-4 z-[60] flex flex-col gap-3 max-w-sm"></div>
+<div id="toast-container" class="fixed top-4 right-4 left-4 sm:left-auto z-[60] flex flex-col gap-3 sm:max-w-sm"></div>
 
 {{-- Mobile overlay --}}
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 lg:hidden" onclick="toggleSidebar()"></div>
@@ -220,20 +220,20 @@
 <div class="flex-1 flex flex-col h-full overflow-y-auto overflow-x-hidden">
 
     {{-- Top bar --}}
-    <header class="bg-white border-b border-gray-200 px-4 md:px-8 py-3 md:py-4 flex justify-between items-center sticky top-0 z-30">
-        <div class="flex items-center gap-3">
+    <header class="bg-white border-b border-gray-200 px-4 md:px-8 py-3 md:py-4 flex justify-between items-center gap-3 sticky top-0 z-30">
+        <div class="flex items-center gap-3 min-w-0">
             {{-- Hamburger (mobile) --}}
-            <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors -ml-1">
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors -ml-1 flex-shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
-            <div>
-                <h1 class="text-base md:text-xl font-bold text-gray-900 leading-tight">@yield('page-title', 'Dashboard')</h1>
+            <div class="min-w-0">
+                <h1 class="text-base md:text-xl font-bold text-gray-900 leading-tight truncate">@yield('page-title', 'Dashboard')</h1>
                 @hasSection('page-subtitle')
-                <p class="text-xs md:text-sm text-gray-500 hidden sm:block">@yield('page-subtitle')</p>
+                <p class="text-xs md:text-sm text-gray-500 hidden sm:block truncate">@yield('page-subtitle')</p>
                 @endif
             </div>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
             @yield('page-actions')
         </div>
     </header>

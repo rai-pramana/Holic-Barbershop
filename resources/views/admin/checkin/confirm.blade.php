@@ -27,7 +27,7 @@
         {{-- Header - monochrome gradient --}}
         <div class="p-6 bg-gradient-to-br from-gray-900 to-slate-700 text-white text-center">
             <p class="text-white/60 text-xs font-semibold uppercase tracking-widest mb-2">{{ $queue->branch->name }}</p>
-            <div class="text-6xl font-black mb-3 font-mono tracking-widest">{{ $queue->queue_number }}</div>
+            <div class="text-5xl sm:text-6xl font-black mb-3 font-mono tracking-widest break-all">{{ $queue->queue_number }}</div>
             <span class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/15 backdrop-blur rounded-full text-sm font-semibold">
                 @if($queue->isPending())
                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
@@ -53,27 +53,27 @@
 
         {{-- Customer & Booking Info --}}
         <div class="p-6 space-y-4">
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 rounded-2xl p-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-2xl p-4 min-w-0">
                     <p class="text-xs text-gray-400 font-medium mb-1">Customer</p>
-                    <p class="font-bold text-gray-900">{{ $queue->customer_name }}</p>
+                    <p class="font-bold text-gray-900 break-words">{{ $queue->customer_name }}</p>
                     @if($queue->customer->phone)
                         <p class="text-xs text-gray-500">{{ $queue->customer->phone }}</p>
                     @endif
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4">
+                <div class="bg-gray-50 rounded-2xl p-4 min-w-0">
                     <p class="text-xs text-gray-400 font-medium mb-1">Barber</p>
                     <p class="font-bold text-gray-900">{{ $queue->barber->name }}</p>
                     @if($queue->barber->specialty)
                         <p class="text-xs text-gray-500">{{ $queue->barber->specialty }}</p>
                     @endif
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4">
+                <div class="bg-gray-50 rounded-2xl p-4 min-w-0">
                     <p class="text-xs text-gray-400 font-medium mb-1">Layanan</p>
                     <p class="font-bold text-gray-900">{{ $queue->service->name }}</p>
                     <p class="text-xs text-gray-500">{{ $queue->service->duration_minutes }} menit</p>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4">
+                <div class="bg-gray-50 rounded-2xl p-4 min-w-0">
                     <p class="text-xs text-gray-400 font-medium mb-1">Harga</p>
                     <p class="font-bold text-gray-900">{{ $queue->service->formatted_price }}</p>
                 </div>

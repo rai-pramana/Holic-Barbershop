@@ -18,11 +18,11 @@
         @endphp
 
         @foreach($stats as $stat)
-        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm min-w-0">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-gray-500 text-xs font-medium uppercase tracking-wide">{{ $stat['label'] }}</p>
-                    <p class="text-3xl font-black text-gray-900 mt-2">{{ $stat['value'] }}</p>
+                    <p class="text-gray-500 text-[11px] sm:text-xs font-medium uppercase tracking-wide truncate">{{ $stat['label'] }}</p>
+                    <p class="text-2xl sm:text-3xl font-black text-gray-900 mt-2">{{ $stat['value'] }}</p>
                 </div>
                 <div class="w-10 h-10 rounded-xl {{ $stat['shade'] }} flex items-center justify-center flex-shrink-0">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,9 +35,9 @@
     </div>
 
     {{-- Queue Status Summary --}}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
         <h3 class="font-bold text-gray-900 mb-4">Status Antrean Hari Ini</h3>
-        <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
             @php
             $statusCards = [
                 ['key' => 'pending',   'label' => 'Menunggu',    'cls' => 'bg-yellow-50  border-yellow-200 text-yellow-800'],
@@ -59,7 +59,7 @@
 
     {{-- Recent Queues Table --}}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
-        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+        <div class="p-4 sm:p-6 border-b border-gray-100 flex justify-between items-center gap-3 flex-wrap">
             <h3 class="font-bold text-gray-900">Antrean Terbaru Hari Ini</h3>
             <a href="{{ route('admin.queues.index') }}" class="text-sm text-gray-500 hover:text-gray-900 font-medium transition-colors">
                 Lihat Semua →
@@ -69,28 +69,28 @@
             <table class="w-full">
                 <thead>
                     <tr class="border-b border-gray-100 bg-gray-50/50">
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">No. Antrean</th>
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Customer</th>
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Barber</th>
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Layanan</th>
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Biaya</th>
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Status</th>
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Waktu</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">No. Antrean</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Customer</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Barber</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Layanan</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Biaya</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Status</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Waktu</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($recentQueues as $queue)
                     <tr class="hover:bg-gray-50/50 transition-colors">
-                        <td class="px-6 py-4 font-bold text-gray-900">{{ $queue->queue_number }}</td>
+                        <td class="px-4 sm:px-6 py-4 font-bold text-gray-900 whitespace-nowrap">{{ $queue->queue_number }}</td>
                         <td class="px-6 py-4">
-                            <p class="font-medium text-gray-900 text-sm">{{ $queue->customer_name }}</p>
+                            <p class="font-medium text-gray-900 text-sm truncate max-w-[140px] sm:max-w-none">{{ $queue->customer_name }}</p>
                             <p class="text-xs text-gray-500">{{ $queue->branch->name }}</p>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ $queue->barber?->name ?? '—' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ $queue->service?->name ?? '-' }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $queue->service?->formatted_price ?? '-' }}</td>
+                        <td class="px-4 sm:px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">{{ $queue->service?->formatted_price ?? '-' }}</td>
                         <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-{{ $queue->status }}">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap badge-{{ $queue->status }}">
                                 {{ $queue->status_label }}
                             </span>
                         </td>

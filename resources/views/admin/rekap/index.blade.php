@@ -51,15 +51,15 @@
         </div>
 
         {{-- Flatpickr range picker --}}
-        <div class="flex items-center gap-2 ml-auto">
-            <div class="relative">
+        <div class="flex items-center gap-2 w-full sm:w-auto sm:ml-auto flex-wrap">
+            <div class="relative flex-1 sm:flex-none min-w-0">
                 <button type="button" id="date-picker-btn"
-                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-white transition-all cursor-pointer min-w-[200px]">
+                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-white transition-all cursor-pointer w-full sm:min-w-[200px]">
                     <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <span id="date-picker-label">
+                    <span id="date-picker-label" class="truncate">
                         {{ $from->isoFormat('D MMM YY') . ' – ' . $to->isoFormat('D MMM YY') }}
                     </span>
-                    <svg class="w-3 h-3 text-gray-400 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    <svg class="w-3 h-3 text-gray-400 ml-auto flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
                 <input type="text" id="flatpickr-range" class="absolute opacity-0 pointer-events-none w-0 h-0">
             </div>
@@ -138,7 +138,7 @@
 
 {{-- ── Row: Avg Duration + Revenue ────────────────────────────────────────── --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-3 sm:gap-4 min-w-0">
         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-900 to-gray-800 flex items-center justify-center flex-shrink-0">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
@@ -148,7 +148,7 @@
             <p class="text-xs text-gray-400">dari panggil → selesai</p>
         </div>
     </div>
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-3 sm:gap-4 min-w-0">
         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center flex-shrink-0">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
@@ -161,7 +161,7 @@
 </div>
 
 {{-- ── Hourly Chart ────────────────────────────────────────────────────────── --}}
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 mb-6">
     <div class="flex items-center justify-between mb-4">
         <div>
             <h3 class="font-bold text-gray-900">Distribusi Antrean per Jam</h3>
@@ -236,7 +236,7 @@
                     <div class="bg-gray-300 rounded-full" style="width:{{ $b['total'] > 0 ? round($b['expired']/$b['total']*100) : 0 }}%"></div>
                     @endif
                 </div>
-                <div class="flex gap-4 mt-1.5 text-[10px] text-gray-400">
+                <div class="flex gap-4 flex-wrap mt-1.5 text-[10px] text-gray-400">
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>Selesai {{ $b['completed'] }}</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-400 inline-block"></span>Lewati {{ $b['skipped'] }}</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-300 inline-block"></span>Kadaluarsa {{ $b['expired'] }}</span>

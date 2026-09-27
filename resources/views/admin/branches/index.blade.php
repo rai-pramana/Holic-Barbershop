@@ -19,35 +19,35 @@
             <thead>
                 <tr class="border-b border-gray-100 bg-gray-50">
                     @include('components.sort-th', ['label' => 'Nama Cabang', 'key' => 'name', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Alamat</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Barber</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Layanan</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Jam Buka</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Status</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Aksi</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Alamat</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Barber</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Layanan</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Jam Buka</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Status</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
                 @forelse($branches as $branch)
                 <tr class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-6 py-4">
+                    <td class="px-4 sm:px-6 py-4">
                         <p class="font-semibold text-gray-900">{{ $branch->name }}</p>
                         @if($branch->phone)
                             <p class="text-xs text-gray-500">{{ $branch->phone }}</p>
                         @endif
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600 max-w-xs">{{ $branch->address }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-700 font-medium">{{ $branch->barbers_count }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-700 font-medium">{{ $branch->services_count }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ $branch->open_time }} – {{ $branch->close_time }}</td>
-                    <td class="px-6 py-4">
+                    <td class="px-4 sm:px-6 py-4 text-sm text-gray-600 max-w-[160px] sm:max-w-xs truncate" title="{{ $branch->address }}">{{ $branch->address }}</td>
+                    <td class="px-4 sm:px-6 py-4 text-sm text-gray-700 font-medium">{{ $branch->barbers_count }}</td>
+                    <td class="px-4 sm:px-6 py-4 text-sm text-gray-700 font-medium">{{ $branch->services_count }}</td>
+                    <td class="px-4 sm:px-6 py-4 text-sm text-gray-600">{{ $branch->open_time }} – {{ $branch->close_time }}</td>
+                    <td class="px-4 sm:px-6 py-4">
                         @if($branch->is_active)
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Aktif</span>
                         @else
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Nonaktif</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="px-4 sm:px-6 py-4">
                         <div class="flex items-center gap-1.5">
                             <a href="{{ route('admin.branches.show', $branch) }}"
                                title="Lihat Detail"

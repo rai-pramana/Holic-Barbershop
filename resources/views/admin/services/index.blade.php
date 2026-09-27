@@ -19,38 +19,38 @@
             <thead>
                 <tr class="border-b border-gray-100 bg-gray-50">
                     @include('components.sort-th', ['label' => 'Nama Layanan', 'key' => 'name', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Cabang</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Cabang</th>
                     @include('components.sort-th', ['label' => 'Durasi', 'key' => 'duration_minutes', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
                     @include('components.sort-th', ['label' => 'Harga', 'key' => 'price', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Status</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">Aksi</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Status</th>
+                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
                 @forelse($services as $service)
                 <tr class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-6 py-4">
+                    <td class="px-4 sm:px-6 py-4">
                         <p class="font-semibold text-gray-900">{{ $service->name }}</p>
                         @if($service->description)
                             <p class="text-xs text-gray-500 mt-0.5 max-w-xs truncate">{{ $service->description }}</p>
                         @endif
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ $service->branch->name }}</td>
-                    <td class="px-6 py-4">
-                        <span class="inline-flex items-center gap-1 text-sm text-gray-700 bg-gray-100 px-2.5 py-1 rounded-full">
+                    <td class="px-4 sm:px-6 py-4 text-sm text-gray-600">{{ $service->branch->name }}</td>
+                    <td class="px-4 sm:px-6 py-4">
+                        <span class="inline-flex items-center gap-1 text-sm text-gray-700 bg-gray-100 whitespace-nowrap px-2.5 py-1 rounded-full">
                             <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             {{ $service->formatted_duration }}
                         </span>
                     </td>
-                    <td class="px-6 py-4 text-sm font-semibold text-gray-800">{{ $service->formatted_price }}</td>
-                    <td class="px-6 py-4">
+                    <td class="px-4 sm:px-6 py-4 text-sm font-semibold text-gray-800">{{ $service->formatted_price }}</td>
+                    <td class="px-4 sm:px-6 py-4">
                         @if($service->is_active)
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Aktif</span>
                         @else
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Nonaktif</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="px-4 sm:px-6 py-4">
                         <div class="flex items-center gap-1.5">
                             <a href="{{ route('admin.services.edit', $service) }}"
                                title="Edit"

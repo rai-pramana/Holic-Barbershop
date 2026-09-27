@@ -65,14 +65,14 @@
         ])
 
         {{-- Flatpickr range button --}}
-        <div class="ml-auto">
+        <div class="w-full sm:w-auto sm:ml-auto">
             <label class="block text-xs font-medium text-gray-500 mb-1">Periode</label>
             <div class="relative">
                 <button type="button" id="h-date-btn"
-                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-white transition-all cursor-pointer min-w-[180px]">
+                        class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-white transition-all cursor-pointer w-full sm:min-w-[180px]">
                     <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <span id="h-date-label">{{ $dateLabel }}</span>
-                    <svg class="w-3 h-3 text-gray-400 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    <span id="h-date-label" class="truncate">{{ $dateLabel }}</span>
+                    <svg class="w-3 h-3 text-gray-400 ml-auto flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
                 <input type="text" id="h-flatpickr" class="absolute opacity-0 pointer-events-none w-0 h-0">
             </div>
@@ -100,20 +100,20 @@
             <tbody class="divide-y divide-gray-100">
                 @forelse($queues as $queue)
                 <tr class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-5 py-3 font-bold text-gray-900 text-sm">{{ $queue->queue_number }}</td>
+                    <td class="px-4 sm:px-5 py-3 font-bold text-gray-900 text-sm whitespace-nowrap">{{ $queue->queue_number }}</td>
                     <td class="px-5 py-3 text-sm">
-                        <p class="font-medium text-gray-900">{{ $queue->customer_name }}</p>
+                        <p class="font-medium text-gray-900 truncate max-w-[130px] sm:max-w-none">{{ $queue->customer_name }}</p>
                         <p class="text-xs text-gray-500">{{ $queue->customer->phone }}</p>
                     </td>
                     <td class="px-5 py-3 text-sm text-gray-700">{{ $queue->barber?->name ?? '—' }}</td>
                     <td class="px-5 py-3 text-sm text-gray-700">
-                        <p>{{ $queue->service->name }}</p>
+                        <p class="truncate max-w-[110px] sm:max-w-none">{{ $queue->service->name }}</p>
                         <p class="text-xs text-gray-500">{{ $queue->service->duration_minutes }} menit</p>
                     </td>
-                    <td class="px-5 py-3 text-sm font-medium text-gray-800">{{ $queue->service->formatted_price }}</td>
-                    <td class="px-5 py-3 text-sm text-gray-600">{{ $queue->branch->name }}</td>
+                    <td class="px-4 sm:px-5 py-3 text-sm font-medium text-gray-800 whitespace-nowrap">{{ $queue->service->formatted_price }}</td>
+                    <td class="px-4 sm:px-5 py-3 text-sm text-gray-600"><span class="block truncate max-w-[100px] sm:max-w-none">{{ $queue->branch->name }}</span></td>
                     <td class="px-5 py-3">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-{{ $queue->status }}">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap badge-{{ $queue->status }}">
                             {{ $queue->status_label }}
                         </span>
                     </td>

@@ -12,15 +12,15 @@
 @endsection
 
 @section('content')
-<div class="max-w-3xl space-y-5">
+<div class="max-w-3xl mx-auto sm:mx-0 space-y-5">
 
     {{-- Barber Info Card --}}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-start gap-5">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-5">
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-white font-black text-2xl flex-shrink-0">
             {{ strtoupper(substr($barber->name, 0, 1)) }}
         </div>
-        <div class="flex-1">
-            <h2 class="text-xl font-bold text-gray-900">{{ $barber->name }}</h2>
+        <div class="flex-1 min-w-0">
+            <h2 class="text-xl font-bold text-gray-900 break-words">{{ $barber->name }}</h2>
             @if($barber->specialty)
                 <p class="text-gray-900 font-medium text-sm">{{ $barber->specialty }}</p>
             @endif
@@ -31,7 +31,7 @@
                 <p class="text-gray-600 text-sm mt-2">{{ $barber->bio }}</p>
             @endif
         </div>
-        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold flex-shrink-0 self-start whitespace-nowrap
               {{ $barber->is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600' }}">
             {{ $barber->is_available ? '✅ Tersedia' : '❌ Tidak Tersedia' }}
         </span>
@@ -54,7 +54,7 @@
             @foreach($todayQueues as $queue)
             <div class="px-6 py-3 flex items-center gap-4">
                 <span class="font-mono font-bold text-gray-800 w-16">{{ $queue->queue_number }}</span>
-                <div class="flex-1">
+                <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-gray-800">{{ $queue->customer_name }}</p>
                     <p class="text-xs text-gray-400">{{ $queue->service->name }}</p>
                 </div>

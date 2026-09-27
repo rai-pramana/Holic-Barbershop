@@ -31,24 +31,24 @@
         </div>
 
         <div class="p-6 space-y-4">
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 rounded-xl p-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-xl p-4 min-w-0">
                     <p class="text-xs text-gray-500 font-medium mb-1">👤 Customer</p>
-                    <p class="font-bold text-gray-900">{{ $queue->customer_name }}</p>
+                    <p class="font-bold text-gray-900 break-words">{{ $queue->customer_name }}</p>
                     @if($queue->customer->phone)
                         <p class="text-xs text-gray-500">{{ $queue->customer->phone }}</p>
                     @endif
                 </div>
-                <div class="bg-gray-50 rounded-xl p-4">
+                <div class="bg-gray-50 rounded-xl p-4 min-w-0">
                     <p class="text-xs text-gray-500 font-medium mb-1">💈 Barber</p>
                     <p class="font-bold text-gray-900">{{ $queue->barber?->user?->name ?? '—' }}</p>
                 </div>
-                <div class="bg-gray-50 rounded-xl p-4">
+                <div class="bg-gray-50 rounded-xl p-4 min-w-0">
                     <p class="text-xs text-gray-500 font-medium mb-1">✂️ Layanan</p>
-                    <p class="font-bold text-gray-900">{{ $queue->service->name }}</p>
+                    <p class="font-bold text-gray-900 break-words">{{ $queue->service->name }}</p>
                     <p class="text-xs text-gray-500">{{ $queue->service->duration_minutes }} menit</p>
                 </div>
-                <div class="bg-gray-50 rounded-xl p-4">
+                <div class="bg-gray-50 rounded-xl p-4 min-w-0">
                     <p class="text-xs text-gray-500 font-medium mb-1">💰 Harga</p>
                     <p class="font-bold text-gray-900">{{ $queue->service->formatted_price }}</p>
                 </div>
