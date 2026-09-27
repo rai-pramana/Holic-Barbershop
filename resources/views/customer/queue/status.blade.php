@@ -76,46 +76,46 @@
         <div class="p-5 md:p-6 space-y-5">
 
             {{-- Stats Grid --}}
-            <div class="grid grid-cols-4 gap-3">
-                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-1 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                         Saat Ini
                     </p>
-                    <p class="font-bold text-gray-900 text-sm font-mono" id="current-serving">
+                    <p class="font-bold text-gray-900 text-sm font-mono truncate" id="current-serving">
                         {{ $currentServing ?? '—' }}
                     </p>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-1 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
                         Posisi
                     </p>
-                    <p class="font-bold text-gray-900 text-sm" id="queue-position">
+                    <p class="font-bold text-gray-900 text-sm truncate" id="queue-position">
                         @if($queue->isActive_or_Pending())
                             ke-{{ $queue->position_in_queue }}
                         @else —
                         @endif
                     </p>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-1 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Di Depan
                     </p>
-                    <p class="font-bold text-gray-900 text-sm" id="queues-ahead">
+                    <p class="font-bold text-gray-900 text-sm truncate" id="queues-ahead">
                         @if($queue->isActive_or_Pending())
                             {{ $queuesAhead + $pendingAhead > 0 ? ($queuesAhead + $pendingAhead).' orang' : 'Hampir!' }}
                         @else —
                         @endif
                     </p>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-1 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Est. Tunggu
                     </p>
-                    <p class="font-bold text-gray-900 text-sm" id="wait-time">
+                    <p class="font-bold text-gray-900 text-sm truncate" id="wait-time">
                         @if($queue->isActive_or_Pending() && $waitMinutes > 0)
                             ~{{ $waitMinutes }}m
                         @elseif($queue->isActive_or_Pending())
@@ -124,23 +124,23 @@
                         @endif
                     </p>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-1 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         Barber
                     </p>
                     <p class="font-bold text-gray-900 text-sm">{{ $queue->barber?->name ?? '—' }}</p>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4 col-span-2">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-2 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
                         Layanan
                     </p>
                     <p class="font-bold text-gray-900 text-sm leading-tight">{{ $queue->service->name }} <span class="text-xs font-normal text-gray-400">({{ $queue->service->duration_minutes }}m)</span></p>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-4 col-span-1">
-                    <p class="text-xs text-gray-400 font-medium mb-1 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg> Biaya</p>
-                    <p class="font-bold text-gray-900 text-sm">{{ $queue->service->formatted_price }}</p>
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-1 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg> Biaya</p>
+                    <p class="font-bold text-gray-900 text-sm truncate">{{ $queue->service->formatted_price }}</p>
                 </div>
             </div>
 
