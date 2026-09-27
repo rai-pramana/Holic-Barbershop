@@ -43,7 +43,6 @@ class WebPushService
             'title' => $title,
             'body'  => $body,
             'icon'  => '/icons/icon-192.png',
-            'badge' => '/icons/badge-72.png',
             'data'  => $data,
             'tag'   => 'queue-notification',    // Replace older notifications of same type
             'renotify' => true,

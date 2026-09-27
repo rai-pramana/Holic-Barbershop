@@ -278,7 +278,7 @@ if ('serviceWorker' in navigator) {
             applicationServerKey: urlBase64ToUint8Array(VAPID_KEY),
         });
         const j = sub.toJSON();
-        await fetch(SUBSCRIBE_URL, {
+        const res = await fetch(SUBSCRIBE_URL, {
             method:  'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
             body:    JSON.stringify({
@@ -288,6 +288,11 @@ if ('serviceWorker' in navigator) {
                 content_encoding: 'aes128gcm',
             }),
         });
+        if (!res.ok) {
+            // Jangan simpan subscription lokal yg tidak terdaftar di server
+            await sub.unsubscribe().catch(() => {});
+            throw new Error('Pendaftaran notifikasi ke server gagal (' + res.status + ')');
+        }
         return sub;
     }
 
@@ -330,7 +335,8 @@ if ('serviceWorker' in navigator) {
 
         // Auto-subscribe if permission already granted and no subscription yet
         if (perm === 'granted' && !sub) {
-            try { sub = await subscribe(); setBellState(btn, !!sub); } catch(e){}
+            try { sub = await subscribe(); setBellState(btn, !!sub); }
+            catch(e){ console.warn('Push auto-subscribe gagal:', e); }
         }
 
         if (!btn) return;
@@ -350,8 +356,13 @@ if ('serviceWorker' in navigator) {
                     }
                     await subscribe();
                     setBellState(btn, true);
+                    alert('Notifikasi aktif di perangkat ini. Anda akan menerima pemberitahuan saat antrean dipanggil.');
                 }
-            } catch(e) { console.warn('Push toggle error:', e); }
+            } catch(e) {
+                console.warn('Push toggle error:', e);
+                alert('Gagal mengaktifkan notifikasi: ' + (e && e.message ? e.message : e) + '. Coba lagi.');
+                try { setBellState(btn, !!(await getSubscription())); } catch(_){}
+            }
             finally { btn.disabled = false; }
         });
     }

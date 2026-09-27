@@ -3,7 +3,7 @@
  * Handles background push notifications
  */
 
-const CACHE_NAME = 'holic-v1';
+const CACHE_NAME = 'holic-v2';
 
 // ─── Push Event ──────────────────────────────────────────────────────────────
 self.addEventListener('push', function (event) {
@@ -20,7 +20,6 @@ self.addEventListener('push', function (event) {
     const options = {
         body:            data.body  || 'Ada pembaruan antrean Anda.',
         icon:            data.icon  || '/icons/icon-192.png',
-        badge:           data.badge || '/icons/badge-72.png',
         tag:             data.tag   || 'queue-notification',
         renotify:        data.renotify ?? true,
         requireInteraction: true,   // Notification stays until user interacts
