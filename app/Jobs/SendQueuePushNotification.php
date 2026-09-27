@@ -54,7 +54,10 @@ class SendQueuePushNotification implements ShouldQueue
         };
 
         // ── Send Web Push (online customers only) ─────────────────────────
+        Log::info('Push job start', ['queue_id' => $queue->id, 'event' => $this->event, 'customer_id' => $queue->customer_id]);
         if ($queue->customer_id) {
+            $subCount = \App\Models\PushSubscription::where('user_id', $queue->customer_id)->count();
+            Log::info('Push job subs', ['customer_id' => $queue->customer_id, 'subs' => $subCount]);
             try {
                 $pushService->sendToUser(
                     userId: $queue->customer_id,
