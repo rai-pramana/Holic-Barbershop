@@ -31,18 +31,20 @@ class SendQueuePushNotification implements ShouldQueue
         }
 
         // ── Web Push title & body ──────────────────────────────────────────
+        $barberName = $queue->barber?->name ?? 'barber kami';
+        $branchName = $queue->branch?->name ?? 'HOLIC Barbershop';
         [$title, $body] = match($this->event) {
             'called' => [
                 'Nomor Anda Dipanggil!',
-                "Antrean {$queue->queue_number} — Segera ke kursi barber {$queue->barber->name}.",
+                "Antrean {$queue->queue_number} — Segera ke kursi {$barberName}.",
             ],
             'active' => [
                 'Check-in Berhasil!',
-                "Antrean {$queue->queue_number} di {$queue->branch->name} aktif. Silakan tunggu dipanggil.",
+                "Antrean {$queue->queue_number} di {$branchName} aktif. Silakan tunggu dipanggil.",
             ],
             'completed' => [
                 'Layanan Selesai',
-                "Terima kasih telah mengunjungi {$queue->branch->name}! Sampai jumpa lagi.",
+                "Terima kasih telah mengunjungi {$branchName}! Sampai jumpa lagi.",
             ],
             'skipped' => [
                 'Antrean Dilewati',
