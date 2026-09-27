@@ -40,7 +40,7 @@
             <h2 class="font-bold text-gray-900">Informasi Profil</h2>
             <p class="text-sm text-gray-500">Perbarui nama, email, dan nomor telepon Anda</p>
         </div>
-        <form method="POST" action="{{ route('profile.update') }}" class="p-6 space-y-4">
+        <form method="POST" action="{{ route('profile.update') }}" class="px-6 pt-3 pb-6 space-y-4">
             @csrf
             @method('PATCH')
 
@@ -89,7 +89,7 @@
             <h2 class="font-bold text-gray-900">Ubah Password</h2>
             <p class="text-sm text-gray-500">Pastikan password baru cukup kuat dan berbeda dari sebelumnya</p>
         </div>
-        <form method="POST" action="{{ route('profile.password') }}" class="p-6 space-y-4">
+        <form method="POST" action="{{ route('profile.password') }}" class="px-6 pt-3 pb-6 space-y-4">
             @csrf
             @method('PATCH')
 
