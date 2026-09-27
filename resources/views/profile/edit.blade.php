@@ -74,9 +74,9 @@
                 @enderror
             </div>
 
-            <div class="flex items-center gap-3 pt-1">
+            <div class="flex justify-center pt-1">
                 <button type="submit"
-                        class="bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+                        class="w-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
                     Simpan Perubahan
                 </button>
             </div>
@@ -120,9 +120,9 @@
                        placeholder="Ulangi password baru">
             </div>
 
-            <div class="pt-1">
+            <div class="flex justify-center pt-1">
                 <button type="submit"
-                        class="bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+                        class="w-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
                     Ubah Password
                 </button>
             </div>
