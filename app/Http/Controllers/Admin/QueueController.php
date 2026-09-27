@@ -38,7 +38,7 @@ class QueueController extends Controller
 
         // Support both single date and date range
         if ($request->filled('date_from') && $request->filled('date_to')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('queues.created_at', [
                 \Carbon\Carbon::parse($request->date_from)->startOfDay(),
                 \Carbon\Carbon::parse($request->date_to)->endOfDay(),
             ]);
@@ -46,17 +46,17 @@ class QueueController extends Controller
                 . ' — '
                 . \Carbon\Carbon::parse($request->date_to)->isoFormat('D MMM YYYY');
         } elseif ($request->filled('date_from')) {
-            $query->whereDate('created_at', $request->date_from);
+            $query->whereDate('queues.created_at', $request->date_from);
             $dateLabel = \Carbon\Carbon::parse($request->date_from)->isoFormat('dddd, D MMMM YYYY');
         } elseif ($request->filled('date')) {
-            $query->whereDate('created_at', $request->date);
+            $query->whereDate('queues.created_at', $request->date);
             $dateLabel = \Carbon\Carbon::parse($request->date)->isoFormat('dddd, D MMMM YYYY');
         } else {
-            $query->whereDate('created_at', today());
+            $query->whereDate('queues.created_at', today());
             $dateLabel = now()->isoFormat('dddd, D MMMM YYYY');
         }
 
-        [$query, $sort, $dir] = $this->applySort($query, $request, ['queue_number', 'status', 'created_at'], 'created_at', 'desc');
+        [$query, $sort, $dir] = $this->applyQueueSort($query, $request);
         $queues   = $query->paginate(25)->withQueryString();
         $branches = Branch::where('is_active', true)->get();
         $barbers  = Barber::orderBy('name')->get();
@@ -91,7 +91,7 @@ class QueueController extends Controller
             $barbers = Barber::where('branch_id', $selectedBranch->id)
                 ->where('is_available', true)
                 ->with(['queues' => function ($q) {
-                    $q->whereDate('created_at', today())
+                    $q->whereDate('queues.created_at', today())
                       ->whereIn('status', ['active', 'called', 'pending'])
                       ->with(['customer', 'service'])
                       ->orderByRaw("FIELD(status, 'called', 'active', 'pending')")
@@ -102,7 +102,7 @@ class QueueController extends Controller
 
         // Recent check-ins today (for merged check-in panel)
         $recent = Queue::with(['customer', 'branch'])
-            ->whereDate('created_at', today())
+            ->whereDate('queues.created_at', today())
             ->whereNotNull('checked_in_at')
             ->orderByDesc('checked_in_at')
             ->take(8)
@@ -190,7 +190,7 @@ class QueueController extends Controller
         $data = Barber::where('branch_id', $branchId)
             ->where('is_available', true)
             ->with(['queues' => function ($q) {
-                $q->whereDate('created_at', today())
+                $q->whereDate('queues.created_at', today())
                   ->whereIn('status', ['active', 'called', 'pending'])
                   ->with(['customer', 'service'])
                   ->orderByRaw("FIELD(status, 'called', 'active', 'pending')")
@@ -220,15 +220,15 @@ class QueueController extends Controller
     {
         $today = today();
 
-        $pending   = Queue::whereDate('created_at', $today)->where('status', 'pending')->count();
-        $active    = Queue::whereDate('created_at', $today)->where('status', 'active')->count();
-        $called    = Queue::whereDate('created_at', $today)->where('status', 'called')->count();
-        $completed = Queue::whereDate('created_at', $today)->where('status', 'completed')->count();
-        $total     = Queue::whereDate('created_at', $today)->count();
+        $pending   = Queue::whereDate('queues.created_at', $today)->where('status', 'pending')->count();
+        $active    = Queue::whereDate('queues.created_at', $today)->where('status', 'active')->count();
+        $called    = Queue::whereDate('queues.created_at', $today)->where('status', 'called')->count();
+        $completed = Queue::whereDate('queues.created_at', $today)->where('status', 'completed')->count();
+        $total     = Queue::whereDate('queues.created_at', $today)->count();
 
         // Latest queue for notification detail
         $latest = Queue::with('customer', 'branch')
-            ->whereDate('created_at', $today)
+            ->whereDate('queues.created_at', $today)
             ->latest()
             ->first();
 
@@ -247,5 +247,47 @@ class QueueController extends Controller
                 'created_at'   => $latest->created_at->toISOString(),
             ] : null,
         ]);
+    }
+
+    /**
+     * Sorting Riwayat Antrean — termasuk kolom relasi via join.
+     * Whitelist ketat: kunci sort dipetakan ke ekspresi aman, bukan input mentah.
+     */
+    private function applyQueueSort($query, Request $request): array
+    {
+        $map = [
+            'queue_number' => 'queues.queue_number',
+            'status'       => 'queues.status',
+            'created_at'   => 'queues.created_at',
+            // Kolom relasi — butuh join (LEFT agar barber null tetap muncul)
+            'customer' => 'customer_sort',
+            'barber'   => 'barbers.name',
+            'service'  => 'services.name',
+            'price'    => 'services.price',
+            'branch'   => 'branches.name',
+        ];
+
+        $sort = $request->query('sort', 'created_at');
+        $dir  = strtolower($request->query('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
+
+        if (! array_key_exists($sort, $map)) {
+            $sort = 'created_at';
+            $dir  = 'desc';
+        }
+
+        $query->select('queues.*')
+            ->leftJoin('users', 'users.id', '=', 'queues.customer_id')
+            ->leftJoin('barbers', 'barbers.id', '=', 'queues.barber_id')
+            ->leftJoin('services', 'services.id', '=', 'queues.service_id')
+            ->leftJoin('branches', 'branches.id', '=', 'queues.branch_id');
+
+        if ($map[$sort] === 'customer_sort') {
+            // Walk-in pakai guest_name, akun pakai users.name
+            $query->orderByRaw('COALESCE(NULLIF(queues.guest_name, ""), users.name) ' . $dir);
+        } else {
+            $query->orderBy($map[$sort], $dir);
+        }
+
+        return [$query, $sort, $dir];
     }
 }
