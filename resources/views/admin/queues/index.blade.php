@@ -128,7 +128,7 @@
                             {{ $queue->status_label }}
                         </span>
                     </td>
-                    <td class="px-5 py-3 text-xs text-gray-500">{{ $queue->created_at->format('H:i') }}</td>
+                    <td class="px-5 py-3 text-xs text-gray-500 whitespace-nowrap">{{ $queue->created_at->translatedFormat('d M Y, H:i') }}</td>
                 </tr>
                 @empty
                 <tr>
