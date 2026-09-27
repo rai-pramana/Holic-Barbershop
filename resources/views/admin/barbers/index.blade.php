@@ -17,7 +17,7 @@
     $sortQs = fn($s, $d) => request()->url() . '?' . http_build_query(array_merge(request()->except(['sort', 'dir', 'page']), ['sort' => $s, 'dir' => $d]));
 @endphp
 <div class="flex justify-end mb-4">
-    <select onchange="window.location.href=this.value" class="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 focus:outline-none focus:border-gray-400">
+    <select onchange="window.location.href=this.value" class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 bg-gray-50 text-sm text-gray-700 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors focus:border-gray-400">
         <option value="{{ $sortQs('created_at', 'desc') }}" {{ ($sort ?? '') === 'created_at' ? 'selected' : '' }}>Terbaru</option>
         <option value="{{ $sortQs('name', 'asc') }}" {{ ($sort ?? '') === 'name' && ($dir ?? '') === 'asc' ? 'selected' : '' }}>Nama A–Z</option>
         <option value="{{ $sortQs('name', 'desc') }}" {{ ($sort ?? '') === 'name' && ($dir ?? '') === 'desc' ? 'selected' : '' }}>Nama Z–A</option>

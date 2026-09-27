@@ -20,7 +20,7 @@
     {{-- Filter --}}
     <form method="GET" action="{{ route('customer.queue.history') }}" class="flex gap-2 flex-wrap">
         <select name="status" onchange="this.form.submit()"
-                class="rounded-xl border border-gray-200 bg-white text-sm px-3 py-2 text-gray-700 focus:ring-2 focus:ring-gray-500 focus:border-gray-400 hover:border-gray-300 hover:bg-gray-50 cursor-pointer transition-colors">
+                class="border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-sm text-gray-700 bg-gray-50 outline-none hover:border-gray-300 hover:bg-white cursor-pointer transition-colors focus:border-gray-400">
             <option value="">Semua Status</option>
             <option value="completed" @selected(request('status') === 'completed')>Selesai</option>
             <option value="skipped"   @selected(request('status') === 'skipped')>Dilewati</option>

@@ -124,7 +124,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cabang (opsional)</label>
                     <select name="branch_id"
-                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400">
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 cursor-pointer transition-colors">
                         <option value="">— Semua Cabang —</option>
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>

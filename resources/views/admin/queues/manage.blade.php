@@ -206,7 +206,7 @@
                 <input type="text" name="queue_number" value="{{ old('queue_number') }}" placeholder="cth: Q0005"
                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-mono font-bold uppercase tracking-widest focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 @error('queue_number') border-red-400 @enderror">
                 @error('queue_number')<p class="text-red-500 text-xs">{{ $message }}</p>@enderror
-                <select name="branch_id" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400">
+                <select name="branch_id" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 cursor-pointer transition-colors">
                     <option value="">— Semua Cabang —</option>
                     @foreach($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
