@@ -6,30 +6,36 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Customer;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PushSubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Routes ─────────────────────────────────────────────────────────
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/live-status', [HomeController::class, 'live'])->name('home.live');
 
 // ─── Health Check (Railway) ─────────────────────────────────────────────────
 Route::get('/health', function () {
-    return response()->json(['status' => 'ok', 'app' => config('app.name')]);
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $db = 'ok';
+    } catch (\Throwable $e) {
+        return response()->json(['status' => 'degraded', 'app' => config('app.name'), 'db' => 'down'], 503);
+    }
+    return response()->json(['status' => 'ok', 'app' => config('app.name'), 'db' => $db]);
 });
 
 // ─── Auth Routes ───────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('register', [RegisteredUserController::class, 'store'])->middleware('throttle:10,1');
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login', [AuthenticatedSessionController::class, 'store'])->middleware('throttle:10,1');
 
     // ── Lupa Password ────────────────────────────────────────────────────
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
     Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 });

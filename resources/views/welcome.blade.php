@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <title>HOLIC Barbershop — Antrean Online</title>
     <meta name="description" content="Sistem antrean online HOLIC Barbershop. Pilih cabang, pilih barber, ambil nomor antrean — tanpa ribet.">
+    <meta property="og:title" content="HOLIC Barbershop — Antrean Online">
+    <meta property="og:description" content="Ambil nomor antrean dari mana saja. Pilih barber favorit, pantau status real-time.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/images/holic-logo.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="theme-color" content="#0a0f1a">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -57,6 +67,30 @@
         /* Card hover lift */
         .card-lift { transition: transform 0.25s ease, box-shadow 0.25s ease; }
         .card-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+        /* Button press feedback — subtle, global */
+        a[class*="rounded"], button[class*="rounded"] { transition: transform 0.15s ease, background-color 0.2s ease, opacity 0.2s ease; }
+        a[class*="rounded"]:active, button[class*="rounded"]:active { transform: scale(0.97); }
+
+        /* Smooth anchor scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* Live number tick — gentle scale pulse when a value updates (JS toggles .tick) */
+        @keyframes tickPop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.18); }
+            100% { transform: scale(1); }
+        }
+        .tick { animation: tickPop 0.45s ease; display: inline-block; }
+
+        /* Respect users who prefer less motion */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .float-anim, .float-anim-slow, .pulse-ring { animation: none; }
+            .card-lift, .card-lift:hover { transform: none; }
+            a[class*="rounded"]:active, button[class*="rounded"]:active { transform: none; }
+            .tick { animation: none; }
+        }
     </style>
 </head>
 <body class="bg-gray-950 text-white overflow-x-hidden">
@@ -117,7 +151,7 @@
 
                 {{-- Headline --}}
                 <h1 class="text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6">
-                    <span class="text-white block">Antri Cerdas,</span>
+                    <span class="text-white block">Antre Cerdas,</span>
                     <span class="text-silver block">Tampil Keren</span>
                 </h1>
 
@@ -128,7 +162,7 @@
                 {{-- CTA buttons --}}
                 <div class="flex flex-col sm:flex-row gap-3">
                     @auth
-                        <a href="{{ auth()->user()->isCustomer() ? route('customer.dashboard') : (auth()->user()->isAdmin() ? route('admin.dashboard') : route('barber.dashboard')) }}"
+                        <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('customer.dashboard') }}"
                            class="inline-flex items-center justify-center gap-2 bg-white text-gray-900 font-bold px-8 py-4 rounded-2xl hover:bg-gray-100 transition-colors shadow-xl text-center">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                             Ke Dashboard
@@ -211,7 +245,7 @@
                     </div>
 
                     {{-- Second card — metallic glass --}}
-                    <div class="absolute -bottom-4 -left-10 relative overflow-hidden rounded-2xl p-4 w-60 shadow-2xl"
+                    <div class="absolute -bottom-4 -left-10 overflow-hidden rounded-2xl p-4 w-60 shadow-2xl"
                          style="background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.13);">
                         {{-- Top shimmer --}}
                         <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
@@ -232,11 +266,141 @@
     </div>
 </section>
 
-{{-- ── Features ──────────────────────────────────────────────────────────── --}}
-<section class="py-28 bg-gray-950 relative">
-    {{-- Divider line at top --}}
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-px h-16 bg-gradient-to-b from-white/15 to-transparent"></div>
+{{-- ── Live Status ───────────────────────────────────────────────────────── --}}
+<section class="py-20 bg-gray-950 relative border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <p class="text-gray-500 text-sm font-semibold uppercase tracking-widest mb-3 flex items-center justify-center gap-2">
+                <span class="w-2 h-2 bg-emerald-400 rounded-full pulse-ring inline-block"></span>
+                Live hari ini
+            </p>
+            <h2 class="text-3xl lg:text-4xl font-black text-white mb-3">Status antrean terkini</h2>
+            <p class="text-gray-400 max-w-lg mx-auto">Data langsung per cabang — diperbarui otomatis tiap 15 detik.</p>
+        </div>
 
+        @if($branches->isEmpty())
+        <p class="text-center text-gray-500">Belum ada cabang aktif saat ini.</p>
+        @else
+        <div id="live-branches" class="flex flex-wrap justify-center gap-5" data-live-url="{{ route('home.live') }}">
+            @foreach($branches as $branch)
+            <div class="card-lift bg-white/[0.025] border border-white/6 rounded-2xl p-6 hover:border-white/15 transition-all w-full sm:w-[340px] flex-shrink-0" data-branch-id="{{ $branch->id }}">
+                <div class="flex items-start justify-between mb-5">
+                    <div>
+                        <h3 class="text-white font-bold text-lg leading-tight text-center sm:text-left">{{ $branch->name }}</h3>
+                        <p class="text-gray-500 text-sm mt-0.5 text-center sm:text-left">{{ $branch->city ?? '' }}{{ $branch->open_time ? ' · ' . substr($branch->open_time, 0, 5) . '–' . substr($branch->close_time, 0, 5) : '' }}</p>
+                    </div>
+                    <span data-open-badge class="{{ $branch->live_is_open ? 'bg-emerald-400/10 border-emerald-400/25 text-emerald-300' : 'bg-white/5 border-white/15 text-gray-400' }} border text-xs font-bold px-3 py-1 rounded-full flex-shrink-0">{{ $branch->live_is_open ? 'BUKA' : 'TUTUP' }}</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-5">
+                    <div class="bg-white/[0.03] border border-white/8 rounded-xl p-3 text-center">
+                        <p class="text-2xl font-black text-white font-mono" data-live="waiting">{{ $branch->live_waiting }}</p>
+                        <p class="text-gray-500 text-xs mt-1">Menunggu</p>
+                    </div>
+                    <div class="bg-white/[0.03] border border-white/8 rounded-xl p-3 text-center">
+                        <p class="text-2xl font-black text-white font-mono" data-live="serving">{{ $branch->live_serving ?? '–' }}</p>
+                        <p class="text-gray-500 text-xs mt-1">Dilayani</p>
+                    </div>
+                    <div class="bg-white/[0.03] border border-white/8 rounded-xl p-3 text-center">
+                        <p class="text-2xl font-black text-white font-mono" data-live="completed">{{ $branch->live_completed }}</p>
+                        <p class="text-gray-500 text-xs mt-1">Selesai</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p class="text-gray-400 text-sm text-center sm:text-left" data-live="wait-text">
+                        @if($branch->live_fastest_wait === null)
+                        Barber belum tersedia
+                        @elseif($branch->live_fastest_wait <= 0)
+                        Langsung dilayani — tanpa tunggu
+                        @else
+                        Estimasi tercepat ~{{ $branch->live_fastest_wait }} mnt
+                        @endif
+                    </p>
+                    @auth
+                    <a href="{{ route('customer.dashboard') }}" class="inline-flex items-center justify-center gap-1 text-sm font-bold bg-white/10 border border-white/15 text-white rounded-xl px-4 py-2.5 sm:bg-transparent sm:border-0 sm:p-0 sm:justify-end hover:bg-white/15 sm:hover:bg-transparent sm:hover:text-gray-300 transition-colors">Ambil antrean →</a>
+                    @else
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-1 text-sm font-bold bg-white/10 border border-white/15 text-white rounded-xl px-4 py-2.5 sm:bg-transparent sm:border-0 sm:p-0 sm:justify-end hover:bg-white/15 sm:hover:bg-transparent sm:hover:text-gray-300 transition-colors">Ambil antrean →</a>
+                    @endauth
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
+        @if($totalServingToday > 0)
+        <p class="text-center text-gray-500 text-sm mt-8"><span id="live-total-served">{{ $totalServingToday }}</span> pelanggan telah dilayani hari ini di semua cabang.</p>
+        @endif
+        <p class="text-center text-gray-700 text-xs mt-3">Diperbarui <span id="live-updated-at">baru saja</span> · otomatis tiap 15 detik</p>
+    </div>
+</section>
+
+<script>
+(function () {
+    var wrap = document.getElementById('live-branches');
+    if (!wrap) return;
+    var url = wrap.dataset.liveUrl;
+    var updatedEl = document.getElementById('live-updated-at');
+    var totalEl = document.getElementById('live-total-served');
+
+    function waitText(w) {
+        if (w === null || w === undefined) return 'Barber belum tersedia';
+        if (w <= 0) return 'Langsung dilayani — tanpa tunggu';
+        return 'Estimasi tercepat ~' + w + ' mnt';
+    }
+
+    function flash(el) {
+        if (!el) return;
+        el.classList.remove('tick');
+        void el.offsetWidth; // restart animation
+        el.classList.add('tick');
+    }
+
+    function setText(el, val) {
+        if (!el) return;
+        var next = (val === null || val === undefined) ? '–' : String(val);
+        if (el.textContent.trim() !== next) { el.textContent = next; flash(el); }
+    }
+
+    async function poll() {
+        if (document.hidden) return;
+        try {
+            var res = await fetch(url + '?t=' + Date.now(), { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+            if (!res.ok) return;
+            var data = await res.json();
+            (data.branches || []).forEach(function (b) {
+                var card = wrap.querySelector('[data-branch-id="' + b.id + '"]');
+                if (!card) return;
+                setText(card.querySelector('[data-live="waiting"]'), b.waiting);
+                setText(card.querySelector('[data-live="serving"]'), b.serving);
+                setText(card.querySelector('[data-live="completed"]'), b.completed);
+                var wt = card.querySelector('[data-live="wait-text"]');
+                if (wt) { var t = waitText(b.fastest_wait); if (wt.textContent.trim() !== t) { wt.textContent = t; flash(wt); } }
+                var badge = card.querySelector('[data-open-badge]');
+                if (badge) {
+                    var want = b.is_open ? 'BUKA' : 'TUTUP';
+                    if (badge.textContent.trim() !== want) {
+                        badge.textContent = want;
+                        badge.className = (b.is_open
+                            ? 'bg-emerald-400/10 border-emerald-400/25 text-emerald-300'
+                            : 'bg-white/5 border-white/15 text-gray-400')
+                            + ' border text-xs font-bold px-3 py-1 rounded-full flex-shrink-0';
+                    }
+                }
+            });
+            if (totalEl && data.total_served !== undefined) setText(totalEl, data.total_served);
+            if (updatedEl) updatedEl.textContent = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        } catch (e) {
+            if (updatedEl) updatedEl.textContent = 'gagal memuat — mencoba lagi…';
+        }
+    }
+
+    poll(); // panggilan awal agar data tidak basi 15 detik pertama
+    setInterval(poll, 15000);
+})();
+</script>
+
+<section class="py-28 relative border-y border-white/5" style="background-color: #10182a;">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
             <p class="text-gray-500 text-sm font-semibold uppercase tracking-widest mb-3">Kenapa HOLIC?</p>
@@ -247,37 +411,37 @@
         @php
         $features = [
             [
-                'shade' => 'bg-gray-900', 'ring' => 'ring-white/10',
+                'tile' => 'bg-slate-700 ring-1 ring-white/20',
                 'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/>',
                 'title' => 'Antrean Real-time',
                 'desc'  => 'Pantau posisi antrean secara langsung. Status selalu diperbarui otomatis tanpa reload.',
             ],
             [
-                'shade' => 'bg-gray-800', 'ring' => 'ring-white/8',
+                'tile' => 'bg-slate-700 ring-1 ring-white/20',
                 'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>',
                 'title' => 'Pilih Barber Favorit',
                 'desc'  => 'Pilih barber spesifik atau biarkan sistem memilih barber tercepat untuk Anda.',
             ],
             [
-                'shade' => 'bg-gray-700', 'ring' => 'ring-white/8',
+                'tile' => 'bg-slate-700 ring-1 ring-white/20',
                 'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>',
                 'title' => 'Check-in Digital',
                 'desc'  => 'Scan QR Code di loket untuk check-in instan. Status langsung berubah aktif.',
             ],
             [
-                'shade' => 'bg-gray-600', 'ring' => 'ring-white/6',
+                'tile' => 'bg-slate-700 ring-1 ring-white/20',
                 'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>',
                 'title' => 'Notifikasi Panggilan',
                 'desc'  => 'Halaman status otomatis memberi tahu saat nomor Anda dipanggil barber.',
             ],
             [
-                'shade' => 'bg-gray-500', 'ring' => 'ring-white/5',
+                'tile' => 'bg-slate-700 ring-1 ring-white/20',
                 'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>',
                 'title' => 'Estimasi Waktu',
                 'desc'  => 'Ketahui perkiraan waktu tunggu berdasarkan antrean dan durasi layanan.',
             ],
             [
-                'shade' => 'bg-gray-400', 'ring' => 'ring-white/5',
+                'tile' => 'bg-slate-700 ring-1 ring-white/20',
                 'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
                 'title' => 'Aman & Terverifikasi',
                 'desc'  => 'Data antrean terjamin aman. 1 akun = 1 antrean aktif per cabang.',
@@ -288,7 +452,7 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($features as $f)
             <div class="card-lift group bg-white/[0.025] border border-white/6 rounded-2xl p-6 hover:border-white/15 hover:bg-white/[0.04] transition-all">
-                <div class="w-12 h-12 rounded-2xl {{ $f['shade'] }} ring-1 {{ $f['ring'] }} flex items-center justify-center mb-5 shadow-lg">
+                <div class="w-12 h-12 rounded-2xl {{ $f['tile'] }} flex items-center justify-center mb-5 shadow-lg">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         {!! $f['icon'] !!}
                     </svg>
@@ -302,7 +466,7 @@
 </section>
 
 {{-- ── How it works ──────────────────────────────────────────────────────── --}}
-<section class="py-28 relative" style="background: linear-gradient(180deg, #0f172a 0%, #111827 100%);">
+<section class="py-28 bg-gray-950 relative border-t border-white/5">
     <div class="max-w-5xl mx-auto px-6">
         <div class="text-center mb-16">
             <p class="text-gray-500 text-sm font-semibold uppercase tracking-widest mb-3">Cara Kerja</p>
@@ -339,7 +503,7 @@
 </section>
 
 {{-- ── CTA ───────────────────────────────────────────────────────────────── --}}
-<section class="py-28 bg-gray-950 relative overflow-hidden">
+<section class="py-28 relative overflow-hidden border-y border-white/5" style="background-color: #10182a;">
     {{-- Ambient glow --}}
     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div class="w-[600px] h-[300px] bg-slate-700/15 rounded-full blur-[80px]"></div>
@@ -384,7 +548,7 @@
             <div class="w-7 h-7 rounded-full bg-white overflow-hidden ring-1 ring-white/10 flex-shrink-0">
                 <img src="/images/holic-logo.png" alt="HOLIC" class="w-full h-full object-cover">
             </div>
-            <span class="text-gray-500 text-sm">© {{ date('Y') }} HOLIC Barbershop. All rights reserved.</span>
+            <span class="text-gray-500 text-sm">© {{ date('Y') }} HOLIC Barbershop. Hak cipta dilindungi.</span>
         </div>
         <p class="text-gray-700 text-xs">Sistem Antrean Online v1.0</p>
     </div>

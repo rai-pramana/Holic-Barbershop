@@ -202,7 +202,7 @@ class QueueController extends Controller
                     'status'       => $q->status,
                     'status_label' => $q->status_label,
                     'customer'     => $q->customer_name,
-                    'service'      => $q->service->name,
+                    'service'      => $q->service?->name ?? '—',
                 ]),
             ]);
 

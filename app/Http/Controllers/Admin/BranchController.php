@@ -29,8 +29,8 @@ class BranchController extends Controller
             'phone'        => 'nullable|string|max:20',
             'city'         => 'nullable|string|max:100',
             'description'  => 'nullable|string',
-            'open_time'    => 'required|string',
-            'close_time'   => 'required|string',
+            'open_time'    => 'required|date_format:H:i',
+            'close_time'   => 'required|date_format:H:i',
             'is_active'    => 'boolean',
             'queue_prefix' => 'required|string|max:3|unique:branches,queue_prefix',
         ]);
@@ -63,8 +63,8 @@ class BranchController extends Controller
             'phone'        => 'nullable|string|max:20',
             'city'         => 'nullable|string|max:100',
             'description'  => 'nullable|string',
-            'open_time'    => 'required|string',
-            'close_time'   => 'required|string',
+            'open_time'    => 'required|date_format:H:i',
+            'close_time'   => 'required|date_format:H:i',
             'is_active'    => 'boolean',
             'queue_prefix' => 'required|string|max:3|unique:branches,queue_prefix,' . $branch->id,
         ]);
@@ -78,6 +78,10 @@ class BranchController extends Controller
 
     public function destroy(Branch $branch): RedirectResponse
     {
+        if ($branch->queues()->exists()) {
+            return redirect()->route('admin.branches.index')
+                ->with('error', 'Cabang tidak dapat dihapus karena masih memiliki data antrean.');
+        }
         $branch->delete();
         return redirect()->route('admin.branches.index')
             ->with('success', 'Cabang berhasil dihapus.');

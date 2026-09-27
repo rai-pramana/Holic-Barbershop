@@ -42,6 +42,7 @@ class QueueController extends Controller
      */
     public function take(Branch $branch): View
     {
+        abort_unless($branch->is_active, 404);
         $user = Auth::user();
 
         // Check for existing active queue at this branch
@@ -76,6 +77,7 @@ class QueueController extends Controller
      */
     public function store(Request $request, Branch $branch): RedirectResponse
     {
+        abort_unless($branch->is_active, 404);
         $user = Auth::user();
 
         // Prevent double queue
@@ -266,7 +268,7 @@ class QueueController extends Controller
             ->whereIn('status', ['completed', 'skipped', 'expired'])
             ->latest();
 
-        if ($request->filled('status')) {
+        if ($request->filled('status') && in_array($request->status, ['completed', 'skipped', 'expired'], true)) {
             $query->where('status', $request->status);
         }
 

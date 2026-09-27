@@ -85,7 +85,7 @@ class WalkinQueueController extends Controller
 
         // Use or create a system "walk-in" user as placeholder for customer_id
         $guestUser = \App\Models\User::firstOrCreate(
-            ['email' => 'walkin@holic.system'],
+            ['email' => 'walkin@system.local'],
             [
                 'name'     => 'Walk-in Guest',
                 'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(32)),

@@ -26,8 +26,7 @@ class PasswordResetLinkController extends Controller
 
         $status = Password::sendResetLink($request->only('email'));
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with('status', 'Tautan reset password telah dikirim ke email Anda. Silakan cek inbox/spam.')
-            : back()->withInput($request->only('email'))->withErrors(['email' => 'Email tidak terdaftar di sistem kami.']);
+        // Pesan generik untuk cegah enumerasi email terdaftar
+        return back()->with('status', 'Jika email terdaftar di sistem kami, tautan reset password telah dikirim. Silakan cek inbox/spam.');
     }
 }

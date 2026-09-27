@@ -79,6 +79,10 @@ class ServiceController extends Controller
 
     public function destroy(Service $service): RedirectResponse
     {
+        if ($service->queues()->exists()) {
+            return redirect()->route('admin.services.index')
+                ->with('error', 'Layanan tidak dapat dihapus karena masih memiliki data antrean.');
+        }
         $service->delete();
         return redirect()->route('admin.services.index')
             ->with('success', 'Layanan berhasil dihapus.');
