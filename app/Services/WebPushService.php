@@ -70,8 +70,9 @@ class WebPushService
                     'reason'   => $reason,
                 ]);
 
-                // Remove expired/invalid subscriptions (410 = Gone, 404 = Not Found)
-                if (in_array($report->getResponse()?->getStatusCode(), [404, 410])) {
+                // Remove expired/invalid subscriptions
+                // (410 = Gone, 404 = Not Found, 403 Forbidden = VAPID mismatch/stale)
+                if (in_array($report->getResponse()?->getStatusCode(), [403, 404, 410])) {
                     $expiredEndpoints[] = $report->getRequest()->getUri()->__toString();
                 }
             }
