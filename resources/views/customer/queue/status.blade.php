@@ -34,7 +34,7 @@
     <div class="bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden mb-5" id="status-card">
 
         {{-- Colored Header --}}
-        <div class="relative overflow-hidden text-white text-center flex items-center justify-center min-h-[240px] md:min-h-[280px]
+        <div class="relative overflow-hidden text-white text-center
             @if($queue->status === 'called')    bg-gradient-to-br from-purple-500 to-slate-700
             @elseif($queue->status === 'active')  bg-gradient-to-br from-slate-800 to-cyan-600
             @elseif($queue->status === 'pending') bg-gradient-to-br from-slate-900 to-gray-800
@@ -46,7 +46,7 @@
             <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-28 h-28 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
 
-            <div class="relative z-10 w-full">
+            <div class="relative z-10">
                 <p class="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">{{ $queue->branch->name }}</p>
 
                 {{-- Queue Number --}}
