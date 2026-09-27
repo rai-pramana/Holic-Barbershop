@@ -74,13 +74,9 @@
                 @enderror
             </div>
 
-            <div class="flex justify-center gap-3 pt-1">
-                <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('customer.dashboard') }}"
-                   class="flex-1 text-center py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors">
-                    Kembali
-                </a>
+            <div class="pt-1">
                 <button type="submit"
-                        class="flex-[2] bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+                        class="w-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
                     Simpan Perubahan
                 </button>
             </div>
@@ -132,6 +128,13 @@
             </div>
         </form>
     </div>
+
+    {{-- Kembali (seperti halaman Ambil Antrean) --}}
+    <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('customer.dashboard') }}"
+       class="w-full flex items-center justify-center gap-2 bg-gray-100 text-gray-700 font-semibold py-3 rounded-2xl hover:bg-gray-200 transition-colors text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Kembali ke Dashboard
+    </a>
 
 </div>
 @endsection
