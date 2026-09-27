@@ -49,4 +49,21 @@ class PushSubscriptionController extends Controller
 
         return response()->json(['ok' => true]);
     }
+
+    /**
+     * Cek apakah endpoint terdaftar di server (untuk diagnosa HP).
+     */
+    public function check(Request $request): JsonResponse
+    {
+        $request->validate(['endpoint' => 'required|string']);
+
+        $exists = PushSubscription::where('user_id', Auth::id())
+            ->where('endpoint', $request->endpoint)
+            ->exists();
+
+        return response()->json([
+            'registered' => $exists,
+            'total_for_user' => PushSubscription::where('user_id', Auth::id())->count(),
+        ]);
+    }
 }

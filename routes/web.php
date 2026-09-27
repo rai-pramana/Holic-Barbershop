@@ -116,4 +116,10 @@ Route::middleware(['auth', 'role:customer'])
         // Push notifications
         Route::post('push/subscribe',   [PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
         Route::post('push/unsubscribe',  [PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
+        Route::post('push/check',       [PushSubscriptionController::class, 'check'])->name('push.check');
+
+        // Diagnosa notifikasi (sementara — untuk debug HP)
+        Route::get('push/diagnose', function () {
+            return view('customer.push-diagnose');
+        })->name('push.diagnose');
     });
