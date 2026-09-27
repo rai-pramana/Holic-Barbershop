@@ -129,11 +129,14 @@
         </form>
     </div>
 
-    {{-- Kembali (seperti halaman Ambil Antrean) --}}
+    {{-- Kembali (style halaman Ambil Antrean) --}}
     <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('customer.dashboard') }}"
-       class="w-full flex items-center justify-center gap-2 bg-gray-100 text-gray-700 font-semibold py-3 rounded-2xl hover:bg-gray-200 transition-colors text-sm">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        Kembali ke Dashboard
+       class="flex items-center justify-center gap-1.5 mt-3
+              text-gray-500 hover:text-gray-800 text-sm font-medium transition-colors">
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Kembali
     </a>
 
 </div>
