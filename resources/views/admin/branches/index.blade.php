@@ -62,7 +62,7 @@
                                 Edit
                             </a>
                             <form method="POST" action="{{ route('admin.branches.destroy', $branch) }}"
-                                  onsubmit="return confirm('Hapus cabang {{ $branch->name }}? Semua data terkait akan ikut terhapus.')">
+                                  onsubmit="return confirm('Hapus cabang {{ $branch->name }}? Hanya bisa dihapus jika tidak memiliki data antrean.')">
                                 @csrf @method('DELETE')
                                 <button type="submit" title="Hapus"
                                         class="inline-flex items-center gap-1 text-xs font-semibold bg-red-50 text-red-600 px-2.5 py-1.5 rounded-lg hover:bg-red-100 active:scale-95 transition-all">

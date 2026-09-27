@@ -12,7 +12,7 @@
     <meta property="og:title" content="HOLIC Barbershop — Antrean Online">
     <meta property="og:description" content="Ambil nomor antrean dari mana saja. Pilih barber favorit, pantau status real-time.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="/images/holic-logo.png">
+    <meta property="og:image" content="{{ url('/images/holic-logo.png') }}">
     <meta name="twitter:card" content="summary">
     <meta name="theme-color" content="#0a0f1a">
     <script src="https://cdn.tailwindcss.com"></script>

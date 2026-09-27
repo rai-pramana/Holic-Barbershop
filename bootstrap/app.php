@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Trust Railway reverse proxy for HTTPS detection
         $middleware->trustProxies(at: '*');
+
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
