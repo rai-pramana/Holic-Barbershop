@@ -79,7 +79,6 @@
                         class="bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
                     Simpan Perubahan
                 </button>
-                <span class="text-xs text-gray-400 capitalize">Role: {{ $user->role }}</span>
             </div>
         </form>
     </div>
