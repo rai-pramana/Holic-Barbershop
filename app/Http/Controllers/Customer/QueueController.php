@@ -105,12 +105,13 @@ class QueueController extends Controller
                 ->where('is_available', true)
                 ->firstOrFail();
         } else {
-            // Auto-assign: barber with fewest pending/active queues
+            // Auto-assign: 1) antrean menunggu paling sedikit,
+            // 2) bila sama → yang paling sedikit melayani hari ini.
             $barber = Barber::query()
                 ->where('branch_id', $branch->id)
                 ->where('is_available', true)
                 ->get()
-                ->sortBy(fn($b) => $b->getPendingQueueCount())
+                ->sortBy(fn($b) => [$b->getPendingQueueCount(), $b->getTodayServedCount()])
                 ->first();
 
             if (!$barber) {

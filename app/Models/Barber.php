@@ -55,6 +55,19 @@ class Barber extends Model
     }
 
     /**
+     * Jumlah pelanggan yang sudah dilayani hari ini (status completed/skipped).
+     * Dipakai sebagai tie-breaker auto-assign: barber tersibuk
+     * (paling banyak melayani) dihindari bila antrean sama banyak.
+     */
+    public function getTodayServedCount(): int
+    {
+        return $this->queues()
+            ->whereIn('status', ['completed', 'skipped'])
+            ->whereDate('created_at', today())
+            ->count();
+    }
+
+    /**
      * Get rich queue stats for the take-queue barber selection page.
      * Returns:
      *   pending_count        — total queues still waiting
