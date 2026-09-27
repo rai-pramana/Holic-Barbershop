@@ -13,6 +13,7 @@
         <h1 class="font-bold text-gray-900 mb-1">Diagnosa Notifikasi HP</h1>
         <p class="text-xs text-gray-500 mb-4">Buka halaman ini di <strong>Chrome HP</strong>, lalu tekan tombol di bawah. Kirim hasilnya (screenshot/teks) ke admin.</p>
         <button id="diag-btn" class="w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-bold">Jalankan Diagnosa</button>
+        <button id="test-btn" class="w-full py-3 rounded-xl bg-white text-gray-900 text-sm font-bold border border-gray-200 mt-2">Kirim Tes Push ke HP Ini</button>
         <pre id="diag-out" class="mt-4 text-[11px] leading-relaxed bg-gray-950 text-green-300 rounded-xl p-4 whitespace-pre-wrap break-all min-h-[200px]">Belum dijalankan.</pre>
     </div>
 </div>
@@ -55,6 +56,24 @@ document.getElementById('diag-btn').addEventListener('click', async () => {
         L.push('ERROR: ' + (e && e.message ? e.message : e));
     }
     out.textContent = L.join('\n');
+});
+document.getElementById('test-btn').addEventListener('click', async () => {
+    const out = document.getElementById('diag-out');
+    out.textContent = 'Mengirim tes push dari server...';
+    try {
+        const csrf = document.querySelector('meta[name="csrf-token"]').content;
+        const res = await fetch('{{ route('customer.push.test') }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+        });
+        const j = await res.json();
+        out.textContent = 'Hasil kirim: ' + JSON.stringify(j)
+            + '\n\nTunggu ±10 detik. Jika TIDAK muncul di HP (bahkan dengan layar menyala),'
+            + ' berarti Chrome HP dibatasi sistem (battery optimization / background data).'
+            + '\nCek: Setelan HP > Aplikasi > Chrome > Baterai = Tidak dibatasi.';
+    } catch (e) {
+        out.textContent = 'ERROR: ' + (e && e.message ? e.message : e);
+    }
 });
 </script>
 @endsection
