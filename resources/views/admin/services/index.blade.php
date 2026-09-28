@@ -13,6 +13,24 @@
 @endsection
 
 @section('content')
+<form method="GET" action="{{ route('admin.services.index') }}" id="service-filter-form" class="flex flex-wrap gap-2 items-end mb-4">
+    @include('components.filter-dropdown', [
+        'id' => 'sv-branch', 'name' => 'branch_id', 'label' => '',
+        'formId' => 'service-filter-form',
+        'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+        'options' => $branches->pluck('name', 'id')->toArray(),
+        'value' => $branchFilter ?? '',
+        'allLabel' => 'Semua Cabang',
+    ])
+    @include('components.filter-dropdown', [
+        'id' => 'sv-status', 'name' => 'status_filter', 'label' => '',
+        'formId' => 'service-filter-form',
+        'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+        'options' => ['active' => 'Aktif', 'inactive' => 'Nonaktif'],
+        'value' => $statusFilter ?? '',
+        'allLabel' => 'Semua Status',
+    ])
+</form>
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full">
@@ -85,3 +103,7 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+@include('components.filter-dropdown-script')
+@endpush

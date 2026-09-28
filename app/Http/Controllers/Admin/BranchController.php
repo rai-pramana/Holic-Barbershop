@@ -15,9 +15,28 @@ class BranchController extends Controller
 
     public function index(Request $request): View
     {
-        [$query, $sort, $dir] = $this->applySort(Branch::withCount(['barbers', 'services']), $request, ['name', 'created_at'], 'created_at', 'desc');
-        $branches = $query->paginate(10);
-        return view('admin.branches.index', compact('branches', 'sort', 'dir'));
+        $query = Branch::withCount(['barbers', 'services']);
+
+        // Filter status: active / inactive (whitelist).
+        $statusFilter = $request->query('status_filter', '');
+        if (in_array($statusFilter, ['active', 'inactive'], true)) {
+            $query->where('is_active', $statusFilter === 'active');
+        }
+
+        // Sort: name / created_at langsung; barbers / services via withCount.
+        $sort = $request->query('sort', 'created_at');
+        $dir = strtolower($request->query('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
+        $allowed = ['name', 'created_at', 'barbers', 'services'];
+        if (! in_array($sort, $allowed, true)) {
+            $sort = 'created_at';
+            $dir = 'desc';
+        }
+        $column = $sort === 'barbers' ? 'barbers_count' : ($sort === 'services' ? 'services_count' : ($sort === 'name' ? 'name' : 'branches.created_at'));
+        // Tiebreaker id agar paginasi deterministik.
+        $query->orderBy($column, $dir)->orderBy('branches.id', $dir);
+
+        $branches = $query->paginate(10)->withQueryString();
+        return view('admin.branches.index', compact('branches', 'sort', 'dir', 'statusFilter'));
     }
 
     public function create(): View

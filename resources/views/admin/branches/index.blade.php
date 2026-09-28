@@ -13,6 +13,16 @@
 @endsection
 
 @section('content')
+<form method="GET" action="{{ route('admin.branches.index') }}" id="branch-filter-form" class="flex flex-wrap gap-2 items-end mb-4">
+    @include('components.filter-dropdown', [
+        'id' => 'br-status', 'name' => 'status_filter', 'label' => '',
+        'formId' => 'branch-filter-form',
+        'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+        'options' => ['active' => 'Aktif', 'inactive' => 'Nonaktif'],
+        'value' => $statusFilter ?? '',
+        'allLabel' => 'Semua Status',
+    ])
+</form>
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full">
@@ -20,8 +30,8 @@
                 <tr class="border-b border-gray-100 bg-gray-50">
                     @include('components.sort-th', ['label' => 'Nama Cabang', 'key' => 'name', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Alamat</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Barber</th>
-                    <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Layanan</th>
+                    @include('components.sort-th', ['label' => 'Barber', 'key' => 'barbers', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
+                    @include('components.sort-th', ['label' => 'Layanan', 'key' => 'services', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc'])
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Jam Buka</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Status</th>
                     <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 sm:px-6 py-3 whitespace-nowrap">Aksi</th>
@@ -90,3 +100,7 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+@include('components.filter-dropdown-script')
+@endpush

@@ -16,7 +16,20 @@
 @php
     $sortQs = fn($s, $d) => request()->url() . '?' . http_build_query(array_merge(request()->except(['sort', 'dir', 'page']), ['sort' => $s, 'dir' => $d]));
 @endphp
-<div class="flex justify-end mb-4">
+<div class="flex flex-wrap gap-2 items-end justify-end mb-4">
+    <form method="GET" action="{{ route('admin.barbers.index') }}" id="barber-filter-form" class="flex flex-wrap gap-2 items-end">
+        @foreach(request()->except(['branch_id', 'page']) as $k => $v)
+            <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+        @endforeach
+        @include('components.filter-dropdown', [
+            'id' => 'bb-branch', 'name' => 'branch_id', 'label' => '',
+            'formId' => 'barber-filter-form',
+            'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+            'options' => $branches->pluck('name', 'id')->toArray(),
+            'value' => $branchFilter ?? '',
+            'allLabel' => 'Semua Cabang',
+        ])
+    </form>
     @include('components.filter-dropdown', [
         'id' => 'b-sort', 'name' => '', 'label' => '',
         'icon' => '<svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>',

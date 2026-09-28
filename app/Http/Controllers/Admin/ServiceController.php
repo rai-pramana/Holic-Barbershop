@@ -16,9 +16,22 @@ class ServiceController extends Controller
 
     public function index(Request $request): View
     {
-        [$query, $sort, $dir] = $this->applySort(Service::with('branch'), $request, ['name', 'price', 'duration_minutes', 'created_at'], 'created_at', 'desc');
-        $services = $query->paginate(15);
-        return view('admin.services.index', compact('services', 'sort', 'dir'));
+        $query = Service::with('branch');
+
+        // Filter cabang + status (whitelist).
+        $branchFilter = $request->query('branch_id', '');
+        if ($branchFilter !== '' && ctype_digit((string) $branchFilter)) {
+            $query->where('services.branch_id', $branchFilter);
+        }
+        $statusFilter = $request->query('status_filter', '');
+        if (in_array($statusFilter, ['active', 'inactive'], true)) {
+            $query->where('services.is_active', $statusFilter === 'active');
+        }
+
+        [$query, $sort, $dir] = $this->applySort($query, $request, ['name', 'price', 'duration_minutes', 'created_at'], 'created_at', 'desc');
+        $services = $query->paginate(15)->withQueryString();
+        $branches = Branch::orderBy('name')->get();
+        return view('admin.services.index', compact('services', 'sort', 'dir', 'branches', 'branchFilter', 'statusFilter'));
     }
 
     public function create(): View

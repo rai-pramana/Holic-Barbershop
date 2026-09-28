@@ -65,6 +65,9 @@
                     <div class="min-w-0">
                         <p class="text-white font-bold truncate">{{ $barber->name }}</p>
                         @if($barber->specialty)<p class="text-gray-400 text-xs truncate">{{ $barber->specialty }}</p>@endif
+                        @if(!$barber->is_available)
+                            <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-[10px] font-semibold bg-red-500/20 text-red-200 border border-red-400/30 whitespace-nowrap">Tidak Tersedia — selesaikan antrean tersisa</span>
+                        @endif
                     </div>
                     <div class="ml-auto text-right flex-shrink-0">
                         <span class="text-xs text-gray-400">Antrean</span>

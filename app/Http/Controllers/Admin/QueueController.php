@@ -88,8 +88,16 @@ class QueueController extends Controller
 
         $barbers = [];
         if ($selectedBranch) {
+            // Tampilkan barber tersedia + barber tidak tersedia yang MASIH
+            // punya antrean aktif hari ini (agar bisa diselesaikan di loket).
             $barbers = Barber::where('branch_id', $selectedBranch->id)
-                ->where('is_available', true)
+                ->where(function ($q) {
+                    $q->where('is_available', true)
+                      ->orWhereHas('queues', function ($qq) {
+                          $qq->whereDate('queues.created_at', today())
+                             ->whereIn('status', ['active', 'called', 'pending']);
+                      });
+                })
                 ->with(['queues' => function ($q) {
                     $q->whereDate('queues.created_at', today())
                       ->whereIn('status', ['active', 'called', 'pending'])
@@ -188,7 +196,13 @@ class QueueController extends Controller
         $branchId = $request->branch_id;
 
         $data = Barber::where('branch_id', $branchId)
-            ->where('is_available', true)
+            ->where(function ($q) {
+                $q->where('is_available', true)
+                  ->orWhereHas('queues', function ($qq) {
+                      $qq->whereDate('queues.created_at', today())
+                         ->whereIn('status', ['active', 'called', 'pending']);
+                  });
+            })
             ->with(['queues' => function ($q) {
                 $q->whereDate('queues.created_at', today())
                   ->whereIn('status', ['active', 'called', 'pending'])

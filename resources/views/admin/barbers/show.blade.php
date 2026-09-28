@@ -12,7 +12,7 @@
 @endsection
 
 @section('content')
-<div class="max-w-3xl mx-auto sm:mx-0 space-y-5">
+<div class="max-w-3xl mx-auto space-y-5">
 
     {{-- Barber Info Card --}}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-5">

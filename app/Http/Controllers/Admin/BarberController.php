@@ -16,9 +16,18 @@ class BarberController extends Controller
 
     public function index(Request $request): View
     {
-        [$query, $sort, $dir] = $this->applySort(Barber::with('branch'), $request, ['name', 'created_at'], 'created_at', 'desc');
-        $barbers = $query->paginate(15);
-        return view('admin.barbers.index', compact('barbers', 'sort', 'dir'));
+        $query = Barber::with('branch');
+
+        // Filter cabang (whitelist numerik).
+        $branchFilter = $request->query('branch_id', '');
+        if ($branchFilter !== '' && ctype_digit((string) $branchFilter)) {
+            $query->where('barbers.branch_id', $branchFilter);
+        }
+
+        [$query, $sort, $dir] = $this->applySort($query, $request, ['name', 'created_at'], 'created_at', 'desc');
+        $barbers = $query->paginate(15)->withQueryString();
+        $branches = Branch::orderBy('name')->get();
+        return view('admin.barbers.index', compact('barbers', 'sort', 'dir', 'branches', 'branchFilter'));
     }
 
     public function create(): View
@@ -90,6 +99,10 @@ class BarberController extends Controller
 
     public function destroy(Barber $barber): RedirectResponse
     {
+        if ($barber->queues()->exists()) {
+            return redirect()->route('admin.barbers.index')
+                ->with('error', 'Barber tidak dapat dihapus karena masih memiliki data antrean. Nonaktifkan saja agar histori tetap utuh.');
+        }
         $barber->delete();
         return redirect()->route('admin.barbers.index')
             ->with('success', 'Barber berhasil dihapus.');
