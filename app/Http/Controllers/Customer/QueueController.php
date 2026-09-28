@@ -270,7 +270,10 @@ class QueueController extends Controller
         $query = Queue::with(['branch', 'barber', 'service'])
             ->where('customer_id', $user->id)
             ->whereIn('status', ['completed', 'skipped', 'expired'])
-            ->latest();
+            // Tiebreaker id: created_at bisa kembar (seed/import detik sama) —
+            // tanpa ini urutan antar-query tidak deterministik, baris bocor ke 2 halaman
+            ->orderBy('queues.created_at', 'desc')
+            ->orderBy('queues.id', 'desc');
 
         if ($request->filled('status') && in_array($request->status, ['completed', 'skipped', 'expired'], true)) {
             $query->where('status', $request->status);
