@@ -5,7 +5,7 @@
 @section('page-subtitle', 'Antrean #' . $queue->queue_number . ' — ' . $queue->branch->name)
 
 @section('page-actions')
-<a href="{{ route('admin.queues.index') }}"
+<a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('admin.queues.index') }}"
    class="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-200 transition-colors">
     ← Kembali
 </a>
