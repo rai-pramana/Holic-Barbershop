@@ -43,6 +43,10 @@ class QueueController extends Controller
     public function take(Branch $branch): View|RedirectResponse
     {
         abort_unless($branch->is_active, 404);
+        if (! $branch->isOpen()) {
+            return redirect()->route('customer.dashboard')
+                ->with('error', "Cabang {$branch->name} sedang tutup (jam operasional {$branch->open_time}–{$branch->close_time}). Silakan kembali saat jam operasional.");
+        }
         $user = Auth::user();
 
         // Check for existing active queue at this branch
@@ -81,6 +85,10 @@ class QueueController extends Controller
     public function store(Request $request, Branch $branch): RedirectResponse
     {
         abort_unless($branch->is_active, 404);
+        if (! $branch->isOpen()) {
+            return redirect()->route('customer.dashboard')
+                ->with('error', "Cabang {$branch->name} sedang tutup (jam operasional {$branch->open_time}–{$branch->close_time}). Silakan kembali saat jam operasional.");
+        }
         $user = Auth::user();
 
         // Prevent double queue

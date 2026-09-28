@@ -46,6 +46,24 @@ class Branch extends Model
     }
 
     /**
+     * Apakah cabang sedang buka sekarang (berdasar open_time/close_time).
+     * Mendukung jam lewat tengah malam (mis. 20:00–02:00).
+     * Tanpa jam yang diset dianggap selalu buka.
+     */
+    public function isOpen(?\Carbon\CarbonInterface $at = null): bool
+    {
+        if (! $this->open_time || ! $this->close_time) {
+            return true;
+        }
+
+        $now = ($at ?? now())->format('H:i');
+
+        return $this->open_time <= $this->close_time
+            ? ($now >= $this->open_time && $now <= $this->close_time)
+            : ($now >= $this->open_time || $now <= $this->close_time);
+    }
+
+    /**
      * Generate next queue number for this branch.
      * Format: Q{prefix}{sequential} — e.g. Q0001 (Pusat), Q1001 (Selatan)
      * Sequence resets daily per branch.

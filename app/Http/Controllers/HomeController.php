@@ -86,14 +86,6 @@ class HomeController extends Controller
 
     private function isOpenNow(Branch $branch): bool
     {
-        if (!$branch->open_time || !$branch->close_time) {
-            return true;
-        }
-
-        $now = now()->format('H:i');
-
-        return $branch->open_time <= $branch->close_time
-            ? ($now >= $branch->open_time && $now <= $branch->close_time)
-            : ($now >= $branch->open_time || $now <= $branch->close_time);
+        return $branch->isOpen();
     }
 }
