@@ -58,6 +58,12 @@ class WalkinQueueController extends Controller
             'guest_name' => 'required|string|max:100',
             'guest_phone'=> 'nullable|string|max:20|regex:/^[0-9+()\-\s]+$/',
             'notes'      => 'nullable|string|max:500',
+        ], [
+            'service_id.required' => 'Silakan pilih layanan terlebih dahulu.',
+            'service_id.exists'   => 'Layanan yang dipilih tidak valid.',
+            'barber_id.exists'    => 'Barber yang dipilih tidak valid.',
+            'guest_name.required' => 'Nama pelanggan wajib diisi.',
+            'guest_phone.regex'   => 'Nomor HP hanya boleh berisi angka, +, -, spasi, dan kurung.',
         ]);
 
         $branch  = Branch::findOrFail($request->branch_id);

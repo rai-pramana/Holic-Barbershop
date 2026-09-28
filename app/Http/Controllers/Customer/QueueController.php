@@ -102,6 +102,10 @@ class QueueController extends Controller
             'service_id' => 'required|exists:services,id',
             'barber_id'  => 'nullable|exists:barbers,id',
             'notes'      => 'nullable|string|max:500',
+        ], [
+            'service_id.required' => 'Silakan pilih layanan terlebih dahulu.',
+            'service_id.exists'   => 'Layanan yang dipilih tidak valid.',
+            'barber_id.exists'    => 'Barber yang dipilih tidak valid.',
         ]);
 
         // Validate service belongs to this branch
