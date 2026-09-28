@@ -117,63 +117,6 @@ class Queue extends Model
         };
     }
 
-    public function getStatusColorAttribute(): string
-    {
-        return match ($this->status) {
-            'pending'   => 'yellow',
-            'active'    => 'blue',
-            'called'    => 'purple',
-            'completed' => 'green',
-            'skipped'   => 'red',
-            'expired'   => 'gray',
-            default     => 'gray',
-        };
-    }
-
-    public function getStatusBadgeClassAttribute(): string
-    {
-        return match ($this->status) {
-            'pending'   => 'badge-warning',
-            'active'    => 'badge-info',
-            'called'    => 'badge-primary',
-            'completed' => 'badge-success',
-            'skipped'   => 'badge-danger',
-            'expired'   => 'badge-secondary',
-            default     => 'badge-secondary',
-        };
-    }
-
-    /**
-     * Get QR code content URL (for admin to scan)
-     */
-    public function getQrCheckinUrlAttribute(): string
-    {
-        return route('admin.checkin.confirm', $this->validation_token);
-    }
-
-    /**
-     * Calculate estimated waiting time in minutes
-     */
-    public function getEstimatedWaitMinutesAttribute(): int
-    {
-        $queuesAhead = Queue::where('branch_id', $this->branch_id)
-            ->where('barber_id', $this->barber_id)
-            ->whereIn('status', ['active', 'called'])
-            ->where('id', '<', $this->id)
-            ->whereDate('created_at', today())
-            ->count();
-
-        $pendingAhead = Queue::where('branch_id', $this->branch_id)
-            ->where('barber_id', $this->barber_id)
-            ->where('status', 'pending')
-            ->where('id', '<', $this->id)
-            ->whereDate('created_at', today())
-            ->count();
-
-        $duration = $this->service->duration_minutes ?? 30;
-        return ($queuesAhead + $pendingAhead) * $duration;
-    }
-
     public function getPositionInQueueAttribute(): int
     {
         return Queue::where('branch_id', $this->branch_id)

@@ -24,7 +24,7 @@ class BarberController extends Controller
             $query->where('barbers.branch_id', $branchFilter);
         }
 
-        [$query, $sort, $dir] = $this->applySort($query, $request, ['name', 'created_at'], 'created_at', 'desc');
+        [$query, $sort, $dir] = $this->applySort($query, $request, ['name', 'created_at'], 'created_at', 'desc', 'barbers');
         $barbers = $query->paginate(15)->withQueryString();
         $branches = Branch::orderBy('name')->get();
         return view('admin.barbers.index', compact('barbers', 'sort', 'dir', 'branches', 'branchFilter'));
@@ -40,7 +40,7 @@ class BarberController extends Controller
     {
         $request->validate([
             'name'         => 'required|string|max:255',
-            'phone'        => 'nullable|string|max:20',
+            'phone'        => 'nullable|string|max:20|regex:/^[0-9+()\-\s]+$/',
             'branch_id'    => 'required|exists:branches,id',
             'specialty'    => 'nullable|string|max:255',
             'bio'          => 'nullable|string',
@@ -77,7 +77,7 @@ class BarberController extends Controller
     {
         $request->validate([
             'name'         => 'required|string|max:255',
-            'phone'        => 'nullable|string|max:20',
+            'phone'        => 'nullable|string|max:20|regex:/^[0-9+()\-\s]+$/',
             'branch_id'    => 'required|exists:branches,id',
             'specialty'    => 'nullable|string|max:255',
             'bio'          => 'nullable|string',

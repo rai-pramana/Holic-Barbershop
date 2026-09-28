@@ -56,7 +56,7 @@ class WalkinQueueController extends Controller
             'service_id' => 'required|exists:services,id',
             'barber_id'  => 'nullable|exists:barbers,id',
             'guest_name' => 'required|string|max:100',
-            'guest_phone'=> 'nullable|string|max:20',
+            'guest_phone'=> 'nullable|string|max:20|regex:/^[0-9+()\-\s]+$/',
             'notes'      => 'nullable|string|max:500',
         ]);
 

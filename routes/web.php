@@ -96,8 +96,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('queues/{queue}/skip', [Admin\QueueController::class, 'skip'])->name('queues.skip');
         Route::get('notifications/poll', [Admin\QueueController::class, 'notificationPoll'])->name('notifications.poll');
 
-        // ── Loket Check-in ────────────────────────────────────────────────
-        Route::get('checkin', fn() => redirect()->route('admin.queues.manage'))->name('checkin.index');
+        // ── Loket Check-in (panel tergabung di manage) ────────────────────────
         Route::post('checkin/search', [Admin\CheckinController::class, 'search'])->name('checkin.search');
         Route::get('checkin/{token}', [Admin\CheckinController::class, 'confirm'])->name('checkin.confirm');
         Route::post('checkin/{queue}/validate', [Admin\CheckinController::class, 'validate_checkin'])->name('checkin.validate');
@@ -133,9 +132,4 @@ Route::middleware(['auth', 'role:customer', 'verified.email'])
         Route::post('push/unsubscribe',  [PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
         Route::post('push/check',       [PushSubscriptionController::class, 'check'])->name('push.check');
         Route::post('push/test',        [PushSubscriptionController::class, 'test'])->name('push.test');
-
-        // Diagnosa notifikasi (sementara — untuk debug HP)
-        Route::get('push/diagnose', function () {
-            return view('customer.push-diagnose');
-        })->name('push.diagnose');
     });

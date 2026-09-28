@@ -13,9 +13,4 @@ class PushSubscription extends Model
         'auth_token',
         'content_encoding',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

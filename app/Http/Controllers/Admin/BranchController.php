@@ -49,7 +49,7 @@ class BranchController extends Controller
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'address'      => 'required|string|max:500',
-            'phone'        => 'nullable|string|max:20',
+            'phone'        => 'nullable|string|max:20|regex:/^[0-9+()\-\s]+$/',
             'city'         => 'nullable|string|max:100',
             'description'  => 'nullable|string',
             'open_time'    => 'required|date_format:H:i',
@@ -83,7 +83,7 @@ class BranchController extends Controller
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'address'      => 'required|string|max:500',
-            'phone'        => 'nullable|string|max:20',
+            'phone'        => 'nullable|string|max:20|regex:/^[0-9+()\-\s]+$/',
             'city'         => 'nullable|string|max:100',
             'description'  => 'nullable|string',
             'open_time'    => 'required|date_format:H:i',

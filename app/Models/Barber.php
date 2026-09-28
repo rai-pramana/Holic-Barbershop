@@ -33,11 +33,6 @@ class Barber extends Model
         return $this->hasMany(Queue::class);
     }
 
-    public function activeQueues()
-    {
-        return $this->queues()->whereIn('status', ['active', 'called']);
-    }
-
     public function todayQueues()
     {
         return $this->queues()->whereDate('created_at', today());

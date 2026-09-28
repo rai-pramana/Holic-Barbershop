@@ -104,7 +104,7 @@
                     </div>
                     <div class="bg-gray-50 rounded-xl px-2 py-2.5 text-center">
                         <p class="text-xs text-gray-400 mb-0.5">Barber</p>
-                        <p class="text-xs font-semibold text-gray-800 truncate">{{ $queue->barber->name }}</p>
+                        <p class="text-xs font-semibold text-gray-800 truncate">{{ $queue->barber?->name ?? '—' }}</p>
                     </div>
                     <div class="bg-gray-50 rounded-xl px-2 py-2.5 text-center">
                         <p class="text-xs text-gray-400 mb-0.5">Durasi</p>

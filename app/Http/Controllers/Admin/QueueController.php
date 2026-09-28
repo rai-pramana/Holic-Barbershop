@@ -24,33 +24,44 @@ class QueueController extends Controller
     {
         Queue::expirePending();
 
+        // Validasi filter tanggal lebih dulu — Carbon::parse atas input mentah = 500.
+        $validated = $request->validate([
+            'date_from' => 'nullable|date',
+            'date_to'   => 'nullable|date|after_or_equal:date_from',
+            'date'      => 'nullable|date',
+        ]);
+
         $query = Queue::with(['customer', 'barber', 'service', 'branch']);
 
-        if ($request->filled('branch_id')) {
-            $query->where('queues.branch_id', $request->branch_id);
+        // Filter whitelist: numerik untuk FK, enum untuk status.
+        $branchFilter = $request->query('branch_id', '');
+        if ($branchFilter !== '' && ctype_digit((string) $branchFilter)) {
+            $query->where('queues.branch_id', $branchFilter);
         }
-        if ($request->filled('status')) {
-            $query->where('queues.status', $request->status);
+        $statusFilter = $request->query('status', '');
+        if (in_array($statusFilter, ['pending', 'active', 'called', 'completed', 'skipped', 'expired'], true)) {
+            $query->where('queues.status', $statusFilter);
         }
-        if ($request->filled('barber_id')) {
-            $query->where('queues.barber_id', $request->barber_id);
+        $barberFilter = $request->query('barber_id', '');
+        if ($barberFilter !== '' && ctype_digit((string) $barberFilter)) {
+            $query->where('queues.barber_id', $barberFilter);
         }
 
-        // Support both single date and date range
-        if ($request->filled('date_from') && $request->filled('date_to')) {
+        // Support both single date and date range (pakai nilai tervalidasi)
+        if (! empty($validated['date_from']) && ! empty($validated['date_to'])) {
             $query->whereBetween('queues.created_at', [
-                \Carbon\Carbon::parse($request->date_from)->startOfDay(),
-                \Carbon\Carbon::parse($request->date_to)->endOfDay(),
+                \Carbon\Carbon::parse($validated['date_from'])->startOfDay(),
+                \Carbon\Carbon::parse($validated['date_to'])->endOfDay(),
             ]);
-            $dateLabel = \Carbon\Carbon::parse($request->date_from)->isoFormat('D MMM YYYY')
+            $dateLabel = \Carbon\Carbon::parse($validated['date_from'])->isoFormat('D MMM YYYY')
                 . ' — '
-                . \Carbon\Carbon::parse($request->date_to)->isoFormat('D MMM YYYY');
-        } elseif ($request->filled('date_from')) {
-            $query->whereDate('queues.created_at', $request->date_from);
-            $dateLabel = \Carbon\Carbon::parse($request->date_from)->isoFormat('dddd, D MMMM YYYY');
-        } elseif ($request->filled('date')) {
-            $query->whereDate('queues.created_at', $request->date);
-            $dateLabel = \Carbon\Carbon::parse($request->date)->isoFormat('dddd, D MMMM YYYY');
+                . \Carbon\Carbon::parse($validated['date_to'])->isoFormat('D MMM YYYY');
+        } elseif (! empty($validated['date_from'])) {
+            $query->whereDate('queues.created_at', $validated['date_from']);
+            $dateLabel = \Carbon\Carbon::parse($validated['date_from'])->isoFormat('dddd, D MMMM YYYY');
+        } elseif (! empty($validated['date'])) {
+            $query->whereDate('queues.created_at', $validated['date']);
+            $dateLabel = \Carbon\Carbon::parse($validated['date'])->isoFormat('dddd, D MMMM YYYY');
         } else {
             $query->whereDate('queues.created_at', today());
             $dateLabel = now()->isoFormat('dddd, D MMMM YYYY');
@@ -301,6 +312,8 @@ class QueueController extends Controller
         } else {
             $query->orderBy($map[$sort], $dir);
         }
+        // Tiebreaker id: cegah baris bocor/duplikat antar halaman.
+        $query->orderBy('queues.id', $dir);
 
         return [$query, $sort, $dir];
     }

@@ -5,23 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Queue;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CheckinController extends Controller
 {
-    /**
-     * Halaman loket check-in: scanner QR + input manual
-     */
-    public function index()
-    {
-        $branches = Branch::where('is_active', true)->get();
-        return view('admin.checkin.index', compact('branches'));
-    }
-
-    /**
-     * Cari antrean berdasarkan nomor antrean (input manual)
-     */
-    public function search(Request $request)
+    public function search(Request $request): RedirectResponse
     {
         $request->validate([
             'queue_number' => 'required|string',
@@ -29,11 +19,11 @@ class CheckinController extends Controller
         ]);
 
         $query = Queue::with(['customer', 'barber', 'service', 'branch'])
-            ->where('queue_number', strtoupper(trim($request->queue_number)))
-            ->whereDate('created_at', today());
+            ->where('queues.queue_number', strtoupper(trim($request->queue_number)))
+            ->whereDate('queues.created_at', today());
 
         if ($request->filled('branch_id')) {
-            $query->where('branch_id', $request->branch_id);
+            $query->where('queues.branch_id', $request->branch_id);
         }
 
         $queue = $query->first();
@@ -45,10 +35,7 @@ class CheckinController extends Controller
         return redirect()->route('admin.checkin.confirm', $queue->validation_token);
     }
 
-    /**
-     * Tampilkan halaman konfirmasi sebelum validasi (hasil scan QR atau search)
-     */
-    public function confirm(string $token)
+    public function confirm(string $token): View
     {
         $queue = Queue::with(['customer', 'barber', 'service', 'branch'])
             ->where('validation_token', $token)
@@ -57,10 +44,7 @@ class CheckinController extends Controller
         return view('admin.checkin.confirm', compact('queue'));
     }
 
-    /**
-     * Proses validasi — ubah status pending → active
-     */
-    public function validate_checkin(Queue $queue)
+    public function validate_checkin(Queue $queue): RedirectResponse
     {
         if (! $queue->isPending()) {
             $message = match ($queue->status) {

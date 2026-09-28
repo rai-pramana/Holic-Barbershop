@@ -4,7 +4,7 @@
 @section('page-title', 'Konfirmasi Kehadiran Customer')
 
 @section('page-actions')
-<a href="{{ route('admin.checkin.index') }}"
+<a href="{{ route('admin.queues.manage') }}"
    class="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-200 transition-colors flex items-center gap-2">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
     Kembali ke Loket
@@ -13,13 +13,6 @@
 
 @section('content')
 <div class="max-w-xl mx-auto">
-
-    @if(session('warning'))
-    <div class="flex items-start gap-3 bg-gray-100 border border-gray-300 text-gray-700 rounded-2xl p-4 text-sm mb-6">
-        <svg class="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <p>{{ session('warning') }}</p>
-    </div>
-    @endif
 
     {{-- Queue Info Card --}}
     <div class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
@@ -63,8 +56,8 @@
                 </div>
                 <div class="bg-gray-50 rounded-2xl p-4 min-w-0">
                     <p class="text-xs text-gray-400 font-medium mb-1">Barber</p>
-                    <p class="font-bold text-gray-900">{{ $queue->barber->name }}</p>
-                    @if($queue->barber->specialty)
+                    <p class="font-bold text-gray-900">{{ $queue->barber?->name ?? '—' }}</p>
+                    @if($queue->barber?->specialty)
                         <p class="text-xs text-gray-500">{{ $queue->barber->specialty }}</p>
                     @endif
                 </div>

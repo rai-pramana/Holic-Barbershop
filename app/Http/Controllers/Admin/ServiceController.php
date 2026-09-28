@@ -28,7 +28,7 @@ class ServiceController extends Controller
             $query->where('services.is_active', $statusFilter === 'active');
         }
 
-        [$query, $sort, $dir] = $this->applySort($query, $request, ['name', 'price', 'duration_minutes', 'created_at'], 'created_at', 'desc');
+        [$query, $sort, $dir] = $this->applySort($query, $request, ['name', 'price', 'duration_minutes', 'created_at'], 'created_at', 'desc', 'services');
         $services = $query->paginate(15)->withQueryString();
         $branches = Branch::orderBy('name')->get();
         return view('admin.services.index', compact('services', 'sort', 'dir', 'branches', 'branchFilter', 'statusFilter'));

@@ -28,18 +28,26 @@ class RekapController extends Controller
                 'month'     => [now()->startOfMonth(), now()->endOfMonth()],
                 default     => [now()->startOfDay(), now()->endOfDay()], // today
             };
-        } elseif ($dateFrom && $dateTo) {
-            $from = Carbon::parse($dateFrom)->startOfDay();
-            $to   = Carbon::parse($dateTo)->endOfDay();
-            $preset = 'custom';
-        } elseif ($dateFrom) {
-            $from = Carbon::parse($dateFrom)->startOfDay();
-            $to   = Carbon::parse($dateFrom)->endOfDay();
-            $preset = 'custom';
         } else {
-            $from = now()->startOfDay();
-            $to   = now()->endOfDay();
-            $preset = 'today';
+            $validated = $request->validate([
+                'date_from' => 'nullable|date',
+                'date_to'   => 'nullable|date|after_or_equal:date_from',
+            ]);
+            $dateFrom = $validated['date_from'] ?? null;
+            $dateTo = $validated['date_to'] ?? null;
+            if ($dateFrom && $dateTo) {
+                $from = Carbon::parse($dateFrom)->startOfDay();
+                $to = Carbon::parse($dateTo)->endOfDay();
+                $preset = 'custom';
+            } elseif ($dateFrom) {
+                $from = Carbon::parse($dateFrom)->startOfDay();
+                $to = Carbon::parse($dateFrom)->endOfDay();
+                $preset = 'custom';
+            } else {
+                $from = now()->startOfDay();
+                $to = now()->endOfDay();
+                $preset = 'today';
+            }
         }
 
         $branchId = $request->get('branch_id');
@@ -75,19 +83,25 @@ class RekapController extends Controller
             $avgMinutes = round($avgSeconds / 60);
         }
 
-        // ── Per-barber breakdown ───────────────────────────────────────────
+        // ── Per-barber breakdown (1 query agregat, bukan N×4 count) ──────────
+        $barberAgg = Queue::whereBetween('queues.created_at', [$from, $to])
+            ->when($branchId, fn($q) => $q->where('queues.branch_id', $branchId))
+            ->selectRaw('barber_id, status, COUNT(*) as c')
+            ->whereNotNull('barber_id')
+            ->groupBy('barber_id', 'status')
+            ->get();
+
         $barberStats = Barber::query()
             ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
             ->with(['branch'])
             ->get()
-            ->map(function (Barber $barber) use ($from, $to) {
-                $q = Queue::where('barber_id', $barber->id)
-                    ->whereBetween('created_at', [$from, $to]);
-                $total     = (clone $q)->count();
-                $done      = (clone $q)->where('status', 'completed')->count();
-                $skip      = (clone $q)->where('status', 'skipped')->count();
-                $exp       = (clone $q)->where('status', 'expired')->count();
-                $rate      = $total > 0 ? round($done / $total * 100) : 0;
+            ->map(function (Barber $barber) use ($barberAgg) {
+                $rows  = $barberAgg->where('barber_id', $barber->id);
+                $total = $rows->sum('c');
+                $done  = $rows->where('status', 'completed')->sum('c');
+                $skip  = $rows->where('status', 'skipped')->sum('c');
+                $exp   = $rows->where('status', 'expired')->sum('c');
+                $rate  = $total > 0 ? round($done / $total * 100) : 0;
                 return [
                     'name'     => $barber->name,
                     'branch'   => $barber->branch->name ?? '-',
@@ -102,15 +116,20 @@ class RekapController extends Controller
             ->sortByDesc('total')
             ->values();
 
-        // ── Per-service breakdown ──────────────────────────────────────────
+        // ── Per-service breakdown (1 query agregat) ─────────────────────────
+        $serviceAgg = Queue::whereBetween('queues.created_at', [$from, $to])
+            ->when($branchId, fn($q) => $q->where('queues.branch_id', $branchId))
+            ->selectRaw('service_id, status, COUNT(*) as c')
+            ->groupBy('service_id', 'status')
+            ->get();
+
         $serviceStats = Service::query()
             ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
             ->get()
-            ->map(function (Service $service) use ($from, $to) {
-                $q = Queue::where('service_id', $service->id)
-                    ->whereBetween('created_at', [$from, $to]);
-                $total  = (clone $q)->count();
-                $done   = (clone $q)->where('status', 'completed')->count();
+            ->map(function (Service $service) use ($serviceAgg) {
+                $rows  = $serviceAgg->where('service_id', $service->id);
+                $total = $rows->sum('c');
+                $done  = $rows->where('status', 'completed')->sum('c');
                 $revenue = $done * $service->price;
                 return [
                     'name'    => $service->name,
