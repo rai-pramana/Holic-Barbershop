@@ -42,14 +42,10 @@ class PasswordResetLinkController extends Controller
             // Kirim async via queue agar request tidak menggantung bila
             // provider email lambat/diblokir jaringan. Butuh worker:
             // php artisan queue:work (Railway: tambah service worker).
-            // Tanpa worker, fallback ke kirim langsung dengan timeout.
-            try {
-                SendPasswordResetEmail::dispatch($request->only('email'));
-                $status = Password::RESET_LINK_SENT;
-            } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('Reset dispatch gagal, fallback sync', ['error' => $e->getMessage()]);
-                $status = Password::sendResetLink($request->only('email'));
-            }
+            // TIDAK ada fallback sync — SMTP diblokir Railway (QDISC_DROP),
+            // fallback sync hanya mengulang 500/60s yang sama.
+            SendPasswordResetEmail::dispatch($request->only('email'));
+            $status = Password::RESET_LINK_SENT;
         } else {
             $status = $this->sendResetLinkViaWhatsApp($contact);
         }
