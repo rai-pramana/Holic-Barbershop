@@ -304,7 +304,12 @@ function printQR() {
     w.document.close();
 }
 document.addEventListener('DOMContentLoaded', () => generateQR(currentUrl));
-setInterval(() => { window.location.reload(); }, 15000);
+// QR ikut terganti saat poll halus me-refresh konten → regenerate.
+document.addEventListener('live-content-updated', () => {
+    if (document.getElementById('qr-canvas')) refreshQR();
+});
+// Live update ditangani poll halus layouts/admin (tiap 8 dtk, ganti #live-content
+// hanya bila berubah) — tanpa reload penuh agar scroll & fokus tidak reset.
 setTimeout(() => {
     const f = document.getElementById('flash-msg');
     if(f) f.style.transition='opacity 0.5s', f.style.opacity='0', setTimeout(()=>f.remove(),500);

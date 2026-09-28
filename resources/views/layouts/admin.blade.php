@@ -359,6 +359,9 @@ document.addEventListener('keydown', e => {
 
                 // Hide indicator after 1.5s
                 setTimeout(() => { dot.style.opacity = '0'; }, 1500);
+
+                // Hook halaman: mis. manage regenerate QR yang ikut terganti.
+                document.dispatchEvent(new CustomEvent('live-content-updated'));
             }
         } catch (e) {
             // Network error — silent retry next interval

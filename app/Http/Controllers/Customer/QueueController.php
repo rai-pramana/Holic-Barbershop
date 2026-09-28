@@ -288,7 +288,7 @@ class QueueController extends Controller
             ->orderBy('queues.id', 'desc');
 
         if ($request->filled('status') && in_array($request->status, ['completed', 'skipped', 'expired'], true)) {
-            $query->where('status', $request->status);
+            $query->where('queues.status', $request->status);
         }
 
         $histories = $query->paginate(10)->withQueryString();
