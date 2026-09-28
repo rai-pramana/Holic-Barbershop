@@ -53,8 +53,8 @@
                     @else bg-amber-50 text-amber-600 @endif">
                     {{ $queue->queue_number }}
                 </div>
-                <div class="min-w-0">
-                    <div class="flex items-center gap-2">
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2 min-w-0">
                         <p class="font-bold text-gray-900 text-sm truncate">{{ $queue->branch->name }}</p>
                         {{-- Status Badge (di samping nama cabang — tidak mengubah tinggi) --}}
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold flex-shrink-0 whitespace-nowrap
