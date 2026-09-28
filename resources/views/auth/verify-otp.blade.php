@@ -5,7 +5,7 @@
 @section('subheading', 'Masukkan 6 digit kode yang kami kirim. Berlaku 10 menit.')
 
 @section('content')
-    <p class="text-gray-400 text-sm mb-6 -mt-4">Kode 6 digit dikirim ke <span class="text-white font-semibold">{{ $contact ?? 'WhatsApp/email Anda' }}</span>. Berlaku 10 menit.</p>
+    <p class="text-gray-400 text-sm mb-6 -mt-4">Kode 6 digit dikirim ke <span class="text-white font-semibold">{{ $contact ?? 'email Anda' }}</span>. Berlaku 10 menit.</p>
     @error('code')
         <div class="bg-red-500/10 border border-red-500/30 text-red-300 rounded-xl px-4 py-3 text-sm mb-5">{{ $message }}</div>
     @enderror

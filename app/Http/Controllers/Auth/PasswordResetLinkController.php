@@ -7,7 +7,6 @@ use App\Jobs\SendPasswordResetOtp;
 use App\Models\PasswordResetOtp;
 use App\Models\User;
 use App\Services\PasswordResetOtpService;
-use App\Services\WhatsAppService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,50 +19,30 @@ class PasswordResetLinkController extends Controller
         return view('auth.forgot-password');
     }
 
-    public function store(Request $request, PasswordResetOtpService $otps, WhatsAppService $wa): RedirectResponse
+    public function store(Request $request, PasswordResetOtpService $otps): RedirectResponse
     {
         $request->validate([
-            'contact' => ['required', 'string', 'max:255'],
+            'contact' => ['required', 'string', 'email', 'max:255'],
         ], [
-            'contact.required' => 'Email atau nomor WhatsApp wajib diisi.',
+            'contact.required' => 'Email wajib diisi.',
+            'contact.email' => 'Format email tidak valid.',
         ]);
 
-        $contact = trim($request->contact);
-        $isEmail = filter_var($contact, FILTER_VALIDATE_EMAIL) !== false;
+        $email = strtolower(trim($request->contact));
+        $user = User::where('email', $email)->first();
 
-        $email = null;
-        $phone = null;
-        $user = null;
-
-        if ($isEmail) {
-            $email = strtolower($contact);
-            $user = User::where('email', $email)->first();
-            $phone = $user?->phone ? $wa->normalizePhone($user->phone) : null;
-        } else {
-            $normalized = $wa->normalizePhone($contact);
-            if (! $normalized) {
-                return back()->withErrors(['contact' => 'Format nomor WhatsApp tidak valid. Contoh: 0812xxxxxxx.'])->withInput();
-            }
-            $phone = $normalized;
-            $user = User::where('phone', $normalized)
-                ->orWhere('phone', $contact)
-                ->orWhere('phone', ltrim($contact, '+'))
-                ->first();
-            $email = $user?->email;
-        }
-
-        $issued = $otps->issue($email, $phone);
+        $issued = $otps->issue($email, null);
 
         if ($user) {
-            SendPasswordResetOtp::dispatch($issued['code'], $email, $phone, $user->name, 'reset');
+            SendPasswordResetOtp::dispatch($issued['code'], $email, null, $user->name, 'reset');
         }
 
         $request->session()->put('reset_otp_id', $issued['otp']->id);
-        $request->session()->put('reset_contact', $contact);
+        $request->session()->put('reset_contact', $email);
 
         return redirect()->route('password.otp')->with(
             'status',
-            'Jika data terdaftar, kode 6 digit telah dikirim ke WhatsApp/email Anda. Berlaku 10 menit.'
+            'Jika email terdaftar, kode 6 digit telah dikirim ke email Anda. Berlaku 10 menit.'
         );
     }
 
@@ -71,51 +50,33 @@ class PasswordResetLinkController extends Controller
      * Kirim ulang kode OTP reset untuk kontak yang sama (dari session).
      * Dibatasi cooldown 60 detik per kontak + throttle route 3/menit.
      */
-    public function resendOtp(Request $request, PasswordResetOtpService $otps, WhatsAppService $wa): RedirectResponse
+    public function resendOtp(Request $request, PasswordResetOtpService $otps): RedirectResponse
     {
-        $contact = $request->session()->get('reset_contact');
+        $email = $request->session()->get('reset_contact');
 
-        if (! $contact) {
+        if (! $email) {
             return redirect()->route('password.request');
         }
 
-        $isEmail = filter_var($contact, FILTER_VALIDATE_EMAIL) !== false;
-
-        $email = null;
-        $phone = null;
-        $user = null;
-
-        if ($isEmail) {
-            $email = strtolower($contact);
-            $user = User::where('email', $email)->first();
-            $phone = $user?->phone ? $wa->normalizePhone($user->phone) : null;
-        } else {
-            $phone = $wa->normalizePhone($contact);
-            $user = User::where('phone', $phone)
-                ->orWhere('phone', $contact)
-                ->orWhere('phone', ltrim($contact, '+'))
-                ->first();
-            $email = $user?->email;
-        }
-
-        $wait = $otps->resendCooldownRemaining($email, $phone);
+        $wait = $otps->resendCooldownRemaining($email, null);
         if ($wait > 0) {
             return back()->withErrors([
                 'code' => 'Tunggu ' . $wait . ' detik sebelum meminta kode baru.',
             ]);
         }
 
-        $issued = $otps->issue($email, $phone);
+        $issued = $otps->issue($email, null);
 
+        $user = User::where('email', $email)->first();
         if ($user) {
-            SendPasswordResetOtp::dispatch($issued['code'], $email, $phone, $user->name, 'reset');
+            SendPasswordResetOtp::dispatch($issued['code'], $email, null, $user->name, 'reset');
         }
 
         $request->session()->put('reset_otp_id', $issued['otp']->id);
 
         return back()->with(
             'status',
-            'Jika data terdaftar, kode 6 digit baru telah dikirim ke WhatsApp/email Anda. Berlaku 10 menit.'
+            'Jika email terdaftar, kode 6 digit baru telah dikirim ke email Anda. Berlaku 10 menit.'
         );
     }
 
@@ -193,13 +154,7 @@ class PasswordResetLinkController extends Controller
             return redirect()->route('password.request')->withErrors(['contact' => 'Sesi reset kedaluwarsa. Minta kode baru.']);
         }
 
-        $user = $otp->email
-            ? User::where('email', $otp->email)->first()
-            : User::where('phone', $otp->phone)->first();
-
-        if (! $user && $otp->phone) {
-            $user = User::where('phone', 'like', '%' . substr($otp->phone, -9))->first();
-        }
+        $user = $otp->email ? User::where('email', $otp->email)->first() : null;
 
         if (! $user) {
             $otp->delete();
