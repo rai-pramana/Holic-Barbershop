@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendPasswordResetOtp;
 use App\Models\User;
+use App\Services\PasswordResetOtpService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +21,7 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, PasswordResetOtpService $otps): RedirectResponse
     {
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
@@ -43,6 +45,15 @@ class RegisteredUserController extends Controller
         // ke verifikasi OTP (bukan langsung dashboard).
         $request->session()->put('verify_user_id', $user->id);
 
-        return redirect()->route('verification.notice');
+        // Kirim OTP LANGSUNG saat daftar — user tiba di halaman verifikasi
+        // dengan kode sudah terkirim (tidak perlu klik "Kirim ulang").
+        $issued = $otps->issue($user->email, null);
+        $request->session()->put('verify_otp_id', $issued['otp']->id);
+        SendPasswordResetOtp::dispatch($issued['code'], $user->email, null, $user->name, 'verify');
+
+        return redirect()->route('verification.notice')->with(
+            'status',
+            'Kode verifikasi 6 digit dikirim ke ' . $user->email . '. Berlaku 10 menit.'
+        );
     }
 }

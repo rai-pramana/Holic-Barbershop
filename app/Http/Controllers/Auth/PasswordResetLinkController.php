@@ -55,7 +55,7 @@ class PasswordResetLinkController extends Controller
         $issued = $otps->issue($email, $phone);
 
         if ($user) {
-            SendPasswordResetOtp::dispatch($issued['code'], $email, $phone, $user->name);
+            SendPasswordResetOtp::dispatch($issued['code'], $email, $phone, $user->name, 'reset');
         }
 
         $request->session()->put('reset_otp_id', $issued['otp']->id);

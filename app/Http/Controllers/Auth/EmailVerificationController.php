@@ -53,6 +53,13 @@ class EmailVerificationController extends Controller
             return redirect()->route('customer.dashboard');
         }
 
+        $wait = $otps->resendCooldownRemaining($user->email, null);
+        if ($wait > 0) {
+            return back()->withErrors([
+                'code' => 'Tunggu ' . $wait . ' detik sebelum meminta kode baru.',
+            ]);
+        }
+
         $issued = $otps->issue($user->email, null);
         $request->session()->put('verify_otp_id', $issued['otp']->id);
 

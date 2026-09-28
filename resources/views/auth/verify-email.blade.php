@@ -2,9 +2,13 @@
 
 @section('title', 'Verifikasi Email')
 @section('heading', 'Verifikasi Email Anda')
-@section('subheading', 'Kode 6 digit dikirim ke {{ $email }}. Berlaku 10 menit.')
+@section('subheading', 'Masukkan 6 digit kode yang kami kirim ke email Anda. Berlaku 10 menit.')
 
 @section('content')
+    <p class="text-gray-400 text-sm mb-6 -mt-4">Kode 6 digit dikirim ke <span class="text-white font-semibold">{{ $email }}</span>. Berlaku 10 menit.</p>
+    @error('code')
+        <div class="bg-red-500/10 border border-red-500/30 text-red-300 rounded-xl px-4 py-3 text-sm mb-5">{{ $message }}</div>
+    @enderror
     <form method="POST" action="{{ route('verification.verify') }}" class="mb-4">
         @csrf
 
@@ -20,12 +24,31 @@
         </button>
     </form>
 
-    <form method="POST" action="{{ route('verification.send') }}">
+    <form method="POST" action="{{ route('verification.send') }}" id="resend-form">
         @csrf
-        <button type="submit" class="w-full text-center text-gray-400 text-sm hover:text-white transition-colors">
+        <button type="submit" id="resend-btn" class="w-full text-center text-gray-400 text-sm hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
             Tidak menerima kode? <span class="font-semibold underline underline-offset-2">Kirim ulang</span>
+            <span id="resend-countdown" class="text-gray-500">(<span id="resend-secs">60</span>d)</span>
         </button>
     </form>
+
+    <script>
+    (function () {
+        var secs = 60, el = document.getElementById('resend-secs'),
+            btn = document.getElementById('resend-btn'),
+            cd = document.getElementById('resend-countdown');
+        var t = setInterval(function () {
+            secs--;
+            if (secs <= 0) {
+                clearInterval(t);
+                btn.disabled = false;
+                if (cd) cd.style.display = 'none';
+            } else if (el) {
+                el.textContent = secs;
+            }
+        }, 1000);
+    })();
+    </script>
 
     <p class="text-center text-gray-400 text-sm mt-6">
         <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"

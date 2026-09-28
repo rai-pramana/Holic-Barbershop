@@ -19,6 +19,30 @@ class PasswordResetOtpService
 
     public const MAX_ACTIVE_PER_CONTACT = 3;
 
+    /** Jeda minimal antar pengiriman kode ke kontak yang sama. */
+    public const RESEND_COOLDOWN_SECONDS = 60;
+
+    /**
+     * Detik tersisa sebelum boleh kirim ulang (0 = boleh kirim).
+     */
+    public function resendCooldownRemaining(?string $email, ?string $phone): int
+    {
+        $query = PasswordResetOtp::query()->where('expires_at', '>', now());
+        if ($email) {
+            $query->where('email', $email);
+        } else {
+            $query->where('phone', $phone);
+        }
+
+        $last = $query->latest('id')->first();
+        if (! $last) {
+            return 0;
+        }
+
+        $elapsed = now()->diffInSeconds($last->created_at);
+        return max(0, self::RESEND_COOLDOWN_SECONDS - $elapsed);
+    }
+
     /**
      * @return array{otp: PasswordResetOtp, code: string}
      */

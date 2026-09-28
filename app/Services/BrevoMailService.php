@@ -63,17 +63,25 @@ class BrevoMailService
     }
 
     /**
-     * Kirim kode OTP reset password. Return true bila terkirim.
+     * Kirim kode OTP. $purpose: 'reset' (lupa password) atau 'verify' (verifikasi email).
+     * Return true bila terkirim.
      */
-    public function sendOtp(string $toEmail, string $toName, string $code): bool
+    public function sendOtp(string $toEmail, string $toName, string $code, string $purpose = 'reset'): bool
     {
-        $subject = 'Kode Reset Password — HOLIC Barbershop';
+        $isVerify = $purpose === 'verify';
+        $subject = $isVerify
+            ? 'Kode Verifikasi Email — HOLIC Barbershop'
+            : 'Kode Reset Password — HOLIC Barbershop';
+        $label = $isVerify ? 'Kode verifikasi email Anda:' : 'Kode reset password Anda:';
+        $ignore = $isVerify
+            ? 'Jika Anda tidak mendaftar akun HOLIC Barbershop, abaikan email ini.'
+            : 'Jika Anda tidak meminta reset password, abaikan email ini.';
         $html = '<html><body style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;">'
             . '<h2 style="margin-bottom:8px;">Halo, ' . e($toName) . '!</h2>'
-            . '<p>Kode reset password Anda:</p>'
+            . '<p>' . $label . '</p>'
             . '<p style="font-size:32px;font-weight:bold;letter-spacing:8px;text-align:center;background:#f1f5f9;border-radius:12px;padding:16px;">' . e($code) . '</p>'
             . '<p>Masukkan kode ini di website. Berlaku 10 menit.</p>'
-            . '<p style="color:#64748b;font-size:13px;">Jika Anda tidak meminta reset password, abaikan email ini.<br>Salam, Tim HOLIC Barbershop</p>'
+            . '<p style="color:#64748b;font-size:13px;">' . $ignore . '<br>Salam, Tim HOLIC Barbershop</p>'
             . '</body></html>';
 
         return $this->send($toEmail, $toName, $subject, $html);

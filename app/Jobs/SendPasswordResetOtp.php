@@ -27,6 +27,7 @@ class SendPasswordResetOtp implements ShouldQueue
         private readonly ?string $email = null,
         private readonly ?string $phone = null,
         private readonly ?string $name = null,
+        private readonly string $purpose = 'reset',
     ) {}
 
     public function handle(WhatsAppService $wa, BrevoMailService $brevo): void
@@ -38,7 +39,7 @@ class SendPasswordResetOtp implements ShouldQueue
         // Gratis 300/hari ke email mana pun — tanpa dinding trial Resend.
         if ($this->email) {
             try {
-                $emailOk = $brevo->sendOtp($this->email, $this->name ?? 'Pelanggan', $this->code);
+                $emailOk = $brevo->sendOtp($this->email, $this->name ?? 'Pelanggan', $this->code, $this->purpose);
             } catch (\Throwable $e) {
                 Log::error('OTP: email gagal', ['email' => $this->email, 'error' => $e->getMessage()]);
             }
@@ -48,8 +49,9 @@ class SendPasswordResetOtp implements ShouldQueue
         // Paket Free hanya sampai ke nomor device sendiri.
         if ($this->phone) {
             try {
+                $kind = $this->purpose === 'verify' ? 'verifikasi email' : 'reset password';
                 // ASCII saja — Fonnte menolak karakter non-UTF8.
-                $message = 'Kode reset password HOLIC Barbershop Anda: ' . $this->code . "\n\n"
+                $message = 'Kode ' . $kind . ' HOLIC Barbershop Anda: ' . $this->code . "\n\n"
                     . "Masukkan kode ini di website (berlaku 10 menit).\n"
                     . 'Jika Anda tidak meminta, abaikan pesan ini.';
 
