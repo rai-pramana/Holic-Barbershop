@@ -33,9 +33,14 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store'])->middleware('throttle:10,1');
 
-    // ── Lupa Password ────────────────────────────────────────────────────
+    // ── Lupa Password via OTP 6 digit (WA prioritas + email cadangan) ────
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
+    Route::get('verify-otp', [PasswordResetLinkController::class, 'showOtpForm'])->name('password.otp');
+    Route::post('verify-otp', [PasswordResetLinkController::class, 'verifyOtp'])->middleware('throttle:10,1')->name('password.otp.verify');
+    Route::get('new-password', [PasswordResetLinkController::class, 'showNewPasswordForm'])->name('password.new');
+    Route::post('new-password', [PasswordResetLinkController::class, 'storeNewPassword'])->middleware('throttle:10,1')->name('password.new.store');
+    // Tautan reset lama (nonaktif — dipertahankan agar URL lama tidak 404).
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
     Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 });

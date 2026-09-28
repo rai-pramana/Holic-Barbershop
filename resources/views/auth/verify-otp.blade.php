@@ -1,0 +1,27 @@
+@extends('layouts.auth')
+
+@section('title', 'Verifikasi Kode')
+@section('heading', 'Masukkan Kode OTP')
+@section('subheading', 'Kode 6 digit dikirim ke {{ $contact ?? "WhatsApp/email Anda" }}. Berlaku 10 menit.')
+
+@section('content')
+    <form method="POST" action="{{ route('password.otp.verify') }}">
+        @csrf
+
+        @include('components.auth-input', [
+            'id' => 'code', 'label' => 'Kode OTP 6 digit', 'type' => 'text',
+            'value' => '', 'placeholder' => '123456',
+            'autofocus' => true, 'extra' => 'inputmode="numeric" autocomplete="one-time-code" maxlength="6"',
+        ])
+
+        <button type="submit"
+                class="w-full bg-slate-600 hover:bg-slate-500 text-white font-bold py-3.5 rounded-xl active:scale-[0.98] transition-all shadow-lg">
+            Verifikasi Kode
+        </button>
+    </form>
+
+    <p class="text-center text-gray-400 text-sm mt-6">
+        Tidak menerima kode?
+        <a href="{{ route('password.request') }}" class="text-white hover:text-gray-300 font-semibold underline underline-offset-2">Minta kode baru</a>
+    </p>
+@endsection
