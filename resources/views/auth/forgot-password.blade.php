@@ -2,16 +2,16 @@
 
 @section('title', 'Lupa Password')
 @section('heading', 'Lupa Password?')
-@section('subheading', 'Masukkan email akun Anda. Kami akan mengirimkan tautan untuk mereset password.')
+@section('subheading', 'Masukkan email atau nomor WhatsApp akun Anda. Kami akan mengirimkan tautan untuk mereset password.')
 
 @section('content')
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
 
         @include('components.auth-input', [
-            'id' => 'email', 'label' => 'Email', 'type' => 'email',
-            'value' => old('email'), 'placeholder' => 'email@contoh.com',
-            'autofocus' => true, 'extra' => 'autocomplete="email"',
+            'id' => 'contact', 'label' => 'Email / No. WhatsApp', 'type' => 'text',
+            'value' => old('contact'), 'placeholder' => 'email@contoh.com / 0812xxxxxxx',
+            'autofocus' => true, 'extra' => 'autocomplete="username"',
         ])
 
         <button type="submit"
