@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             if (!$job) {
                 return;
             }
-            if (str_contains($job->resolveName() ?? '', 'SendPasswordResetEmail')) {
+            if (str_contains($job->resolveName() ?? '', 'SendPasswordResetLink')) {
                 app('queue.worker')->process(
                     $connection->getConnectionName(),
                     $job,
