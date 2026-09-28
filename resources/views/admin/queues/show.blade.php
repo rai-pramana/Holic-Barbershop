@@ -41,7 +41,7 @@
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4 min-w-0">
                     <p class="text-xs text-gray-500 font-medium mb-1">💈 Barber</p>
-                    <p class="font-bold text-gray-900">{{ $queue->barber?->user?->name ?? '—' }}</p>
+                    <p class="font-bold text-gray-900">{{ $queue->barber?->name ?? '—' }}</p>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4 min-w-0">
                     <p class="text-xs text-gray-500 font-medium mb-1">✂️ Layanan</p>
