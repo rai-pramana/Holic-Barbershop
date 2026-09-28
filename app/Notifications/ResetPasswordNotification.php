@@ -3,13 +3,12 @@
 namespace App\Notifications;
 
 use Illuminate\Auth\Notifications\ResetPassword as BaseResetPassword;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ResetPasswordNotification extends BaseResetPassword implements ShouldQueueAfterCommit
+// Sengaja TIDAK ShouldQueue: job SendPasswordResetEmail sudah async,
+// notifikasi harus terkirim sinkron di dalam job agar tidak antre 2 lapis.
+class ResetPasswordNotification extends BaseResetPassword
 {
-    use Queueable;
     public function toMail($notifiable): MailMessage
     {
         $url = url(route('password.reset', [
