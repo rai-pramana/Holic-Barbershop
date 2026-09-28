@@ -44,18 +44,26 @@
 
     {{-- History List --}}
     @forelse($histories as $queue)
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-4">
-        <div class="flex justify-between items-start gap-3">
-            <div class="flex items-center gap-4">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5 mb-4">
+        <div class="flex items-center gap-3 sm:gap-4 min-w-0">
                 {{-- Queue Number --}}
-                <div class="w-16 h-14 px-1 rounded-2xl flex items-center justify-center font-black text-lg font-mono flex-shrink-0
+                <div class="w-14 sm:w-16 h-12 sm:h-14 px-1 rounded-2xl flex items-center justify-center font-black text-base sm:text-lg font-mono flex-shrink-0
                     @if($queue->status === 'completed') bg-emerald-50 text-emerald-700
                     @elseif($queue->status === 'skipped') bg-red-50 text-red-500
                     @else bg-amber-50 text-amber-600 @endif">
                     {{ $queue->queue_number }}
                 </div>
                 <div class="min-w-0">
-                    <p class="font-bold text-gray-900 text-sm">{{ $queue->branch->name }}</p>
+                    <div class="flex items-center gap-2">
+                        <p class="font-bold text-gray-900 text-sm truncate">{{ $queue->branch->name }}</p>
+                        {{-- Status Badge (di samping nama cabang — tidak mengubah tinggi) --}}
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold flex-shrink-0 whitespace-nowrap
+                            @if($queue->status === 'completed') bg-emerald-100 text-emerald-700
+                            @elseif($queue->status === 'skipped') bg-red-100 text-red-600
+                            @else bg-amber-100 text-amber-600 @endif">
+                            {{ $queue->status_label }}
+                        </span>
+                    </div>
                     <p class="text-xs text-gray-500 mt-0.5">{{ $queue->service->name }}</p>
                     {{-- Biaya --}}
                     <p class="text-xs font-semibold text-gray-700 mt-0.5 flex items-center gap-1">
@@ -67,22 +75,6 @@
                     {{-- Barber: selalu render agar tinggi kartu seragam --}}
                     <p class="text-xs text-gray-400 mt-0.5 truncate">Barber: {{ $queue->barber?->name ?? '—' }}</p>
                 </div>
-            </div>
-
-            {{-- Status Badge --}}
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0
-                @if($queue->status === 'completed') bg-emerald-100 text-emerald-700
-                @elseif($queue->status === 'skipped') bg-red-100 text-red-600
-                @else bg-amber-100 text-amber-600 @endif">
-                @if($queue->status === 'completed')
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                @elseif($queue->status === 'skipped')
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                @else
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                @endif
-                {{ $queue->status_label }}
-            </span>
         </div>
 
         {{-- Date + Duration --}}
