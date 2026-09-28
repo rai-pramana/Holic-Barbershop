@@ -2,19 +2,17 @@
 
 namespace App\Jobs;
 
+use App\Services\BrevoMailService;
 use App\Services\WhatsAppService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Password;
 
 /**
- * Kirim KODE OTP reset password via 2 kanal (WA + email).
+ * Kirim KODE OTP reset password via 2 kanal (email + WA).
  *
- * Prioritas WhatsApp (Fonnte HTTP API) — kode pendek selalu terbaca,
- * tidak seperti tautan panjang yang tak bisa diklik / masuk spam.
- * Email (Resend HTTP API) sebagai cadangan; kegagalannya tidak
- * menggagalkan job selama WA terkirim.
+ * Email utama via Brevo HTTP API (gratis 300/hari, semua tujuan).
+ * WhatsApp via Fonnte HTTP API sebagai cadangan (Free: nomor sendiri).
  */
 class SendPasswordResetOtp implements ShouldQueue
 {
@@ -31,12 +29,23 @@ class SendPasswordResetOtp implements ShouldQueue
         private readonly ?string $name = null,
     ) {}
 
-    public function handle(WhatsAppService $wa): void
+    public function handle(WhatsAppService $wa, BrevoMailService $brevo): void
     {
         $waOk = false;
         $emailOk = false;
 
-        // ── Kanal 1 (utama): WHATSAPP via Fonnte ────────────────
+        // ── Kanal 1 (utama): EMAIL via Brevo HTTP API ────────────
+        // Gratis 300/hari ke email mana pun — tanpa dinding trial Resend.
+        if ($this->email) {
+            try {
+                $emailOk = $brevo->sendOtp($this->email, $this->name ?? 'Pelanggan', $this->code);
+            } catch (\Throwable $e) {
+                Log::error('OTP: email gagal', ['email' => $this->email, 'error' => $e->getMessage()]);
+            }
+        }
+
+        // ── Kanal 2 (cadangan): WHATSAPP via Fonnte ──────────────
+        // Paket Free hanya sampai ke nomor device sendiri.
         if ($this->phone) {
             try {
                 // ASCII saja — Fonnte menolak karakter non-UTF8.
@@ -47,20 +56,6 @@ class SendPasswordResetOtp implements ShouldQueue
                 $waOk = $wa->send($this->phone, $message);
             } catch (\Throwable $e) {
                 Log::error('OTP: WA gagal', ['phone' => $this->phone, 'error' => $e->getMessage()]);
-            }
-        }
-
-        // ── Kanal 2 (cadangan): EMAIL via Resend ────────────────
-        if ($this->email) {
-            try {
-                $user = \App\Models\User::where('email', $this->email)->first();
-                if ($user) {
-                    // Kirim kode via notifikasi mail langsung (tanpa antre 2 lapis).
-                    $user->notify(new \App\Notifications\ResetPasswordOtpNotification($this->code));
-                    $emailOk = true;
-                }
-            } catch (\Throwable $e) {
-                Log::error('OTP: email gagal', ['email' => $this->email, 'error' => $e->getMessage()]);
             }
         }
 
