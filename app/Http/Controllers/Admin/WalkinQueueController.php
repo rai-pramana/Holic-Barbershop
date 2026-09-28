@@ -41,6 +41,11 @@ class WalkinQueueController extends Controller
                 })
                 ->sortBy('pending_count')
                 ->values();
+
+            // Peringatan bila cabang tutup — form tetap tampil tapi simpan ditolak.
+            if (! $selectedBranch->isOpen()) {
+                session()->flash('warning', "Cabang {$selectedBranch->name} sedang tutup (jam {$selectedBranch->open_time}–{$selectedBranch->close_time}). Antrean walk-in baru tidak dapat disimpan.");
+            }
         }
 
         return view('admin.queues.walkin', compact('branches', 'selectedBranch', 'services', 'barbers'));
@@ -67,6 +72,13 @@ class WalkinQueueController extends Controller
         ]);
 
         $branch  = Branch::findOrFail($request->branch_id);
+
+        // Cabang tutup = tidak ada antrean baru (konsisten dengan guard customer).
+        if (! $branch->isOpen()) {
+            return back()->withInput()
+                ->with('error', "Cabang {$branch->name} sedang tutup (jam {$branch->open_time}–{$branch->close_time}). Antrean walk-in tidak dapat dibuat.");
+        }
+
         $service = Service::where('id', $request->service_id)
             ->where('branch_id', $branch->id)
             ->firstOrFail();
