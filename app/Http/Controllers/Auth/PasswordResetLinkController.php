@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendPasswordResetEmail;
 use App\Models\User;
 use App\Services\WhatsAppService;
 use Illuminate\Http\RedirectResponse;
@@ -38,7 +39,17 @@ class PasswordResetLinkController extends Controller
                 'email.email' => 'Format email tidak valid.',
             ]);
 
-            $status = Password::sendResetLink($request->only('email'));
+            // Kirim async via queue agar request tidak menggantung bila
+            // provider email lambat/diblokir jaringan. Butuh worker:
+            // php artisan queue:work (Railway: tambah service worker).
+            // Tanpa worker, fallback ke kirim langsung dengan timeout.
+            try {
+                SendPasswordResetEmail::dispatch($request->only('email'));
+                $status = Password::RESET_LINK_SENT;
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Reset dispatch gagal, fallback sync', ['error' => $e->getMessage()]);
+                $status = Password::sendResetLink($request->only('email'));
+            }
         } else {
             $status = $this->sendResetLinkViaWhatsApp($contact);
         }

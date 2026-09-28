@@ -3,10 +3,13 @@
 namespace App\Notifications;
 
 use Illuminate\Auth\Notifications\ResetPassword as BaseResetPassword;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ResetPasswordNotification extends BaseResetPassword
+class ResetPasswordNotification extends BaseResetPassword implements ShouldQueueAfterCommit
 {
+    use Queueable;
     public function toMail($notifiable): MailMessage
     {
         $url = url(route('password.reset', [
