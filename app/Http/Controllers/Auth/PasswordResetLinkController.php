@@ -67,6 +67,58 @@ class PasswordResetLinkController extends Controller
         );
     }
 
+    /**
+     * Kirim ulang kode OTP reset untuk kontak yang sama (dari session).
+     * Dibatasi cooldown 60 detik per kontak + throttle route 3/menit.
+     */
+    public function resendOtp(Request $request, PasswordResetOtpService $otps, WhatsAppService $wa): RedirectResponse
+    {
+        $contact = $request->session()->get('reset_contact');
+
+        if (! $contact) {
+            return redirect()->route('password.request');
+        }
+
+        $isEmail = filter_var($contact, FILTER_VALIDATE_EMAIL) !== false;
+
+        $email = null;
+        $phone = null;
+        $user = null;
+
+        if ($isEmail) {
+            $email = strtolower($contact);
+            $user = User::where('email', $email)->first();
+            $phone = $user?->phone ? $wa->normalizePhone($user->phone) : null;
+        } else {
+            $phone = $wa->normalizePhone($contact);
+            $user = User::where('phone', $phone)
+                ->orWhere('phone', $contact)
+                ->orWhere('phone', ltrim($contact, '+'))
+                ->first();
+            $email = $user?->email;
+        }
+
+        $wait = $otps->resendCooldownRemaining($email, $phone);
+        if ($wait > 0) {
+            return back()->withErrors([
+                'code' => 'Tunggu ' . $wait . ' detik sebelum meminta kode baru.',
+            ]);
+        }
+
+        $issued = $otps->issue($email, $phone);
+
+        if ($user) {
+            SendPasswordResetOtp::dispatch($issued['code'], $email, $phone, $user->name, 'reset');
+        }
+
+        $request->session()->put('reset_otp_id', $issued['otp']->id);
+
+        return back()->with(
+            'status',
+            'Jika data terdaftar, kode 6 digit baru telah dikirim ke WhatsApp/email Anda. Berlaku 10 menit.'
+        );
+    }
+
     public function showOtpForm(Request $request): View|RedirectResponse
     {
         if (! $request->session()->has('reset_otp_id')) {

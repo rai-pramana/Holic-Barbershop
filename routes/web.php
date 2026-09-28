@@ -39,6 +39,7 @@ Route::middleware('guest')->group(function () {
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
     Route::get('verify-otp', [PasswordResetLinkController::class, 'showOtpForm'])->name('password.otp');
     Route::post('verify-otp', [PasswordResetLinkController::class, 'verifyOtp'])->middleware('throttle:10,1')->name('password.otp.verify');
+    Route::post('verify-otp/resend', [PasswordResetLinkController::class, 'resendOtp'])->middleware('throttle:3,1')->name('password.otp.resend');
     Route::get('new-password', [PasswordResetLinkController::class, 'showNewPasswordForm'])->name('password.new');
     Route::post('new-password', [PasswordResetLinkController::class, 'storeNewPassword'])->middleware('throttle:10,1')->name('password.new.store');
     // Tautan reset lama (nonaktif — dipertahankan agar URL lama tidak 404).
