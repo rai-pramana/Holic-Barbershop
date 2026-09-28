@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -44,6 +45,13 @@ Route::middleware('guest')->group(function () {
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
     Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 });
+
+// ─── Verifikasi Email Pendaftaran (OTP 6 digit via Brevo) ───────────────
+// notice/send/verify: untuk user baru (guest pasca-daftar) maupun user
+// login yang belum verifikasi. Throttle kirim 3/menit, tebak 10/menit.
+Route::get('verify-email', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+Route::post('verify-email/send', [EmailVerificationController::class, 'send'])->middleware('throttle:3,1')->name('verification.send');
+Route::post('verify-email', [EmailVerificationController::class, 'verify'])->middleware('throttle:10,1')->name('verification.verify');
 
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -98,11 +106,12 @@ Route::middleware(['auth', 'role:admin'])
 // Must be outside auth middleware so unauthenticated users get redirected to login
 // Laravel's Authenticate middleware will redirect back here after login
 Route::get('customer/checkin/{branch}', [Customer\QueueController::class, 'scanCheckin'])
-    ->middleware(['auth', 'role:customer'])
+    ->middleware(['auth', 'role:customer', 'verified.email'])
     ->name('customer.checkin.scan');
 
 // ─── Customer Routes ───────────────────────────────────────────────────────
-Route::middleware(['auth', 'role:customer'])
+// verified.email: email wajib terverifikasi sebelum bisa antre.
+Route::middleware(['auth', 'role:customer', 'verified.email'])
     ->prefix('customer')
     ->name('customer.')
     ->group(function () {

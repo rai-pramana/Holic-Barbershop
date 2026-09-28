@@ -39,6 +39,10 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
-        return redirect()->route('customer.dashboard');
+        // Tandai agar halaman verifikasi tahu user siapa, lalu arahkan
+        // ke verifikasi OTP (bukan langsung dashboard).
+        $request->session()->put('verify_user_id', $user->id);
+
+        return redirect()->route('verification.notice');
     }
 }
