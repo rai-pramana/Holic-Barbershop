@@ -65,9 +65,12 @@ class QueueController extends Controller
                 $barber->pending_count          = $stats['pending_count'];
                 $barber->current_serving        = $stats['current_serving'];
                 $barber->estimated_wait_minutes = $stats['estimated_wait_minutes'];
+                $barber->today_served_count     = $barber->getTodayServedCount();
                 return $barber;
             })
-            ->sortBy('pending_count');
+            // Sama dengan aturan auto-assign di store():
+            // 1) antrean menunggu tersedikit, 2) paling sedikit melayani hari ini.
+            ->sortBy(fn($b) => [$b->pending_count, $b->today_served_count]);
 
         return view('customer.queue.take', compact('branch', 'services', 'barbers'));
     }
