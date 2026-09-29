@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendQueuePushNotification;
 use App\Models\Branch;
 use App\Models\Queue;
 use Illuminate\Http\RedirectResponse;
@@ -64,6 +65,13 @@ class CheckinController extends Controller
             'status'       => Queue::STATUS_ACTIVE,
             'checked_in_at' => now(),
         ]);
+
+        // Beritahu customer: check-in berhasil (non-blokir bila push gagal)
+        try {
+            \Illuminate\Support\Facades\Bus::dispatchSync(new SendQueuePushNotification($queue->id, 'active'));
+        } catch (\Throwable $e) {
+            // Silent — notification failure should not block validation
+        }
 
         return redirect()->route('admin.queues.manage')
             ->with('success', "Antrean #{$queue->queue_number} ({$queue->customer_name}) berhasil divalidasi!");

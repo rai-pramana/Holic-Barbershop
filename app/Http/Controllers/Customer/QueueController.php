@@ -156,7 +156,7 @@ class QueueController extends Controller
 
         // Beritahu admin: antrean baru masuk (non-blokir bila push gagal)
         try {
-            dispatchSync(new \App\Jobs\SendQueuePushNotification($queue->id, 'created'));
+            \Illuminate\Support\Facades\Bus::dispatchSync(new \App\Jobs\SendQueuePushNotification($queue->id, 'created'));
         } catch (\Throwable $e) {
             // Silent — notification failure should not block queue creation
         }
@@ -342,7 +342,7 @@ class QueueController extends Controller
 
         // Send push notification (confirmed check-in)
         try {
-            dispatchSync(new \App\Jobs\SendQueuePushNotification($queue->id, 'active'));
+            \Illuminate\Support\Facades\Bus::dispatchSync(new \App\Jobs\SendQueuePushNotification($queue->id, 'active'));
         } catch (\Throwable $e) {
             // Silent — notification failure should not block check-in
         }

@@ -135,7 +135,7 @@ class WalkinQueueController extends Controller
 
         // Beritahu admin lain: antrean walk-in baru (non-blokir bila push gagal)
         try {
-            dispatchSync(new SendQueuePushNotification($queue->id, 'created'));
+            \Illuminate\Support\Facades\Bus::dispatchSync(new SendQueuePushNotification($queue->id, 'created'));
         } catch (\Throwable $e) {
             // Silent — notification failure should not block queue creation
         }
