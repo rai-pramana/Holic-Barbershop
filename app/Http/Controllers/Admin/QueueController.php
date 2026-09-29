@@ -147,8 +147,9 @@ class QueueController extends Controller
         // Send push notification to customer (sync — no queue worker needed)
         try {
             dispatchSync(new SendQueuePushNotification($queue->id, 'called'));
+            \Illuminate\Support\Facades\Log::info('Push called dispatched', ['queue_id' => $queue->id, 'customer_id' => $queue->customer_id, 'subs' => \App\Models\PushSubscription::where('user_id', $queue->customer_id)->count()]);
         } catch (\Throwable $e) {
-            // Silent — push failure must not block queue management
+            \Illuminate\Support\Facades\Log::warning('Push called dispatch failed', ['queue_id' => $queue->id, 'error' => $e->getMessage()]);
         }
 
         return back()->with('success', "🔔 Antrean #{$queue->queue_number} ({$queue->customer_name}) berhasil dipanggil.");
