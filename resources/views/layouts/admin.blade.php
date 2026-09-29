@@ -538,9 +538,9 @@ document.addEventListener('keydown', e => {
                 }).catch(() => {});
                 return;
             }
-            // Popup pertama-kali: hanya bila belum pernah ditanya + belum tolak 7 hari.
-            const dismissedAt = parseInt(localStorage.getItem('push-popup-dismissed') || '0', 10);
-            if (Notification.permission === 'default' && dismissedAt < Date.now() - 7 * 24 * 60 * 60 * 1000) {
+            // Popup pertama-kali: setiap sesi baru bila belum pernah ditanya.
+            // Tolak = tutup untuk sesi ini saja (sessionStorage).
+            if (Notification.permission === 'default' && !sessionStorage.getItem('push-popup-dismissed')) {
                 setTimeout(showPushPopup, 1500);
             }
         } catch(_) {}
@@ -566,7 +566,7 @@ document.addEventListener('keydown', e => {
         const close = (remember) => {
             overlay.remove();
             if (remember) {
-                try { localStorage.setItem('push-popup-dismissed', String(Date.now())); } catch(_) {}
+                try { sessionStorage.setItem('push-popup-dismissed', '1'); } catch(_) {}
             }
         };
         overlay.addEventListener('click', (e) => { if (e.target === overlay) close(true); });

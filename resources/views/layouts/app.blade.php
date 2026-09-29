@@ -366,12 +366,10 @@ if ('serviceWorker' in navigator) {
         if (!btn) return;
 
         // ── Popup pertama-kali: tawarkan aktifkan notifikasi ──────────────
-        // Hanya bila browser belum pernah ditanya (permission=default) dan
-        // user belum menutup popup dalam 7 hari terakhir.
+        // Muncul setiap sesi baru (sessionStorage) bila browser belum pernah
+        // ditanya (permission=default). Tolak = tutup untuk sesi ini saja.
         try {
-            const dismissedAt = parseInt(localStorage.getItem('push-popup-dismissed') || '0', 10);
-            const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-            if (Notification.permission === 'default' && dismissedAt < weekAgo) {
+            if (Notification.permission === 'default' && !sessionStorage.getItem('push-popup-dismissed')) {
                 setTimeout(() => showPushPopup(btn), 1500);
             }
         } catch(_) {}
@@ -423,7 +421,7 @@ if ('serviceWorker' in navigator) {
         const close = (remember) => {
             overlay.remove();
             if (remember) {
-                try { localStorage.setItem('push-popup-dismissed', String(Date.now())); } catch(_) {}
+                try { sessionStorage.setItem('push-popup-dismissed', '1'); } catch(_) {}
             }
         };
         overlay.addEventListener('click', (e) => { if (e.target === overlay) close(true); });
