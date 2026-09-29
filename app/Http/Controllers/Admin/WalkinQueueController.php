@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendQueuePushNotification;
 use App\Models\Barber;
 use App\Models\Branch;
 use App\Models\Queue;
@@ -131,6 +132,13 @@ class WalkinQueueController extends Controller
                 'checked_in_at'=> now(),
             ]);
         });
+
+        // Beritahu admin lain: antrean walk-in baru (non-blokir bila push gagal)
+        try {
+            dispatchSync(new SendQueuePushNotification($queue->id, 'created'));
+        } catch (\Throwable $e) {
+            // Silent — notification failure should not block queue creation
+        }
 
         return redirect()->route('admin.queues.manage', ['branch_id' => $branch->id])
             ->with('success', "✅ Antrean walk-in #{$queue->queue_number} untuk {$request->guest_name} berhasil dibuat dan otomatis tervalidasi.");

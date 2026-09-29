@@ -17,7 +17,7 @@ class SendQueuePushNotification implements ShouldQueue
 
     public function __construct(
         private readonly int    $queueId,
-        private readonly string $event,  // 'called' | 'active' | 'completed' | 'skipped'
+        private readonly string $event,  // 'created' | 'called' | 'active' | 'completed' | 'skipped'
     ) {}
 
     public function handle(WebPushService $pushService): void
@@ -33,6 +33,10 @@ class SendQueuePushNotification implements ShouldQueue
         $barberName = $queue->barber?->name ?? 'barber kami';
         $branchName = $queue->branch?->name ?? 'HOLIC Barbershop';
         [$title, $body] = match($this->event) {
+            'created' => [
+                'Antrean Baru Masuk',
+                "Antrean {$queue->queue_number} ({$queue->customer_name}) di {$branchName}.",
+            ],
             'called' => [
                 'Nomor Anda Dipanggil!',
                 "Antrean {$queue->queue_number} — Segera ke kursi {$barberName}.",
@@ -67,6 +71,27 @@ class SendQueuePushNotification implements ShouldQueue
                 );
             } catch (\Throwable $e) {
                 Log::warning('Web Push failed (non-fatal)', ['error' => $e->getMessage()]);
+            }
+        }
+
+        // ── Antrean baru → beritahu semua admin (agar popup subscribe ada gunanya)
+        if ($this->event === 'created') {
+            $adminIds = \App\Models\User::where('role', 'admin')->pluck('id');
+            foreach ($adminIds as $adminId) {
+                try {
+                    $pushService->sendToUser(
+                        userId: $adminId,
+                        title:  $title,
+                        body:   $body,
+                        data:   [
+                            'url'          => route('admin.queues.manage', ['branch_id' => $queue->branch_id]),
+                            'queue_number' => $queue->queue_number,
+                            'event'        => $this->event,
+                        ],
+                    );
+                } catch (\Throwable $e) {
+                    Log::warning('Web Push admin failed (non-fatal)', ['error' => $e->getMessage()]);
+                }
             }
         }
 

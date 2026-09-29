@@ -8,6 +8,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
+    <meta name="push-subscribe-url" content="{{ route('admin.push.subscribe') }}">
+    <meta name="push-unsubscribe-url" content="{{ route('admin.push.unsubscribe') }}">
     <title>@yield('title', 'Admin') — HOLIC Barbershop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -473,6 +476,115 @@ document.addEventListener('keydown', e => {
             if (banner) banner.style.display = 'none';
         });
     };
+})();
+
+// ─── Web Push Subscription + Popup pertama-kali ───────────────────────────
+// Mendaftarkan perangkat admin ke server agar notifikasi antrean baru masuk
+// walau tab tertutup (sebelumnya hanya bunyi saat tab terbuka).
+(function () {
+    const vapidMeta = document.querySelector('meta[name="vapid-public-key"]');
+    if (!vapidMeta || !vapidMeta.content) return;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+    const VAPID_KEY     = vapidMeta.content;
+    const SUBSCRIBE_URL = document.querySelector('meta[name="push-subscribe-url"]').content;
+    const CSRF          = document.querySelector('meta[name="csrf-token"]').content;
+
+    function urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+        const raw     = atob(base64);
+        return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+    }
+
+    async function subscribe() {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.subscribe({
+            userVisibleOnly:      true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_KEY),
+        });
+        const j = sub.toJSON();
+        const res = await fetch(SUBSCRIBE_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+            body:    JSON.stringify({
+                endpoint:         j.endpoint,
+                public_key:       j.keys.p256dh,
+                auth_token:       j.keys.auth,
+                content_encoding: 'aes128gcm',
+            }),
+        });
+        if (!res.ok) {
+            await sub.unsubscribe().catch(() => {});
+            throw new Error('Pendaftaran notifikasi ke server gagal (' + res.status + ')');
+        }
+        return sub;
+    }
+
+    async function init() {
+        try {
+            // Sudah subscribe? cukup pastikan terdaftar (self-heal diam-diam).
+            const reg = await navigator.serviceWorker.ready;
+            let sub = await reg.pushManager.getSubscription();
+            if (sub) {
+                const j = sub.toJSON();
+                await fetch(SUBSCRIBE_URL, {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+                    body:    JSON.stringify({
+                        endpoint: j.endpoint, public_key: j.keys.p256dh,
+                        auth_token: j.keys.auth, content_encoding: 'aes128gcm',
+                    }),
+                }).catch(() => {});
+                return;
+            }
+            // Popup pertama-kali: hanya bila belum pernah ditanya + belum tolak 7 hari.
+            const dismissedAt = parseInt(localStorage.getItem('push-popup-dismissed') || '0', 10);
+            if (Notification.permission === 'default' && dismissedAt < Date.now() - 7 * 24 * 60 * 60 * 1000) {
+                setTimeout(showPushPopup, 1500);
+            }
+        } catch(_) {}
+    }
+
+    function showPushPopup() {
+        if (document.getElementById('push-popup')) return;
+        const overlay = document.createElement('div');
+        overlay.id = 'push-popup';
+        overlay.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm';
+        overlay.innerHTML =
+            '<div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">' +
+            '<div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gray-900 flex items-center justify-center">' +
+            '<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>' +
+            '</div>' +
+            '<h3 class="font-bold text-gray-900 text-lg mb-1">Aktifkan Notifikasi</h3>' +
+            '<p class="text-sm text-gray-500 mb-5">Dapatkan pemberitahuan saat ada antrean baru masuk, walau tab ini tertutup.</p>' +
+            '<button id="push-popup-allow" class="w-full bg-gray-900 text-white text-sm font-bold py-3 rounded-xl hover:bg-gray-800 transition-colors mb-2">Aktifkan Notifikasi</button>' +
+            '<button id="push-popup-later" class="w-full text-gray-400 text-sm py-2 hover:text-gray-600 transition-colors">Nanti Saja</button>' +
+            '</div>';
+        document.body.appendChild(overlay);
+
+        const close = (remember) => {
+            overlay.remove();
+            if (remember) {
+                try { localStorage.setItem('push-popup-dismissed', String(Date.now())); } catch(_) {}
+            }
+        };
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(true); });
+        document.getElementById('push-popup-later').addEventListener('click', () => close(true));
+        document.getElementById('push-popup-allow').addEventListener('click', async () => {
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') { close(true); return; }
+                await subscribe();
+                close(false);
+            } catch(e) {
+                console.warn('Push popup admin gagal:', e);
+                close(true);
+            }
+        });
+    }
+
+    init();
 })();
 </script>
 @stack('scripts')

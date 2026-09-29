@@ -154,6 +154,13 @@ class QueueController extends Controller
             ]);
         });
 
+        // Beritahu admin: antrean baru masuk (non-blokir bila push gagal)
+        try {
+            dispatchSync(new \App\Jobs\SendQueuePushNotification($queue->id, 'created'));
+        } catch (\Throwable $e) {
+            // Silent — notification failure should not block queue creation
+        }
+
         return redirect()->route('customer.queue.status', $queue)
             ->with('success', "Antrean berhasil dibuat! Nomor antrean Anda: {$queueNumber}");
     }

@@ -100,6 +100,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('checkin/search', [Admin\CheckinController::class, 'search'])->name('checkin.search');
         Route::get('checkin/{token}', [Admin\CheckinController::class, 'confirm'])->name('checkin.confirm');
         Route::post('checkin/{queue}/validate', [Admin\CheckinController::class, 'validate_checkin'])->name('checkin.validate');
+
+        // Push notifications (controller sama dengan customer — user-agnostik via Auth::id())
+        Route::post('push/subscribe',   [PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
+        Route::post('push/unsubscribe', [PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
     });
 
 // ─── QR Scan Check-in (Customer scans admin's QR) ─────────────────────────
