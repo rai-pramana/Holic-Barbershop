@@ -90,7 +90,6 @@ Route::middleware(['auth', 'role:admin'])
 
         // ── Kelola Antrean (board per barber) ─────────────────────────────
         Route::get('manage', [Admin\QueueController::class, 'manage'])->name('queues.manage');
-        Route::get('manage/poll', [Admin\QueueController::class, 'poll'])->name('queues.poll');
         Route::post('queues/{queue}/call', [Admin\QueueController::class, 'call'])->name('queues.call');
         Route::post('queues/{queue}/complete', [Admin\QueueController::class, 'complete'])->name('queues.complete');
         Route::post('queues/{queue}/skip', [Admin\QueueController::class, 'skip'])->name('queues.skip');
@@ -134,6 +133,4 @@ Route::middleware(['auth', 'role:customer', 'verified.email'])
         // Push notifications
         Route::post('push/subscribe',   [PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
         Route::post('push/unsubscribe',  [PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
-        Route::post('push/check',       [PushSubscriptionController::class, 'check'])->name('push.check');
-        Route::post('push/test',        [PushSubscriptionController::class, 'test'])->name('push.test');
     });

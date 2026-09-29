@@ -201,45 +201,6 @@ class QueueController extends Controller
     }
 
     /**
-     * AJAX: poll queue board for live updates on manage page
-     */
-    public function poll(Request $request): JsonResponse
-    {
-        $branchId = $request->branch_id;
-
-        $data = Barber::where('branch_id', $branchId)
-            ->where(function ($q) {
-                $q->where('is_available', true)
-                  ->orWhereHas('queues', function ($qq) {
-                      $qq->whereDate('queues.created_at', today())
-                         ->whereIn('status', ['active', 'called', 'pending']);
-                  });
-            })
-            ->with(['queues' => function ($q) {
-                $q->whereDate('queues.created_at', today())
-                  ->whereIn('status', ['active', 'called', 'pending'])
-                  ->with(['customer', 'service'])
-                  ->orderByRaw("FIELD(status, 'called', 'active', 'pending')")
-                  ->orderBy('id');
-            }])
-            ->get()
-            ->map(fn($b) => [
-                'id'   => $b->id,
-                'name' => $b->name,
-                'queues' => $b->queues->map(fn($q) => [
-                    'id'           => $q->id,
-                    'queue_number' => $q->queue_number,
-                    'status'       => $q->status,
-                    'status_label' => $q->status_label,
-                    'customer'     => $q->customer_name,
-                    'service'      => $q->service?->name ?? '—',
-                ]),
-            ]);
-
-        return response()->json($data);
-    }
-
-    /**
      * AJAX: Poll for new queues — used by admin notification system
      */
     public function notificationPoll(): JsonResponse

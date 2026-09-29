@@ -50,43 +50,4 @@ class PushSubscriptionController extends Controller
 
         return response()->json(['ok' => true]);
     }
-
-    /**
-     * Kirim notifikasi tes ke user saat ini (untuk diagnosa HP).
-     */
-    public function test(): JsonResponse
-    {
-        try {
-            app(\App\Services\WebPushService::class)->sendToUser(
-                userId: Auth::id(),
-                title: 'Tes Notifikasi HOLIC',
-                body: 'Jika Anda melihat ini di HP, push berfungsi. Kunci layar lalu coba lagi.',
-                data: ['url' => route('customer.dashboard')],
-            );
-        } catch (\Throwable $e) {
-            return response()->json(['sent' => false, 'error' => $e->getMessage()], 500);
-        }
-
-        return response()->json([
-            'sent' => true,
-            'total_for_user' => PushSubscription::where('user_id', Auth::id())->count(),
-        ]);
-    }
-
-    /**
-     * Cek apakah endpoint terdaftar di server (untuk diagnosa HP).
-     */
-    public function check(Request $request): JsonResponse
-    {
-        $request->validate(['endpoint' => 'required|string']);
-
-        $exists = PushSubscription::where('user_id', Auth::id())
-            ->where('endpoint', $request->endpoint)
-            ->exists();
-
-        return response()->json([
-            'registered' => $exists,
-            'total_for_user' => PushSubscription::where('user_id', Auth::id())->count(),
-        ]);
-    }
 }
