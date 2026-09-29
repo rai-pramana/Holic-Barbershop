@@ -137,4 +137,5 @@ Route::middleware(['auth', 'role:customer', 'verified.email'])
         Route::post('push/check',       [PushSubscriptionController::class, 'check'])->name('push.check');
         Route::post('push/test',        [PushSubscriptionController::class, 'test'])->name('push.test');
         Route::post('push/test-event',  [PushSubscriptionController::class, 'testEvent'])->name('push.test-event');
+        Route::post('push/test-call',   [PushSubscriptionController::class, 'testCall'])->name('push.test-call');
     });
