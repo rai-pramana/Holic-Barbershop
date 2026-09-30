@@ -169,7 +169,7 @@
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-2">QR Cabang</p>
                 <div class="flex flex-wrap gap-2" id="branch-tabs">
                     @foreach($branches as $branch)
-                    <button onclick="switchBranch('{{ $branch->id }}', '{{ addslashes($branch->name) }}', '{{ route('customer.checkin.scan', $branch->id) }}')"
+                    <button onclick="switchBranch('{{ $branch->id }}', '{{ addslashes($branch->name) }}')"
                             id="tab-{{ $branch->id }}"
                             class="branch-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
                                    {{ $selectedBranch?->id === $branch->id ? 'bg-gradient-to-r from-gray-900 to-slate-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
@@ -264,8 +264,21 @@
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-let currentUrl = '{{ $selectedBranch ? route('customer.checkin.scan', $selectedBranch->id) : route('customer.checkin.scan', $branches->first()->id ?? 1) }}';
+let currentBranchId = '{{ $selectedBranch->id ?? $branches->first()->id ?? 1 }}';
+let currentUrl = '';
 let currentBranchName = '{{ addslashes($selectedBranch->name ?? $branches->first()->name ?? '') }}';
+const tokenUrlTemplate = '{{ route('admin.queues.checkin-token', ['branch' => '__ID__']) }}';
+
+async function fetchQrUrl(branchId) {
+    try {
+        const res = await fetch(tokenUrlTemplate.replace('__ID__', branchId), { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        return data.url || '';
+    } catch (e) {
+        return '';
+    }
+}
 
 function generateQR(url) {
     document.getElementById('qr-canvas').innerHTML = '';
@@ -283,7 +296,9 @@ function switchBranch(branchId, branchName, url) {
         window.location.href = dest.toString();
         return;
     }
-    currentUrl = url; currentBranchName = branchName;
+    currentBranchId = branchId;
+    currentBranchName = branchName;
+    refreshQrForCurrentBranch();
     document.getElementById('branch-name').textContent = branchName;
     document.querySelectorAll('.branch-tab').forEach(btn => {
         btn.className = btn.className.replace('bg-gradient-to-r from-gray-900 to-slate-800 text-white','').replace('bg-gray-100 text-gray-600 hover:bg-gray-200','').trim();
@@ -291,9 +306,14 @@ function switchBranch(branchId, branchName, url) {
     });
     const t = document.getElementById('tab-' + branchId);
     if(t){ t.classList.remove('bg-gray-100','text-gray-600','hover:bg-gray-200'); t.classList.add('bg-gradient-to-r','from-gray-900','to-slate-800','text-white'); }
+}
+async function refreshQrForCurrentBranch() {
+    const url = await fetchQrUrl(currentBranchId);
+    if (!url) return;
+    currentUrl = url;
     generateQR(url);
 }
-function refreshQR() { generateQR(currentUrl); }
+function refreshQR() { refreshQrForCurrentBranch(); }
 function printQR() {
     const c = document.querySelector('#qr-canvas canvas') || document.querySelector('#qr-canvas img');
     if (!c) { alert('QR belum siap.'); return; }
@@ -310,7 +330,9 @@ function printQR() {
     <script>window.onload=()=>window.print()<\/script></body></html>`);
     w.document.close();
 }
-document.addEventListener('DOMContentLoaded', () => generateQR(currentUrl));
+document.addEventListener('DOMContentLoaded', () => refreshQrForCurrentBranch());
+// QR berputar tiap 60 detik — samakan dengan slot token server.
+setInterval(() => { refreshQrForCurrentBranch(); }, 60000);
 // QR ikut terganti saat poll halus me-refresh konten → regenerate.
 document.addEventListener('live-content-updated', () => {
     if (document.getElementById('qr-canvas')) refreshQR();

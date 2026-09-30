@@ -236,6 +236,17 @@ class QueueController extends Controller
     }
 
     /**
+     * AJAX: token QR check-in cabang saat ini (QR berputar tiap 60 detik).
+     */
+    public function checkinToken(Branch $branch): JsonResponse
+    {
+        return response()->json([
+            'url' => route('customer.checkin.scan', $branch->id)
+                . '?t=' . \App\Http\Controllers\Customer\QueueController::checkinToken($branch->id),
+        ]);
+    }
+
+    /**
      * AJAX: Poll for new queues — used by admin notification system
      */
     public function notificationPoll(): JsonResponse

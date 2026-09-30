@@ -90,6 +90,7 @@ Route::middleware(['auth', 'role:admin'])
 
         // ── Kelola Antrean (board per barber) ─────────────────────────────
         Route::get('manage', [Admin\QueueController::class, 'manage'])->name('queues.manage');
+        Route::get('manage/checkin-token/{branch}', [Admin\QueueController::class, 'checkinToken'])->name('queues.checkin-token');
         Route::post('queues/{queue}/call', [Admin\QueueController::class, 'call'])->name('queues.call');
         Route::post('queues/{queue}/complete', [Admin\QueueController::class, 'complete'])->name('queues.complete');
         Route::post('queues/{queue}/skip', [Admin\QueueController::class, 'skip'])->name('queues.skip');

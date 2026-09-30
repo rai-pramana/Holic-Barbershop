@@ -305,9 +305,17 @@ class QueueController extends Controller
         return view('customer.queue.history', compact('histories'));
     }
 
-    public function scanCheckin(Branch $branch): RedirectResponse
+    public function scanCheckin(Request $request, Branch $branch): RedirectResponse
     {
         Queue::expirePending();
+
+        // QR cabang berputar tiap 60 detik — tolak token basi/palsu agar
+        // foto QR tidak bisa dipakai check-in jarak jauh di lain waktu.
+        $token = $request->query('t', '');
+        if (! self::checkinTokenValid($branch->id, $token)) {
+            return redirect()->route('customer.dashboard')
+                ->with('error', 'QR sudah kedaluwarsa. Minta loket menampilkan QR terbaru lalu scan ulang.');
+        }
 
         $user = Auth::user();
 
@@ -351,5 +359,31 @@ class QueueController extends Controller
 
         return redirect()->route('customer.queue.status', $queue)
             ->with('success', "✅ Check-in berhasil di {$branch->name}! Nomor antrean Anda: {$queue->queue_number}. Silakan tunggu dipanggil.");
+    }
+
+    /**
+     * Token QR check-in cabang: acak per 60 detik per cabang (CACHE_STORE).
+     * Toleransi slot sebelumnya (≤90 dtk) agar scan di detik peralihan lolos.
+     */
+    public static function checkinToken(int $branchId, ?int $slot = null): string
+    {
+        $slot ??= intdiv(time(), 60);
+        $key = "checkin-qr:{$branchId}:{$slot}";
+        $token = \Illuminate\Support\Facades\Cache::get($key);
+        if (! $token) {
+            $token = bin2hex(random_bytes(8));
+            \Illuminate\Support\Facades\Cache::put($key, $token, 120);
+        }
+        return $token;
+    }
+
+    public static function checkinTokenValid(int $branchId, string $token): bool
+    {
+        if ($token === '') {
+            return false;
+        }
+        $slot = intdiv(time(), 60);
+        return hash_equals(self::checkinToken($branchId, $slot), $token)
+            || hash_equals(self::checkinToken($branchId, $slot - 1), $token);
     }
 }
