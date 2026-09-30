@@ -4,7 +4,7 @@
 @section('page-title', 'Konfirmasi Kehadiran Customer')
 
 @section('page-actions')
-<a href="{{ route('admin.queues.manage') }}"
+<a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('admin.queues.manage') }}"
    class="bg-gray-100 text-gray-700 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-200 transition-colors flex items-center gap-2">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
     Kembali ke Loket
