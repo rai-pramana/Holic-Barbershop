@@ -298,6 +298,7 @@ class QueueController extends Controller
             'queue_number' => 'queues.queue_number',
             'status'       => 'queues.status',
             'created_at'   => 'queues.created_at',
+            'completed_at' => 'queues.completed_at',
             // Kolom relasi — butuh join (LEFT agar barber null tetap muncul)
             'customer' => 'customer_sort',
             'barber'   => 'barbers.name',

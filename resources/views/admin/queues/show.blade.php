@@ -49,8 +49,16 @@
                     <p class="text-xs text-gray-500">{{ $queue->service->duration_minutes }} menit</p>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4 min-w-0">
-                    <p class="text-xs text-gray-500 font-medium mb-1">💰 Harga</p>
+                    <p class="text-xs text-gray-500 font-medium mb-1">💰 Biaya</p>
                     <p class="font-bold text-gray-900">{{ $queue->service->formatted_price }}</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 min-w-0">
+                    <p class="text-xs text-gray-500 font-medium mb-1">🏠 Cabang</p>
+                    <p class="font-bold text-gray-900 break-words">{{ $queue->branch->name }}</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 min-w-0">
+                    <p class="text-xs text-gray-500 font-medium mb-1">📅 Tanggal</p>
+                    <p class="font-bold text-gray-900">{{ $queue->created_at->translatedFormat('d M Y') }}</p>
                 </div>
             </div>
 
@@ -61,27 +69,27 @@
                     <div class="flex items-center gap-3 text-sm">
                         <div class="w-2 h-2 rounded-full bg-gray-600"></div>
                         <span class="text-gray-500">Dibuat:</span>
-                        <span class="font-medium">{{ $queue->created_at->format('H:i') }}</span>
+                        <span class="font-medium">{{ $queue->created_at->translatedFormat('d M Y, H:i') }}</span>
                     </div>
                     @if($queue->checked_in_at)
                     <div class="flex items-center gap-3 text-sm">
                         <div class="w-2 h-2 rounded-full bg-gray-200"></div>
                         <span class="text-gray-500">Divalidasi admin:</span>
-                        <span class="font-medium">{{ $queue->checked_in_at->format('H:i') }}</span>
+                        <span class="font-medium">{{ $queue->checked_in_at->translatedFormat('d M Y, H:i') }}</span>
                     </div>
                     @endif
                     @if($queue->called_at)
                     <div class="flex items-center gap-3 text-sm">
                         <div class="w-2 h-2 rounded-full bg-gray-100"></div>
                         <span class="text-gray-500">Dipanggil:</span>
-                        <span class="font-medium">{{ $queue->called_at->format('H:i') }}</span>
+                        <span class="font-medium">{{ $queue->called_at->translatedFormat('d M Y, H:i') }}</span>
                     </div>
                     @endif
                     @if($queue->completed_at)
                     <div class="flex items-center gap-3 text-sm">
                         <div class="w-2 h-2 rounded-full bg-gray-400"></div>
                         <span class="text-gray-500">Selesai:</span>
-                        <span class="font-medium">{{ $queue->completed_at->format('H:i') }}</span>
+                        <span class="font-medium">{{ $queue->completed_at->translatedFormat('d M Y, H:i') }}</span>
                     </div>
                     @endif
                 </div>

@@ -95,11 +95,12 @@
                     @include('components.sort-th', ['label' => 'Cabang', 'key' => 'branch', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc', 'class' => 'px-5 py-3'])
                     @include('components.sort-th', ['label' => 'Status', 'key' => 'status', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc', 'class' => 'px-5 py-3'])
                     @include('components.sort-th', ['label' => 'Dibuat', 'key' => 'created_at', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc', 'class' => 'px-5 py-3'])
+                    @include('components.sort-th', ['label' => 'Selesai', 'key' => 'completed_at', 'current' => $sort ?? null, 'dir' => $dir ?? 'desc', 'class' => 'px-5 py-3'])
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
                 @forelse($queues as $queue)
-                <tr class="hover:bg-gray-50/50 transition-colors">
+                <tr class="hover:bg-gray-50/50 transition-colors cursor-pointer" onclick="window.location='{{ route('admin.queues.show', $queue) }}'">
                     <td class="px-4 sm:px-5 py-3 font-bold text-gray-900 text-sm whitespace-nowrap">{{ $queue->queue_number }}</td>
                     <td class="px-5 py-3 text-sm">
                         <p class="font-medium text-gray-900 truncate max-w-[130px] sm:max-w-none">{{ $queue->customer_name }}</p>
@@ -118,10 +119,11 @@
                         </span>
                     </td>
                     <td class="px-5 py-3 text-xs text-gray-500 whitespace-nowrap">{{ $queue->created_at->translatedFormat('d M Y, H:i') }}</td>
+                    <td class="px-5 py-3 text-xs text-gray-500 whitespace-nowrap">{{ $queue->completed_at ? $queue->completed_at->translatedFormat('d M Y, H:i') : '—' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="px-5 py-12 text-center text-gray-400 text-sm">Tidak ada antrean ditemukan.</td>
+                    <td colspan="9" class="px-5 py-12 text-center text-gray-400 text-sm">Tidak ada antrean ditemukan.</td>
                 </tr>
                 @endforelse
             </tbody>
