@@ -142,6 +142,20 @@
                     <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg> Biaya</p>
                     <p class="font-bold text-gray-900 text-sm truncate">{{ $queue->service->formatted_price }}</p>
                 </div>
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-1 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        Cabang
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm truncate">{{ $queue->branch->name }}</p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-3 sm:p-4 col-span-1 min-w-0">
+                    <p class="text-[11px] sm:text-xs text-gray-400 font-medium mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Tanggal
+                    </p>
+                    <p class="font-bold text-gray-900 text-sm truncate">{{ $queue->created_at->translatedFormat('d M Y') }}</p>
+                </div>
             </div>
 
             {{-- Check-in Instructions (for pending) --}}
@@ -274,11 +288,11 @@
             @endif
             @endif
 
-            {{-- Back button --}}
-            <a href="{{ route('customer.dashboard') }}"
+            {{-- Back button: kembali ke asal (riwayat bila dari riwayat) --}}
+            <a href="{{ request('from') === 'history' ? route('customer.queue.history') : (url()->previous() !== url()->current() ? url()->previous() : route('customer.dashboard')) }}"
                class="w-full flex items-center justify-center gap-2 bg-gray-100 text-gray-700 font-semibold py-3 rounded-2xl hover:bg-gray-200 transition-colors text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Kembali ke Dashboard
+                Kembali
             </a>
         </div>
     </div>

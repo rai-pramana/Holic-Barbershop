@@ -44,7 +44,7 @@
 
     {{-- History List --}}
     @forelse($histories as $queue)
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5 mb-4">
+    <a href="{{ route('customer.queue.status', [$queue, 'from' => 'history']) }}" class="block bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5 mb-4 hover:border-gray-300 hover:shadow transition-all">
         <div class="flex items-center gap-3 sm:gap-4 min-w-0">
                 {{-- Queue Number --}}
                 <div class="w-14 sm:w-16 h-12 sm:h-14 px-1 rounded-2xl flex items-center justify-center font-black text-base sm:text-lg font-mono flex-shrink-0
@@ -63,6 +63,7 @@
                             @else bg-amber-100 text-amber-600 @endif">
                             {{ $queue->status_label }}
                         </span>
+                        <svg class="w-4 h-4 text-gray-300 flex-shrink-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </div>
                     <p class="text-xs text-gray-500 mt-0.5">{{ $queue->service->name }}</p>
                     {{-- Biaya --}}
@@ -83,10 +84,10 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 {{ $queue->created_at->translatedFormat('d M Y, H:i') }} WITA
             </span>
-            {{-- Selesai: selalu render agar tinggi footer kartu seragam --}}
+            {{-- Selesai: tanggal + jam lengkap --}}
             <span class="flex items-center gap-1">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                Selesai: {{ $queue->completed_at ? $queue->completed_at->translatedFormat('H:i') . ' WITA' : '—' }}
+                Selesai: {{ $queue->completed_at ? $queue->completed_at->translatedFormat('d M Y, H:i') . ' WITA' : '—' }}
             </span>
             {{-- Catatan: selalu render (truncate) agar tinggi kartu seragam --}}
             <span class="flex items-center gap-1 italic min-w-0">
@@ -94,7 +95,7 @@
                 <span class="truncate">{{ $queue->notes ?: '—' }}</span>
             </span>
         </div>
-    </div>
+    </a>
     @empty
     <div class="text-center py-16">
         <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
