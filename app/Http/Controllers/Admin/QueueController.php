@@ -210,17 +210,17 @@ class QueueController extends Controller
     }
 
     /**
-     * Kirim push "segera giliran" ke antrean yang baru masuk ambang ≤3 di
-     * depan akibat perubahan $changed. Idempoten via notified_near_at;
-     * kegagalan push tidak menggagalkan aksi loket.
+     * Kirim push "segera giliran" bertingkat (3 → 2 → 1 di depan) ke antrean
+     * yang turun level akibat perubahan $changed. Tiap level dikirim sekali
+     * (notified_near_level); kegagalan push tidak menggagalkan aksi loket.
      */
     private static function notifyNewlyNear(Queue $changed): void
     {
         try {
-            foreach (Queue::newlyNear($changed) as $candidate) {
-                $candidate->update(['notified_near_at' => now()]);
+            foreach (Queue::newlyNear($changed) as [$candidate, $level]) {
+                $candidate->update(['notified_near_at' => now(), 'notified_near_level' => $level]);
                 \Illuminate\Support\Facades\Bus::dispatchSync(
-                    new SendQueuePushNotification($candidate->id, 'near')
+                    new SendQueuePushNotification($candidate->id, 'near', $level)
                 );
             }
         } catch (\Throwable $e) {

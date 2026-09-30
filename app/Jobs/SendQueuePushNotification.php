@@ -18,6 +18,7 @@ class SendQueuePushNotification implements ShouldQueue
     public function __construct(
         private readonly int    $queueId,
         private readonly string $event,  // 'created' | 'called' | 'active' | 'completed' | 'skipped' | 'near'
+        private readonly ?int   $nearLevel = null,  // level antrean di depan (untuk event 'near')
     ) {}
 
     public function handle(WebPushService $pushService): void
@@ -55,7 +56,9 @@ class SendQueuePushNotification implements ShouldQueue
             ],
             'near' => [
                 'Sebentar Lagi Giliran Anda!',
-                "Tinggal {$queue->ahead_count} antrean lagi sebelum {$queue->queue_number}. Bersiap ke kursi {$barberName}.",
+                $this->nearLevel === 1
+                    ? "Tinggal 1 antrean lagi sebelum {$queue->queue_number}. Segera ke kursi {$barberName}."
+                    : "Tinggal {$this->nearLevel} antrean lagi sebelum {$queue->queue_number}. Bersiap ke kursi {$barberName}.",
             ],
             default => ['HOLIC Barbershop', "Status antrean Anda berubah: {$queue->status_label}"],
         };

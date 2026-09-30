@@ -34,6 +34,7 @@ class Queue extends Model
         'completed_at',
         'expired_at',
         'notified_near_at',
+        'notified_near_level',
     ];
 
     protected $casts = [
@@ -143,9 +144,10 @@ class Queue extends Model
     }
 
     /**
-     * Cari antrean yang baru masuk ambang "dekat" (<= 3 di depan) dan belum
-     * pernah diberitahu. Dipanggil setiap ada perubahan antrean di barber
-     * yang sama (panggil/selesai/lepas). Kembalikan koleksi kandidat.
+     * Cari antrean yang turun ke level "dekat" berikutnya (3 → 2 → 1 di depan)
+     * dan belum pernah diberitahu untuk level tersebut. Dipanggil setiap ada
+     * perubahan antrean di barber yang sama (panggil/selesai/lepas).
+     * Kembalikan pasangan [queue, level].
      */
     public static function newlyNear(Queue $changed, int $threshold = 3)
     {
@@ -154,10 +156,12 @@ class Queue extends Model
             ->whereIn('status', ['active', 'called', 'pending'])
             ->where('id', '>', $changed->id)
             ->whereDate('created_at', today())
-            ->whereNull('notified_near_at')
             ->with('service')
             ->get()
-            ->filter(fn(Queue $q) => $q->ahead_count <= $threshold);
+            ->map(fn(Queue $q) => [$q, $q->ahead_count])
+            ->filter(fn($pair) => $pair[1] >= 1
+                && $pair[1] <= $threshold
+                && ($pair[0]->notified_near_level === null || $pair[0]->notified_near_level > $pair[1]));
     }
 
     /**

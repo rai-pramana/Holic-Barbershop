@@ -277,7 +277,7 @@ class QueueController extends Controller
             'current_serving' => $currentServing,
             'called_at'       => $queue->called_at?->toIso8601String(),
             'completed_at'    => $queue->completed_at?->toIso8601String(),
-            'near_notified'   => (bool) $queue->notified_near_at,
+            'near_level'      => $queue->notified_near_level,
         ]);
     }
 

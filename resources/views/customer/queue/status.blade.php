@@ -323,19 +323,21 @@ const statusMessages = {
     'skipped':   { title: 'Antrean Dilewati',      body: 'Antrean Anda dilewati. Hubungi petugas jika ada kesalahan.' },
 };
 
-let nearNotified = {{ $queue->notified_near_at ? 'true' : 'false' }};
+let nearLevelNotified = {{ $queue->notified_near_level ?? 'null' }};
 
 function showNearAlert(total) {
-    // Banner in-app sekali per sesi saat tinggal ≤3 (push server jalan terpisah)
-    if (nearNotified || total > 3 || total <= 0) return;
-    nearNotified = true;
+    // Banner in-app bertingkat 3 → 2 → 1 (push server jalan terpisah).
+    // Sekali per level per sesi; selaraskan dgn level yg sudah dikirim server.
+    if (total > 3 || total <= 0) return;
+    if (nearLevelNotified !== null && nearLevelNotified <= total) return;
+    nearLevelNotified = total;
     playCustomerNotifSound();
     const label = total === 1 ? 'Tinggal 1 antrean lagi!' : 'Tinggal ' + total + ' antrean lagi!';
     if (Notification.permission === 'granted') {
         new Notification('Sebentar Lagi Giliran Anda!', {
             body: label + ' Bersiap ke area barber.',
             icon: '/icons/icon-192.png',
-            tag: 'queue-near-{{ $queue->id }}',
+            tag: 'queue-near-{{ $queue->id }}-' + total,
             renotify: true,
         });
     } else {
@@ -382,8 +384,13 @@ async function pollStatus() {
         if (aheadEl && data.queues_ahead !== undefined) {
             const total = (data.queues_ahead ?? 0) + (data.pending_ahead ?? 0);
             aheadEl.textContent = total > 0 ? total + ' orang' : 'Hampir!';
-            // Peringatan "segera giliran" saat tinggal ≤3 (sekali per sesi)
-            if (data.near_notified) nearNotified = true;
+            // Peringatan "segera giliran" bertingkat 3 → 2 → 1.
+            // Selaraskan dgn level server agar tidak dobel dgn push server.
+            if (data.near_level !== undefined && data.near_level !== null) {
+                if (nearLevelNotified === null || data.near_level < nearLevelNotified) {
+                    nearLevelNotified = data.near_level;
+                }
+            }
             showNearAlert(total);
         }
         if (waitEl && data.wait_minutes !== undefined) {
