@@ -180,7 +180,7 @@
             </div>
             <div class="p-5 flex flex-col items-center text-center">
                 <p class="text-xs text-gray-400 mb-1" id="branch-name">{{ $selectedBranch->name ?? $branches->first()->name ?? '-' }}</p>
-                <p class="text-xs text-gray-400 mb-4">Minta customer scan QR ini</p>
+                <p class="text-xs text-gray-400 mb-4">Minta customer scan QR ini · berganti otomatis tiap menit</p>
                 <div class="relative bg-white p-3 rounded-2xl shadow-lg border-4 border-gray-900 mb-4">
                     <div id="qr-canvas" class="w-44 h-44"></div>
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -189,16 +189,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex gap-2 w-full">
-                    <button onclick="refreshQR()" class="flex-1 flex items-center justify-center gap-1.5 bg-gray-100 text-gray-600 text-xs font-semibold py-2 rounded-xl hover:bg-gray-200 transition-colors">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                        Refresh
-                    </button>
-                    <button onclick="printQR()" class="flex-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-gray-900 to-slate-800 text-white text-xs font-semibold py-2 rounded-xl hover:opacity-90 transition-opacity">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                        Print
-                    </button>
-                </div>
+                <p class="text-xs text-gray-400 font-medium">QR baru dalam <span id="qr-countdown" class="font-bold text-gray-700">60</span>d</p>
             </div>
         </div>
 
@@ -312,30 +303,28 @@ async function refreshQrForCurrentBranch() {
     if (!url) return;
     currentUrl = url;
     generateQR(url);
-}
-function refreshQR() { refreshQrForCurrentBranch(); }
-function printQR() {
-    const c = document.querySelector('#qr-canvas canvas') || document.querySelector('#qr-canvas img');
-    if (!c) { alert('QR belum siap.'); return; }
-    const d = c.tagName==='CANVAS' ? c.toDataURL() : c.src;
-    const w = window.open('','_blank');
-    w.document.write(`<!DOCTYPE html><html><head><title>QR - ${currentBranchName}</title>
-    <style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif}
-    .card{text-align:center;padding:40px;border:3px solid #111;border-radius:20px;max-width:320px}
-    h1{font-size:1.5rem;font-weight:900;margin:0 0 4px}p{color:#666;font-size:.85rem;margin:0 0 20px}
-    img{width:220px;height:220px;display:block;margin:0 auto 20px}.hint{font-size:.75rem;color:#999;margin-top:16px}</style>
-    </head><body><div class="card"><h1>HOLIC Barbershop</h1><p>${currentBranchName}</p>
-    <img src="${d}" alt="QR"><strong>Scan untuk Check-in</strong>
-    <p class="hint">Pastikan sudah login sebelum scan</p></div>
-    <script>window.onload=()=>window.print()<\/script></body></html>`);
-    w.document.close();
+    resetQrCountdown();
 }
 document.addEventListener('DOMContentLoaded', () => refreshQrForCurrentBranch());
 // QR berputar tiap 60 detik — samakan dengan slot token server.
 setInterval(() => { refreshQrForCurrentBranch(); }, 60000);
+// Countdown penanda QR berikutnya (selaras slot 60 detik server).
+function resetQrCountdown() {
+    const el = document.getElementById('qr-countdown');
+    if (!el) return;
+    const remain = 60 - (Math.floor(Date.now() / 1000) % 60);
+    el.textContent = remain;
+}
+setInterval(() => {
+    const el = document.getElementById('qr-countdown');
+    if (!el) return;
+    let v = parseInt(el.textContent || '60', 10) - 1;
+    if (v <= 0) v = 60;
+    el.textContent = v;
+}, 1000);
 // QR ikut terganti saat poll halus me-refresh konten → regenerate.
 document.addEventListener('live-content-updated', () => {
-    if (document.getElementById('qr-canvas')) refreshQR();
+    if (document.getElementById('qr-canvas')) refreshQrForCurrentBranch();
 });
 // Live update ditangani poll halus layouts/admin (tiap 8 dtk, ganti #live-content
 // hanya bila berubah) — tanpa reload penuh agar scroll & fokus tidak reset.
