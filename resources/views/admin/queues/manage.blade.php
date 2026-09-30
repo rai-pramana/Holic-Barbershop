@@ -6,9 +6,9 @@
 
 @section('content')
 
-{{-- Branch Selector --}}
+{{-- Branch Selector (hanya cabang yang buka) --}}
 <div class="flex flex-wrap items-center gap-3 mb-6">
-    @foreach($branches as $branch)
+    @foreach($openBranches as $branch)
     <a href="{{ route('admin.queues.manage', ['branch_id' => $branch->id]) }}"
        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all
               {{ $selectedBranch?->id === $branch->id
@@ -17,7 +17,21 @@
         {{ $branch->name }}
     </a>
     @endforeach
+    @if($selectedIsClosed && $selectedBranch)
+    <span class="px-5 py-2.5 rounded-xl text-sm font-semibold bg-red-50 border border-red-200 text-red-600">
+        {{ $selectedBranch->name }} · Tutup ({{ $selectedBranch->open_time }}–{{ $selectedBranch->close_time }})
+    </span>
+    @endif
+    @if($openBranches->isEmpty() && ! $selectedBranch)
+    <p class="text-sm text-gray-400">Semua cabang sedang tutup.</p>
+    @endif
 </div>
+@if($selectedIsClosed && $selectedBranch)
+<div class="mb-6 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">
+    Cabang ini sudah tutup (jam {{ $selectedBranch->open_time }}–{{ $selectedBranch->close_time }}).
+    Selesaikan antrean tersisa — antrean baru tidak dapat dibuat.
+</div>
+@endif
 
 {{-- Flash Messages dirender oleh layouts/admin.blade.php --}}
 
@@ -168,7 +182,7 @@
             <div class="px-4 py-3 border-b border-gray-100">
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-2">QR Cabang</p>
                 <div class="flex flex-wrap gap-2" id="branch-tabs">
-                    @foreach($branches as $branch)
+                    @foreach($openBranches as $branch)
                     <button onclick="switchBranch('{{ $branch->id }}', '{{ addslashes($branch->name) }}')"
                             id="tab-{{ $branch->id }}"
                             class="branch-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
@@ -209,13 +223,9 @@
                 <input type="text" name="queue_number" value="{{ old('queue_number') }}" placeholder="cth: Q0005"
                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-mono font-bold uppercase tracking-widest focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 @error('queue_number') border-red-400 @enderror">
                 @error('queue_number')<p class="text-red-500 text-xs">{{ $message }}</p>@enderror
-                @include('components.filter-dropdown', [
-                    'id' => 'm-branch', 'name' => 'branch_id', 'label' => '', 'icon' => '',
-                    'options' => $branches->pluck('name', 'id')->toArray(),
-                    'value' => (string)request('branch_id', ''),
-                    'allLabel' => '— Semua Cabang —',
-                    'theme' => 'form', 'noreload' => true,
-                ])
+                @if($selectedBranch)
+                <p class="text-xs text-gray-400">Mencari di cabang <span class="font-semibold text-gray-600">{{ $selectedBranch->name }}</span></p>
+                @endif
                 <button type="submit" class="w-full bg-gradient-to-r from-gray-900 to-slate-800 text-white font-semibold py-2.5 rounded-xl hover:opacity-90 text-sm flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     Cari Antrean

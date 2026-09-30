@@ -14,6 +14,10 @@ class CheckinController extends Controller
 {
     public function search(Request $request): RedirectResponse
     {
+        // Loket selalu dalam konteks 1 cabang terpilih (tanpa input cabang di form).
+        $branchId = $request->branch_id ?: session('manage_branch_id');
+        $request->merge(['branch_id' => $branchId]);
+
         $request->validate([
             'queue_number' => 'required|string',
             'branch_id'    => 'nullable|exists:branches,id',

@@ -102,6 +102,12 @@ class QueueController extends Controller
         $selectedBranch = $branches->firstWhere('id', session('manage_branch_id'))
             ?? $branches->first();
 
+        // Sembunyikan cabang yang sudah tutup dari pemilih; karyawan fokus
+        // melayani cabang yang buka. Cabang tersimpan yang keburu tutup tetap
+        // ditampilkan (dengan penanda) agar antrean tersisa bisa diselesaikan.
+        $openBranches = $branches->filter(fn(Branch $b) => $b->isOpen())->values();
+        $selectedIsClosed = $selectedBranch && ! $selectedBranch->isOpen();
+
         $barbers = [];
         if ($selectedBranch) {
             // Tampilkan barber tersedia + barber tidak tersedia yang MASIH
@@ -132,7 +138,7 @@ class QueueController extends Controller
             ->take(8)
             ->get();
 
-        return view('admin.queues.manage', compact('branches', 'selectedBranch', 'barbers', 'recent'));
+        return view('admin.queues.manage', compact('branches', 'openBranches', 'selectedBranch', 'selectedIsClosed', 'barbers', 'recent'));
     }
 
     /**
