@@ -17,7 +17,7 @@ class SendQueuePushNotification implements ShouldQueue
 
     public function __construct(
         private readonly int    $queueId,
-        private readonly string $event,  // 'created' | 'called' | 'active' | 'completed' | 'skipped'
+        private readonly string $event,  // 'created' | 'called' | 'active' | 'completed' | 'skipped' | 'near'
     ) {}
 
     public function handle(WebPushService $pushService): void
@@ -52,6 +52,10 @@ class SendQueuePushNotification implements ShouldQueue
             'skipped' => [
                 'Antrean Dilewati',
                 "Antrean {$queue->queue_number} Anda dilewati. Silakan hubungi petugas.",
+            ],
+            'near' => [
+                'Sebentar Lagi Giliran Anda!',
+                "Tinggal {$queue->ahead_count} antrean lagi sebelum {$queue->queue_number}. Bersiap ke kursi {$barberName}.",
             ],
             default => ['HOLIC Barbershop', "Status antrean Anda berubah: {$queue->status_label}"],
         };

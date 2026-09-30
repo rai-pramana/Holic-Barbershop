@@ -152,6 +152,9 @@ class QueueController extends Controller
             \Illuminate\Support\Facades\Log::warning('Push called dispatch failed', ['queue_id' => $queue->id, 'error' => $e->getMessage()]);
         }
 
+        // Beritahu antrean yang kini tinggal ≤3 di depan (sekali per antrean)
+        self::notifyNewlyNear($queue);
+
         return back()->with('success', "🔔 Antrean #{$queue->queue_number} ({$queue->customer_name}) berhasil dipanggil.");
     }
 
@@ -176,6 +179,9 @@ class QueueController extends Controller
             // Silent — push failure must not block queue management
         }
 
+        // Beritahu antrean yang kini tinggal ≤3 di depan (sekali per antrean)
+        self::notifyNewlyNear($queue);
+
         return back()->with('success', "✅ Antrean #{$queue->queue_number} telah selesai.");
     }
 
@@ -197,7 +203,31 @@ class QueueController extends Controller
             // Silent — push failure must not block queue management
         }
 
+        // Beritahu antrean yang kini tinggal ≤3 di depan (sekali per antrean)
+        self::notifyNewlyNear($queue);
+
         return back()->with('success', "⚠️ Antrean #{$queue->queue_number} telah dilewati.");
+    }
+
+    /**
+     * Kirim push "segera giliran" ke antrean yang baru masuk ambang ≤3 di
+     * depan akibat perubahan $changed. Idempoten via notified_near_at;
+     * kegagalan push tidak menggagalkan aksi loket.
+     */
+    private static function notifyNewlyNear(Queue $changed): void
+    {
+        try {
+            foreach (Queue::newlyNear($changed) as $candidate) {
+                $candidate->update(['notified_near_at' => now()]);
+                \Illuminate\Support\Facades\Bus::dispatchSync(
+                    new SendQueuePushNotification($candidate->id, 'near')
+                );
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Push near failed (non-fatal)', [
+                'queue_id' => $changed->id, 'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

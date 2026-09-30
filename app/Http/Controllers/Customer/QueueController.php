@@ -271,11 +271,13 @@ class QueueController extends Controller
             'status_label'    => $queue->status_label,
             'queues_ahead'    => $queuesAhead,
             'pending_ahead'   => $pendingAhead,
+            'ahead_count'     => $queuesAhead + $pendingAhead,
             'wait_minutes'    => $waitMinutes,
             'position'        => $position,
             'current_serving' => $currentServing,
             'called_at'       => $queue->called_at?->toIso8601String(),
             'completed_at'    => $queue->completed_at?->toIso8601String(),
+            'near_notified'   => (bool) $queue->notified_near_at,
         ]);
     }
 

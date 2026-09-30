@@ -207,6 +207,21 @@
             </div>
             @endif
 
+            {{-- Near alert: tinggal ≤3 antrean lagi (server kirim push sekali) --}}
+            @if($queue->isActive_or_Pending() && ! $queue->isCalled() && ($queue->ahead_count ?? 99) <= 3)
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-amber-800 font-bold text-sm">Sebentar Lagi Giliran Anda!</p>
+                        <p class="text-amber-600 text-xs">Tinggal {{ $queue->ahead_count }} antrean lagi — bersiap ke area barber.</p>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             {{-- Timeline --}}
             <div class="border-t border-gray-100 pt-4">
                 <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-3">Riwayat Status</p>
@@ -308,6 +323,26 @@ const statusMessages = {
     'skipped':   { title: 'Antrean Dilewati',      body: 'Antrean Anda dilewati. Hubungi petugas jika ada kesalahan.' },
 };
 
+let nearNotified = {{ $queue->notified_near_at ? 'true' : 'false' }};
+
+function showNearAlert(total) {
+    // Banner in-app sekali per sesi saat tinggal ≤3 (push server jalan terpisah)
+    if (nearNotified || total > 3 || total <= 0) return;
+    nearNotified = true;
+    playCustomerNotifSound();
+    const label = total === 1 ? 'Tinggal 1 antrean lagi!' : 'Tinggal ' + total + ' antrean lagi!';
+    if (Notification.permission === 'granted') {
+        new Notification('Sebentar Lagi Giliran Anda!', {
+            body: label + ' Bersiap ke area barber.',
+            icon: '/icons/icon-192.png',
+            tag: 'queue-near-{{ $queue->id }}',
+            renotify: true,
+        });
+    } else {
+        alert('Sebentar Lagi Giliran Anda! ' + label);
+    }
+}
+
 @if($queue->isActive_or_Pending())
 async function pollStatus() {
     try {
@@ -347,6 +382,9 @@ async function pollStatus() {
         if (aheadEl && data.queues_ahead !== undefined) {
             const total = (data.queues_ahead ?? 0) + (data.pending_ahead ?? 0);
             aheadEl.textContent = total > 0 ? total + ' orang' : 'Hampir!';
+            // Peringatan "segera giliran" saat tinggal ≤3 (sekali per sesi)
+            if (data.near_notified) nearNotified = true;
+            showNearAlert(total);
         }
         if (waitEl && data.wait_minutes !== undefined) {
             const roundedWait = Math.round(data.wait_minutes);

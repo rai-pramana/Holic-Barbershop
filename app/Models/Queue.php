@@ -33,6 +33,7 @@ class Queue extends Model
         'called_at',
         'completed_at',
         'expired_at',
+        'notified_near_at',
     ];
 
     protected $casts = [
@@ -41,6 +42,7 @@ class Queue extends Model
         'called_at'       => 'datetime',
         'completed_at'    => 'datetime',
         'expired_at'      => 'datetime',
+        'notified_near_at' => 'datetime',
     ];
 
     /**
@@ -125,6 +127,37 @@ class Queue extends Model
             ->where('id', '<=', $this->id)
             ->whereDate('created_at', today())
             ->count();
+    }
+
+    /**
+     * Jumlah antrean di depan antrean ini (barber + cabang sama, hari ini).
+     */
+    public function getAheadCountAttribute(): int
+    {
+        return Queue::where('branch_id', $this->branch_id)
+            ->where('barber_id', $this->barber_id)
+            ->whereIn('status', ['active', 'called', 'pending'])
+            ->where('id', '<', $this->id)
+            ->whereDate('created_at', today())
+            ->count();
+    }
+
+    /**
+     * Cari antrean yang baru masuk ambang "dekat" (<= 3 di depan) dan belum
+     * pernah diberitahu. Dipanggil setiap ada perubahan antrean di barber
+     * yang sama (panggil/selesai/lepas). Kembalikan koleksi kandidat.
+     */
+    public static function newlyNear(Queue $changed, int $threshold = 3)
+    {
+        return Queue::where('branch_id', $changed->branch_id)
+            ->where('barber_id', $changed->barber_id)
+            ->whereIn('status', ['active', 'called', 'pending'])
+            ->where('id', '>', $changed->id)
+            ->whereDate('created_at', today())
+            ->whereNull('notified_near_at')
+            ->with('service')
+            ->get()
+            ->filter(fn(Queue $q) => $q->ahead_count <= $threshold);
     }
 
     /**
