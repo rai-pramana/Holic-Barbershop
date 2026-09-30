@@ -93,9 +93,14 @@ class QueueController extends Controller
         Queue::autoSkipCalled();
 
         $branches = Branch::where('is_active', true)->with('barbers')->get();
-        $selectedBranch = $request->filled('branch_id')
-            ? Branch::find($request->branch_id)
-            : $branches->first();
+        // Pilihan cabang persisten: query > session > cabang pertama.
+        // Aksi POST (call/complete/skip) redirect back() tanpa query,
+        // jadi session menjaga pilihan tetap saat refresh maupun aksi loket.
+        if ($request->filled('branch_id') && $branches->contains('id', (int) $request->branch_id)) {
+            session(['manage_branch_id' => (int) $request->branch_id]);
+        }
+        $selectedBranch = $branches->firstWhere('id', session('manage_branch_id'))
+            ?? $branches->first();
 
         $barbers = [];
         if ($selectedBranch) {
