@@ -12,7 +12,7 @@ Aplikasi manajemen antrean barbershop berbasis web: customer ambil antrean dari 
 
 ### Halaman Publik — Landing Page
 ![Landing page HOLIC Barbershop](docs/screenshots/01-landing.png)
-Halaman depan dengan headline "Antre Cerdas, Tampil Keren", tombol "Ambil Antrean Sekarang", dan mockup kartu antrean live (Q0008 DIPANGGIL). Di bawahnya ada status antrean terkini per cabang yang diperbarui otomatis tiap 15 detik.
+Halaman depan lengkap (7 section): headline "Antre Cerdas, Tampil Keren" + tombol "Ambil Antrean Sekarang" + mockup kartu antrean live (Q0008 DIPANGGIL), status antrean terkini per cabang (auto-refresh 15 detik), 6 kartu fitur, 4 langkah cara kerja, CTA penutup, dan footer.
 
 ### Login
 ![Halaman login](docs/screenshots/02-login.png)
