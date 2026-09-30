@@ -25,6 +25,11 @@ class WalkinQueueController extends Controller
             ? Branch::findOrFail($request->branch_id)
             : $branches->first();
 
+        // Dropdown hanya tampilkan cabang yang buka; cabang tutup yang
+        // terpilih langsung (mis. via URL/bookmark) tetap bisa dibuka
+        // dengan peringatan — simpan tetap ditolak oleh guard store().
+        $openBranches = $branches->filter(fn(Branch $b) => $b->isOpen());
+
         $services = collect();
         $barbers  = collect();
 
@@ -49,7 +54,7 @@ class WalkinQueueController extends Controller
             }
         }
 
-        return view('admin.queues.walkin', compact('branches', 'selectedBranch', 'services', 'barbers'));
+        return view('admin.queues.walkin', compact('branches', 'openBranches', 'selectedBranch', 'services', 'barbers'));
     }
 
     /**

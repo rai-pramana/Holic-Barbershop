@@ -39,9 +39,9 @@
                 @include('components.filter-dropdown', [
                     'id' => 'w-branch', 'name' => 'branch_id', 'label' => '',
                     'icon' => '',
-                    'options' => $branches->pluck('name', 'id')->toArray(),
+                    'options' => $openBranches->pluck('name', 'id')->toArray(),
                     'value' => (string)($selectedBranch?->id ?? ''),
-                    'allLabel' => '— Pilih Cabang —',
+                    'allLabel' => $openBranches->isEmpty() ? '— Semua Cabang Tutup —' : '— Pilih Cabang —',
                     'theme' => 'form', 'noreload' => true,
                 ])
                 @error('branch_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
