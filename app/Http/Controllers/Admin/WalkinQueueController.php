@@ -21,9 +21,11 @@ class WalkinQueueController extends Controller
     {
         $branches = Branch::where('is_active', true)->get();
 
+        // Tanpa branch_id eksplisit: paksa pilih cabang dulu (jangan default
+        // ke cabang pertama agar layanan/barber tidak aktif prematur).
         $selectedBranch = $request->filled('branch_id')
             ? Branch::findOrFail($request->branch_id)
-            : $branches->first();
+            : null;
 
         // Dropdown hanya tampilkan cabang yang buka; cabang tutup yang
         // terpilih langsung (mis. via URL/bookmark) tetap bisa dibuka

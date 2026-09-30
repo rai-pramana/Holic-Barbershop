@@ -107,7 +107,7 @@
 
             {{-- Submit --}}
             <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                <a href="{{ route('admin.queues.manage', ['branch_id' => $selectedBranch->id]) }}"
+                <a href="{{ route('admin.queues.manage', $selectedBranch ? ['branch_id' => $selectedBranch->id] : []) }}"
                    class="flex-1 text-center py-3 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors">
                     Batal
                 </a>
