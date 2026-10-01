@@ -24,3 +24,4 @@ yarn-error.log
 /storage/framework/views/*.php
 !/storage/framework/views/.gitkeep
 /storage/logs/laravel.log
+storage/app/*.sql
