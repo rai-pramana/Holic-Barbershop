@@ -177,20 +177,10 @@
             Loket Check-in
         </h2>
 
-        {{-- QR Code Card --}}
+        {{-- QR Code Card (mengikuti cabang terpilih di atas) --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="px-4 py-3 border-b border-gray-100">
-                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-2">QR Cabang</p>
-                <div class="flex flex-wrap gap-2" id="branch-tabs">
-                    @foreach($openBranches as $branch)
-                    <button onclick="switchBranch('{{ $branch->id }}', '{{ addslashes($branch->name) }}')"
-                            id="tab-{{ $branch->id }}"
-                            class="branch-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
-                                   {{ $selectedBranch?->id === $branch->id ? 'bg-gradient-to-r from-gray-900 to-slate-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                        {{ $branch->name }}
-                    </button>
-                    @endforeach
-                </div>
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">QR Cabang</p>
             </div>
             <div class="p-5 flex flex-col items-center text-center">
                 <p class="text-xs text-gray-400 mb-1" id="branch-name">{{ $selectedBranch->name ?? $branches->first()->name ?? '-' }}</p>
@@ -267,7 +257,6 @@
 <script>
 let currentBranchId = '{{ $selectedBranch->id ?? $branches->first()->id ?? 1 }}';
 let currentUrl = '';
-let currentBranchName = '{{ addslashes($selectedBranch->name ?? $branches->first()->name ?? '') }}';
 const tokenUrlTemplate = '{{ route('admin.queues.checkin-token', ['branch' => '__ID__']) }}';
 
 async function fetchQrUrl(branchId) {
@@ -288,25 +277,6 @@ function generateQR(url) {
         colorDark: '#111827', colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.M,
     });
-}
-function switchBranch(branchId, branchName, url) {
-    // Samakan papan antrean + simpan pilihan (reload; session menjaga persistensi)
-    const dest = new URL('{{ route('admin.queues.manage') }}', window.location.origin);
-    dest.searchParams.set('branch_id', branchId);
-    if (dest.toString() !== window.location.href.split('#')[0]) {
-        window.location.href = dest.toString();
-        return;
-    }
-    currentBranchId = branchId;
-    currentBranchName = branchName;
-    refreshQrForCurrentBranch();
-    document.getElementById('branch-name').textContent = branchName;
-    document.querySelectorAll('.branch-tab').forEach(btn => {
-        btn.className = btn.className.replace('bg-gradient-to-r from-gray-900 to-slate-800 text-white','').replace('bg-gray-100 text-gray-600 hover:bg-gray-200','').trim();
-        btn.classList.add('bg-gray-100','text-gray-600','hover:bg-gray-200');
-    });
-    const t = document.getElementById('tab-' + branchId);
-    if(t){ t.classList.remove('bg-gray-100','text-gray-600','hover:bg-gray-200'); t.classList.add('bg-gradient-to-r','from-gray-900','to-slate-800','text-white'); }
 }
 async function refreshQrForCurrentBranch() {
     const url = await fetchQrUrl(currentBranchId);
